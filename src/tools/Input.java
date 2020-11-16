@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 public class Input
 {
-    private static final Scanner s = new Scanner(System.in);
+    private static final Scanner scanner = new Scanner(System.in);
     private static Input instance = null;
 
     // Change the color of terminal stuff
@@ -34,7 +34,7 @@ public class Input
     public void teardown()
     {
         instance = null;
-        s.close();
+        scanner.close();
     }
 
     public String getStr(String str)
@@ -44,7 +44,7 @@ public class Input
         while (!complianceCheck) {
             try {
                 System.out.print(str);
-                userInput = s.nextLine();
+                userInput = scanner.nextLine();
                 complianceCheck = true;
             } catch (InputMismatchException e) {
                 e.printStackTrace();
@@ -60,8 +60,8 @@ public class Input
         while (!complianceCheck) {
             try {
                 System.out.print(str);
-                userInput = s.nextInt();
-                s.nextLine();
+                userInput = scanner.nextInt();
+                scanner.nextLine();
                 complianceCheck = true;
             } catch (InputMismatchException e){
                 e.printStackTrace();
@@ -77,7 +77,7 @@ public class Input
         while (!complianceCheck) {
             try {
                 System.out.print(str);
-                userInput = s.nextDouble();
+                userInput = scanner.nextDouble();
                 complianceCheck = true;
             } catch (InputMismatchException e) {
                 e.printStackTrace();
@@ -89,8 +89,8 @@ public class Input
     public void checkToContinue() {
         String check = ">> Press" + RED + " 'Enter' " + RESET + "to continue: ";
         System.out.print(check);
-        s.nextLine();
-        s.reset();
+        scanner.nextLine();
+        scanner.reset();
     }
 
 }
