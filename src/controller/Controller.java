@@ -3,6 +3,7 @@ package controller;
 import components.Login;
 import tools.Input;
 import tools.Menu;
+import entities.User;
 
 import java.util.ArrayList;
 
