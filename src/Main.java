@@ -1,4 +1,6 @@
 import controller.Controller;
+import entities.Project;
+import entities.ProjectLibrary;
 
 public class Main
 {
