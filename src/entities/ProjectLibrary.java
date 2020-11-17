@@ -1,6 +1,21 @@
 package entities;
-//currently just for testing DataLibrary, not the final class
-//please dont edit it yet
-public class ProjectLibrary extends DataLibrary{
+import tools.Input;
 
+public class ProjectLibrary extends DataLibrary{
+    
+    public void createProject() {
+        Input input = Input.getInstance();
+        String name = input.getStr("Project name");
+        String startDate = input.getStr("Project Start Date");
+        String endDate = input.getStr("End Date");
+        addToList(new Project(name, name,startDate, endDate));
+    }
+    
+    public void importProject() {
+        // name
+        // owner
+        // startDate
+        // endDate
+    }
+    
 }
