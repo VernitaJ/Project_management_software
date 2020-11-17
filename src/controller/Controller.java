@@ -1,12 +1,16 @@
 package controller;
 
-import entities.ProjectLibrary;
+import components.Login;
 import tools.Input;
 import tools.Menu;
+import entities.User;
+
+import java.util.ArrayList;
 
 public class Controller {
     private Input input = Input.getInstance();
     private Menu menu;
+    private Login login = Login.getInstance();
     private static Controller instance = null;
 
     private Controller(){}
@@ -31,7 +35,7 @@ public class Controller {
     public void run()
     {
         // TODO Change to Login menu once implemented
-        mainMenu();
+        loginMenu();
     }
     private void exit()
     {
@@ -61,7 +65,7 @@ public class Controller {
             switch (choice)
             {
                 case "1" -> notImplemented();
-                case "2" -> notImplemented();
+                case "2" -> login();
                 case "3" -> exit();
             }
         } while (true);
@@ -244,6 +248,35 @@ public class Controller {
                 case "5" -> exit();
             }
         } while (true);
+    }
+
+    private ArrayList<User> userList = new ArrayList<>();
+
+    public void login() {
+        System.out.println("Heyyy. Welcome to the log in page");
+        boolean loggedIn = false;
+        do {
+            String userName = input.getStr("UserName: ");
+            String password = input.getStr("Password: ");
+
+            User loggingIn = userProfile(userName);
+            if (loggingIn !=null){
+                if (loggingIn.getPassword().equals(password)){
+                    System.out.println("\n" + "Welcome back " + loggingIn.getUserName() + "!");
+                    loggedIn = true;
+                    mainMenu();
+                } else System.out.println("Wrong username or password, please try again.");
+            } else System.out.println("Wrong username or password, please try again.");
+        } while (!loggedIn);
+    }
+
+    public User userProfile(String name) {
+        for (User user : userList) {
+            if (user.getUserName().equals(name)){
+                return user;
+            }
+        }
+        return null;
     }
 }
 
