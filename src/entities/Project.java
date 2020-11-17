@@ -3,7 +3,6 @@ package entities;
 // import date time for calculating Duration
 
 public class Project extends Data{
-    // Data.projectID
     private String name;
     private String owner; // Change to User
     // private Team team;
