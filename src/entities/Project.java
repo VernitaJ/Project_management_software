@@ -20,6 +20,8 @@ public class Project extends Data{
         // startDate - endDate;
         return 1;
     }
+
+    //public changeStatus(){}
     
     // Getters & Setters
     
