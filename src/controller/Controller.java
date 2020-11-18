@@ -1,6 +1,7 @@
 package controller;
 
 import components.Login;
+import entities.UserLibrary;
 import tools.Input;
 import tools.Menu;
 import entities.User;
@@ -11,6 +12,7 @@ public class Controller {
     private Input input = Input.getInstance();
     private Menu menu;
     private Login login = Login.getInstance();
+    private UserLibrary userLibrary = UserLibrary.getInstance();
     private static Controller instance = null;
 
     private Controller(){}
@@ -64,7 +66,7 @@ public class Controller {
             String choice = menu.printMenu();
             switch (choice)
             {
-                case "1" -> notImplemented();
+                case "1" -> userLibrary.createUser();
                 case "2" -> login();
                 case "3" -> exit();
             }
