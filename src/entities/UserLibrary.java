@@ -29,8 +29,9 @@ public class UserLibrary extends DataLibrary {
             eMail = this.input.getStr("Enter your e-mail:");
             occupation = this.input.getStr("Enter your current occupation:");
             companyName = this.input.getStr("Enter your company name:");
-        } while (userName != null && eMail != null && occupation != null && companyName != null);
+        } while (userName == null || eMail == null || occupation == null || companyName == null);
         super.addToList(new User(userName, password, eMail, occupation, companyName));
+        System.out.println("Successfully created user.");
     }
 
     private String passwordValidate() {
