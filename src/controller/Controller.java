@@ -11,7 +11,6 @@ import java.util.ArrayList;
 public class Controller {
     private Input input = Input.getInstance();
     private Menu menu;
-    private Login login = Login.getInstance();
     private UserLibrary userLibrary = UserLibrary.getInstance();
     private static Controller instance = null;
 
@@ -67,7 +66,7 @@ public class Controller {
             switch (choice)
             {
                 case "1" -> userLibrary.createUser();
-                case "2" -> login();
+                case "2" -> userLibrary.login();
                 case "3" -> exit();
             }
         } while (true);
@@ -252,33 +251,5 @@ public class Controller {
         } while (true);
     }
 
-    private ArrayList<User> userList = new ArrayList<>();
-
-    public void login() {
-        System.out.println("Heyyy. Welcome to the log in page");
-        boolean loggedIn = false;
-        do {
-            String userName = input.getStr("UserName: ");
-            String password = input.getStr("Password: ");
-
-            User loggingIn = userProfile(userName);
-            if (loggingIn !=null){
-                if (loggingIn.getPassword().equals(password)){
-                    System.out.println("\n" + "Welcome back " + loggingIn.getUserName() + "!");
-                    loggedIn = true;
-                    mainMenu();
-                } else System.out.println("Wrong username or password, please try again.");
-            } else System.out.println("Wrong username or password, please try again.");
-        } while (!loggedIn);
-    }
-
-    public User userProfile(String name) {
-        for (User user : userList) {
-            if (user.getUserName().equals(name)){
-                return user;
-            }
-        }
-        return null;
-    }
 }
 

@@ -1,10 +1,13 @@
 package entities;
 
+import controller.Controller;
 import tools.Input;
+
+import java.util.ArrayList;
 
 public class UserLibrary extends DataLibrary {
     Input input = Input.getInstance();
-
+    private ArrayList<User> userList = new ArrayList<>();
     private static final UserLibrary instance = null;
 
     public static UserLibrary getInstance() {
@@ -43,6 +46,33 @@ public class UserLibrary extends DataLibrary {
         }
 
         return(password);
+    }
+
+    public boolean login() {
+        System.out.println("Welcome to Simple Direction. " + "\n" + "Please Log in to continue.");
+        boolean loggedIn = false;
+        do {
+            String userName = input.getStr("UserName: ");
+            String password = input.getStr("Password: ");
+
+            User loggingIn = findItInList(userName);
+            if (loggingIn !=null){
+                if (loggingIn.getPassword().equals(password)){
+                    System.out.println("\n" + "Welcome back " + loggingIn.getUserName() + "!");
+                    loggedIn = true;
+                } else System.out.println("Wrong username or password, please try again.");
+            } else System.out.println("Wrong username or password, please try again.");
+        } while (!loggedIn);
+        return true;
+    }
+
+    public User findItInList(String userName) {
+        for (User user : userList) {
+            if (user.getUserName().equals(userName)){
+                return user;
+            }
+        }
+        return null;
     }
 
 }
