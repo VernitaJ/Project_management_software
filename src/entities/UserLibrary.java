@@ -1,6 +1,5 @@
 package entities;
 
-import controller.Controller;
 import tools.Input;
 
 import java.util.ArrayList;
