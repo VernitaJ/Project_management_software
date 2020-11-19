@@ -54,10 +54,11 @@ public class UserLibrary extends DataLibrary {
             String userName = input.getStr("UserName: ");
             String password = input.getStr("Password: ");
 
-            User loggingIn = findItInList(userName);
-            if (loggingIn !=null){
-                if (loggingIn.getPassword().equals(password)){
-                    System.out.println("\n" + "Welcome back " + loggingIn.getUserName() + "!");
+            Data loggingIn = findItInList(userName);
+            User user = (User) loggingIn;
+            if (user !=null){
+                if (user.getPassword().equals(password)){
+                    System.out.println("\n" + "Welcome back " + user.getUserName() + "!");
                     loggedIn = true;
                 } else System.out.println("Wrong username or password, please try again.");
             } else System.out.println("Wrong username or password, please try again.");
@@ -65,13 +66,13 @@ public class UserLibrary extends DataLibrary {
         return true;
     }
 
-    public User findItInList(String userName) {
-        for (User user : userList) {
-            if (user.getUserName().equals(userName)){
+    public Data findItInList(String userName) {
+        for (Data user : super.list) {
+            if (user instanceof User){
+                if (((User) user).getUserName().equals(userName));
                 return user;
             }
         }
         return null;
     }
-
 }
