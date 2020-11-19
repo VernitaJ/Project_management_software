@@ -10,9 +10,11 @@ public class Maintainer implements Roles {
     public User assignProjectMember(){
         return null;
     }
+
     public boolean changeProjectStatus(){
         return false;
     }
+
     public void assignRole(){
     }
     public Task createTask() {
@@ -20,7 +22,8 @@ public class Maintainer implements Roles {
     }
 
 
-    public boolean adminAccess() {
+    public boolean setAdminAccess() {
+
         return true;
     }
 }
