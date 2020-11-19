@@ -1,6 +1,13 @@
 package entities;
 
-public class User {
+import components.Login;
+import controller.Controller;
+import tools.Input;
+
+import javax.naming.ldap.Control;
+import java.util.ArrayList;
+
+public class User extends Data {
 
     private String userName;
     private String password;
@@ -53,4 +60,5 @@ public class User {
     public void setCompanyName(String companyName) {
         this.companyName = companyName;
     }
+
 }
