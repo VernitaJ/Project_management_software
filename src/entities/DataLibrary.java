@@ -1,4 +1,5 @@
 package entities;
+import components.Login;
 import exceptions.IDAlreadyInUseException;
 import java.util.ArrayList;
 
@@ -6,6 +7,7 @@ import java.util.ArrayList;
 
 public class DataLibrary {
     private ArrayList<Data> list = new ArrayList<>();
+
 
     //Exception might not be necessary for UUIDs, just wanted to be ready for other types of IDs :P
     public void addToList(Data dataToAdd){
