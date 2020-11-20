@@ -8,15 +8,10 @@ public class ProjectLibrary extends DataLibrary{
         String name = input.getStr("Project name");
         String startDate = input.getStr("Project Start Date");
         String endDate = input.getStr("End Date");
-        addToList(new Project(name, name,startDate, endDate));
+        //addToList(new Project(name, name,startDate, endDate));
     }
     
-    public void importProject() {
-        // name
-        // owner
-        // startDate
-        // endDate
-    }
+
     
     // deleteProject()
     
