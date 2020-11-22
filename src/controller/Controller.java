@@ -12,9 +12,9 @@ public class Controller {
     private Menu menu;
     private Login login = Login.getInstance();
     private static Controller instance = null;
-
+    
     private Controller(){}
-
+    
     public static Controller getInstance()
     {
         if (instance == null)
@@ -26,12 +26,12 @@ public class Controller {
             return instance;
         }
     }
-
+    
     public void teardown()
     {
         instance = null;
     }
-
+    
     public void run()
     {
         // TODO Change to Login menu once implemented
@@ -43,13 +43,13 @@ public class Controller {
         teardown();
         System.exit(0);
     }
-
+    
     // method just to say that a menu item has not been implemented. (temporary)
     private void notImplemented()
     {
         System.out.println(Input.RED + "This Feature Has Not been Implemented" + Input.RESET);
     }
-
+    
     private void loginMenu()
     {
         String[] options =
@@ -70,7 +70,7 @@ public class Controller {
             }
         } while (true);
     }
-
+    
     private void mainMenu()
     {
         // options will change but this is just so you can move around the system.
@@ -100,7 +100,7 @@ public class Controller {
             }
         } while (true);
     }
-
+    
     private void adminMenu()
     {
         String[] options =
@@ -125,7 +125,7 @@ public class Controller {
             }
         } while (true);
     }
-
+    
     private void userMenu()
     {
         String[] options =
@@ -150,7 +150,7 @@ public class Controller {
             }
         } while (true);
     }
-
+    
     private void projectMenu()
     {
         String[] options =
@@ -175,7 +175,7 @@ public class Controller {
             }
         } while (true);
     }
-
+    
     private void activityMenu()
     {
         String[] options =
@@ -200,7 +200,7 @@ public class Controller {
             }
         } while (true);
     }
-
+    
     private void teamResourceMenu()
     {
         String[] options =
@@ -249,16 +249,16 @@ public class Controller {
             }
         } while (true);
     }
-
+    
     private ArrayList<User> userList = new ArrayList<>();
-
+    
     public void login() {
         System.out.println("Heyyy. Welcome to the log in page");
         boolean loggedIn = false;
         do {
             String userName = input.getStr("UserName: ");
             String password = input.getStr("Password: ");
-
+            
             User loggingIn = userProfile(userName);
             if (loggingIn !=null){
                 if (loggingIn.getPassword().equals(password)){
@@ -269,7 +269,7 @@ public class Controller {
             } else System.out.println("Wrong username or password, please try again.");
         } while (!loggedIn);
     }
-
+    
     public User userProfile(String name) {
         for (User user : userList) {
             if (user.getUserName().equals(name)){
