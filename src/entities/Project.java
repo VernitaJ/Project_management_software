@@ -81,8 +81,10 @@ public class Project extends Data{
         setStatus(newStatus);
     }
     */
-    
+
+/*
     public void addTask(User currentUser) {
         this.taskList.createTask(currentUser);
     }
+*/
 }
