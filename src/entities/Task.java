@@ -7,7 +7,7 @@ public class Task extends Data{
     private String status; //NotStarted/Ongoing/Completed?
     private String name;
     private String description;
-   // private UserLibrary assignees;
+   // private Team assignees;
     
     public Task(User createdBy, String name, String description){
         this.createdBy = createdBy;
@@ -29,7 +29,7 @@ public class Task extends Data{
     }
     
 /*
-    public DataLibrary getAssignees() {
+    public Team getAssignees() {
         return assignees;
     }
 */
