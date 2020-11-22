@@ -4,11 +4,10 @@ import tools.Input;
 
 public class Task extends Data{
     private User createdBy;
-    // User assignedTo; //we can create a new class extends DataLibrary
     private String status; //NotStarted/Ongoing/Completed?
     private String name;
     private String description;
-    private User assignees;
+   // private UserLibrary assignees; // Should this be UserLibrary instead?
     
     public Task(User createdBy, String name, String description){
         this.createdBy = createdBy;
@@ -29,9 +28,11 @@ public class Task extends Data{
         return status;
     }
     
-    public User getAssignees() {
+/*
+    public DataLibrary getAssignees() {
         return assignees;
     }
+*/
     
     public User getCreatedBy() {
         return createdBy;
@@ -49,8 +50,12 @@ public class Task extends Data{
         this.status = status;
     }
     
-    private void setAssignees(User assignees) {
-        this.assignees = assignees;
+    private void addAssignee() {
+    
+    }
+    
+    private void removeAssignee() {
+    
     }
     
     public void updateName() {
@@ -71,24 +76,7 @@ public class Task extends Data{
     
     public void updateAssignees() {
         // if(role == ?)
-        // Find by id etc.
+        // addAssignee() OR removeAssignee()
     }
-    
-    //public assign(){}
-    
-    //public changeStatus(){}
-    
-    //public changeTitle(){}
-    
-    //public changeDescription(){}
-    
-    //getters
-    //setter
-    
-    
-    
-    
-    
-    
     
 }
