@@ -7,7 +7,7 @@ public class Task extends Data{
     private String status; //NotStarted/Ongoing/Completed?
     private String name;
     private String description;
-   // private UserLibrary assignees; // Should this be UserLibrary instead?
+   // private UserLibrary assignees;
     
     public Task(User createdBy, String name, String description){
         this.createdBy = createdBy;
