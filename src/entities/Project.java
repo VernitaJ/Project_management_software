@@ -39,6 +39,10 @@ public class Project extends Data{
         this.description = description;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getOwner() {
         return owner;
     }
@@ -69,7 +73,7 @@ public class Project extends Data{
     }
 
 
-    //access level check needs to be added
+    //user & access level check needs to be added
     public void updateStatus(){
         Input input = Input.getInstance();
         String newStatus = input.getStr("Enter the status: ");
@@ -82,21 +86,16 @@ public class Project extends Data{
     //access level check needs to be added
     public void updateName(){
         Input input = Input.getInstance();
-        String newStatus = input.getStr("Enter the description: ");
-        setStatus(newStatus);
+        String newDesc = input.getStr("Enter the description: ");
+        setName(newDesc);
     }
 
     //access level check needs to be added
     public void updateDescription(){
         Input input = Input.getInstance();
-        String newStatus = input.getStr("Enter the description: ");
-        setStatus(newStatus);
+        String newName = input.getStr("Enter the name: ");
+        setDescription(newName);
     }
     */
 
-/*
-    public void addTask(User currentUser) {
-        this.taskList.createTask(currentUser);
-    }
-*/
 }

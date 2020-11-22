@@ -5,7 +5,7 @@ import tools.Input;
 import java.time.LocalDate;
 
 public class ProjectLibrary extends DataLibrary{
-    
+    //user control is missing
     public void createProject() {
         Input input = Input.getInstance();
         String name = input.getStr("Project name: ");
@@ -14,9 +14,11 @@ public class ProjectLibrary extends DataLibrary{
         LocalDate endDate = input.getDate("Project end date (YYYY-MM-DD): ");
         addToList(new Project(name, name, description, startDate, endDate));
     }
-    
 
-    
-    // deleteProject()
+
+    //access level and ownership check is missing
+    public boolean deleteProject(String idToDelete){
+        return removeItFromList(idToDelete);
+    }
     
 }
