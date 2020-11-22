@@ -59,19 +59,23 @@ public class Task extends Data{
     }
     
     public void updateName() {
-        Input input = Input.getInstance();
         // if(role == ?)
+        Input input = Input.getInstance();
         String newStatus = input.getStr("Enter the name: ");
     }
     
     public void updateDescription() {
-        Input input = Input.getInstance();
         // if(role == ?)
+        Input input = Input.getInstance();
         String newStatus = input.getStr("Enter the description: ");
     }
     
     public void updateStatus() {
-        // Waiting to see if status is an object etc..
+        // Waiting to see if status is an object for tasks etc..
+        // if(role == ?)
+        Input input = Input.getInstance();
+        String newStatus = input.getStr("Enter the description: ");
+        setStatus(newStatus);
     }
     
     public void updateAssignees() {
