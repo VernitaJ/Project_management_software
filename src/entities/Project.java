@@ -20,10 +20,11 @@ public class Project extends Data{
     private TaskLibrary taskList;
 
     public Project(String name, String owner, String description) {
-        this.name=name;
-        this.owner=owner;
-        this.description=description;
+        this.name = name;
+        this.owner = owner;
+        this.description = description;
         this.createdDate = LocalDate.now();
+        this.taskList = new TaskLibrary();
     }
 
     private void setStatus(String status) {
