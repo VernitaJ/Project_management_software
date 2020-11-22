@@ -70,7 +70,7 @@ public class Task extends Data{
         String newStatus = input.getStr("Enter the description: ");
     }
     
-    public void setStatus() {
+    public void updateStatus() {
         // Waiting to see if status is an object etc..
     }
     
