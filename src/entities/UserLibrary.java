@@ -42,12 +42,16 @@ public class UserLibrary extends DataLibrary {
 
     private String passwordValidate() {
         String password = this.input.getStr("Enter desired password:");
-
-        if(!password.equals(this.input.getStr("Verify password:"))) {
+        if (password.isBlank()) {
             password = null;
-            System.out.println("Passwords don't match. Please try again.");
+            System.out.println("Your password can't be empty. Please try again.");
+        } else if (password.length() < 5){
+            password = null;
+            System.out.println("Your password needs to be more than 4 characters long. Please try again.");
+        } else if (!password.equals(this.input.getStr("Verify password:"))) {
+            password = null;
+            System.out.println("Passwords doesn't match. Please try again.");
         }
-
         return(password);
     }
 
