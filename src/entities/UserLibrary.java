@@ -6,7 +6,6 @@ import java.util.ArrayList;
 
 public class UserLibrary extends DataLibrary {
     Input input = Input.getInstance();
-    private ArrayList<User> userList = new ArrayList<>();
     private static final UserLibrary instance = null;
 
     public static UserLibrary getInstance() {
@@ -24,7 +23,12 @@ public class UserLibrary extends DataLibrary {
         String occupation = null;
         String companyName = null;
         do {
-            userName = this.input.getStr("Enter desired username:");
+            do{
+                String user = this.input.getStr("Enter desired username:");
+                if (findUserInList(user) == null){
+                    userName = user;
+                } else System.out.println("That username already exists. Try again. \n");
+            } while (userName == null);
             do{
                 password = passwordValidate();
             } while (password == null);
@@ -53,7 +57,7 @@ public class UserLibrary extends DataLibrary {
         do {
             String userName = input.getStr("UserName: ");
             String password = input.getStr("Password: ");
-            Data loggingIn = findItInList(userName);
+            Data loggingIn = findUserInList(userName);
             if (loggingIn !=null){
                 User user = (User) loggingIn;
                 if (user.getPassword().equals(password)){
@@ -65,7 +69,7 @@ public class UserLibrary extends DataLibrary {
         return null;
     }
 
-    public Data findItInList(String userName) {
+    public Data findUserInList(String userName) {
         for (Data user : list) {
                 if (((User) user).getUserName().equals(userName)){
                     return user;
