@@ -30,7 +30,7 @@ public class Project extends Data{
         this.startDate = startDate;
         this.endDate = endDate;
     }
-
+    
     private void setStatus(String status) {
         this.status = status;
     }
