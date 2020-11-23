@@ -1,19 +1,15 @@
 package controller;
-
-import components.Login;
 import entities.UserLibrary;
 import tools.Input;
 import tools.Menu;
 import entities.User;
 
-import java.util.ArrayList;
-
 public class Controller {
     private Input input = Input.getInstance();
     private Menu menu;
-    private Login login = Login.getInstance();
     private UserLibrary userLibrary = UserLibrary.getInstance();
     private static Controller instance = null;
+    private User currentUser = null;
 
     private Controller(){}
 
@@ -36,7 +32,6 @@ public class Controller {
 
     public void run()
     {
-        // TODO Change to Login menu once implemented
         loginMenu();
     }
     private void exit()
@@ -66,7 +61,7 @@ public class Controller {
             String choice = menu.printMenu();
             switch (choice)
             {
-                case "1" -> userLibrary.createUser();
+                case "1" -> createUser();
                 case "2" -> login();
                 case "3" -> exit();
             }
@@ -84,6 +79,7 @@ public class Controller {
                         "Activity Menu",
                         "Team Resource Menu",
                         "Statistics Menu",
+                        "Logout",
                         "Exit"
                 };
         menu = new Menu("Main Menu", options);
@@ -98,7 +94,8 @@ public class Controller {
                 case "4" -> activityMenu();
                 case "5" -> teamResourceMenu();
                 case "6" -> statisticsMenu();
-                case "7" -> exit();
+                case "7" -> logout();
+                case "8" -> exit();
             }
         } while (true);
     }
@@ -252,33 +249,24 @@ public class Controller {
         } while (true);
     }
 
-    private ArrayList<User> userList = new ArrayList<>();
-
-    public void login() {
-        System.out.println("Heyyy. Welcome to the log in page");
-        boolean loggedIn = false;
-        do {
-            String userName = input.getStr("UserName: ");
-            String password = input.getStr("Password: ");
-
-            User loggingIn = userProfile(userName);
-            if (loggingIn !=null){
-                if (loggingIn.getPassword().equals(password)){
-                    System.out.println("\n" + "Welcome back " + loggingIn.getUserName() + "!");
-                    loggedIn = true;
-                    mainMenu();
-                } else System.out.println("Wrong username or password, please try again.");
-            } else System.out.println("Wrong username or password, please try again.");
-        } while (!loggedIn);
-    }
-
-    public User userProfile(String name) {
-        for (User user : userList) {
-            if (user.getUserName().equals(name)){
-                return user;
-            }
+    private void login()
+    {
+        currentUser = userLibrary.login();
+        if (currentUser != null)
+        {
+            mainMenu();
         }
-        return null;
     }
+    private void logout()
+    {
+        currentUser = null;
+        mainMenu();
+    }
+
+    private void createUser()
+    {
+        userLibrary.createUser();
+    }
+
 }
 
