@@ -55,7 +55,7 @@ public class UserLibrary extends DataLibrary {
 
     public User login() {
         System.out.println("Welcome to Simple Direction. " + "\n" + "Please Log in to continue.");
-        boolean loggedIn = false;
+        String userLogin = "";
         do {
             String userName = input.getStr("UserName: ");
             String password = input.getStr("Password: ");
@@ -65,9 +65,9 @@ public class UserLibrary extends DataLibrary {
                 if (user.getPassword().equals(password)){
                     System.out.println("\n" + "Welcome back " + user.getUserName() + "!");
                     return user;
-                } else System.out.println("Wrong username or password, please try again.");
-            } else System.out.println("Wrong username or password, please try again.");
-        } while (!loggedIn);
+                } else userLogin = input.getStr("Wrong username or password, try again? Y/N: ");
+            } else userLogin = input.getStr("Wrong username or password, try again? Y/N: ");
+        } while (!userLogin.equalsIgnoreCase("n"));
         return null;
     }
 
