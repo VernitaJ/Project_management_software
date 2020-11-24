@@ -1,28 +1,31 @@
 package controller;
+
+import components.Login;
+import entities.TeamLibrary;
 import entities.UserLibrary;
 import tools.Input;
 import tools.Menu;
 import entities.User;
 
+import java.util.ArrayList;
+
 public class Controller {
     private Input input = Input.getInstance();
     private Menu menu;
+    private Login login = Login.getInstance();
     private UserLibrary userLibrary = UserLibrary.getInstance();
+    private TeamLibrary teamLibrary = TeamLibrary.getInstance();
     private static Controller instance = null;
-    private User currentUser = null;
+    private User loggedInUser = null;
 
     private Controller(){}
 
     public static Controller getInstance()
     {
-        if (instance == null)
-        {
-            return new Controller();
+        if (instance == null) {
+            instance = new Controller();
         }
-        else
-        {
-            return instance;
-        }
+        return instance;
     }
 
     public void teardown()
@@ -32,6 +35,7 @@ public class Controller {
 
     public void run()
     {
+        // TODO Change to Login menu once implemented
         loginMenu();
     }
     private void exit()
@@ -61,7 +65,7 @@ public class Controller {
             String choice = menu.printMenu();
             switch (choice)
             {
-                case "1" -> createUser();
+                case "1" -> userLibrary.createUser();
                 case "2" -> login();
                 case "3" -> exit();
             }
@@ -79,7 +83,6 @@ public class Controller {
                         "Activity Menu",
                         "Team Resource Menu",
                         "Statistics Menu",
-                        "Logout",
                         "Exit"
                 };
         menu = new Menu("Main Menu", options);
@@ -94,8 +97,7 @@ public class Controller {
                 case "4" -> activityMenu();
                 case "5" -> teamResourceMenu();
                 case "6" -> statisticsMenu();
-                case "7" -> loginMenu();
-                case "8" -> exit();
+                case "7" -> exit();
             }
         } while (true);
     }
@@ -204,7 +206,7 @@ public class Controller {
     {
         String[] options =
                 {
-                        "Add",
+                        "Create Team",
                         "Remove",
                         "Change",
                         "Main Menu",
@@ -216,7 +218,7 @@ public class Controller {
             String choice = menu.printMenu();
             switch (choice)
             {
-                case "1" -> notImplemented();
+                case "1" -> teamLibrary.createTeam();
                 case "2" -> notImplemented();
                 case "3" -> notImplemented();
                 case "4" -> mainMenu();
@@ -249,24 +251,36 @@ public class Controller {
         } while (true);
     }
 
-    private void login()
-    {
-        currentUser = userLibrary.login();
-        if (currentUser != null)
-        {
-            mainMenu();
+    public void login() {
+        System.out.println("Heyyy. Welcome to the log in page");
+        boolean loggedIn = false;
+        do {
+            String userName = input.getStr("UserName: ");
+            String password = input.getStr("Password: ");
+
+            User loggingIn = userProfile(userName);
+            if (loggingIn !=null){
+                if (loggingIn.getPassword().equals(password)){
+                    System.out.println("\n" + "Welcome back " + loggingIn.getUserName() + "!");
+                    loggedIn = true;
+                    this.loggedInUser = loggingIn;
+                    mainMenu();
+                } else System.out.println("Wrong username or password, please try again.");
+            } else System.out.println("Wrong username or password, please try again.");
+        } while (!loggedIn);
+    }
+
+    public User userProfile(String name) {
+        for (User user : userLibrary.getAllUsers()) {
+            if (user.getUserName().equals(name)){
+                return user;
+            }
         }
-    }
-    private void logout()
-    {
-        currentUser = null;
-        mainMenu();
+        return null;
     }
 
-    private void createUser()
-    {
-        userLibrary.createUser();
+    public User getLoggedInUser() {
+        return this.loggedInUser;
     }
-
 }
 
