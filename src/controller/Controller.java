@@ -94,7 +94,7 @@ public class Controller {
                 case "4" -> activityMenu();
                 case "5" -> teamResourceMenu();
                 case "6" -> statisticsMenu();
-                case "7" -> logout();
+                case "7" -> loginMenu();
                 case "8" -> exit();
             }
         } while (true);
