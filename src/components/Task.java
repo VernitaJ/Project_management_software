@@ -1,2 +1,3 @@
-package components;public class Task {
+package components;
+public class Task {
 }

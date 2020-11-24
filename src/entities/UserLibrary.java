@@ -2,11 +2,8 @@ package entities;
 
 import tools.Input;
 
-import java.util.ArrayList;
-
 public class UserLibrary extends DataLibrary {
     Input input = Input.getInstance();
-    private ArrayList<User> userList = new ArrayList<>();
     private static final UserLibrary instance = null;
 
     public static UserLibrary getInstance() {
@@ -24,7 +21,12 @@ public class UserLibrary extends DataLibrary {
         String occupation = null;
         String companyName = null;
         do {
-            userName = this.input.getStr("Enter desired username:");
+            do{
+                String user = this.input.getStr("Enter desired username:");
+                if (findUserInList(user) == null){
+                    userName = user;
+                } else System.out.println("That username already exists. Try again. \n");
+            } while (userName == null);
             do{
                 password = passwordValidate();
             } while (password == null);
@@ -38,40 +40,42 @@ public class UserLibrary extends DataLibrary {
 
     private String passwordValidate() {
         String password = this.input.getStr("Enter desired password:");
-
-        if(!password.equals(this.input.getStr("Verify password:"))) {
+        if (password.isBlank()) {
             password = null;
-            System.out.println("Incorrect password, please try again.");
+            System.out.println("Your password can't be empty. Please try again.");
+        } else if (password.length() < 5){
+            password = null;
+            System.out.println("Your password needs to be more than 4 characters long. Please try again.");
+        } else if (!password.equals(this.input.getStr("Verify password:"))) {
+            password = null;
+            System.out.println("Passwords doesn't match. Please try again.");
         }
-
         return(password);
     }
 
-    public boolean login() {
+    public User login() {
         System.out.println("Welcome to Simple Direction. " + "\n" + "Please Log in to continue.");
         boolean loggedIn = false;
         do {
             String userName = input.getStr("UserName: ");
             String password = input.getStr("Password: ");
-
-            Data loggingIn = findItInList(userName);
-            User user = (User) loggingIn;
-            if (user !=null){
+            Data loggingIn = findUserInList(userName);
+            if (loggingIn !=null){
+                User user = (User) loggingIn;
                 if (user.getPassword().equals(password)){
                     System.out.println("\n" + "Welcome back " + user.getUserName() + "!");
-                    loggedIn = true;
+                    return user;
                 } else System.out.println("Wrong username or password, please try again.");
             } else System.out.println("Wrong username or password, please try again.");
         } while (!loggedIn);
-        return true;
+        return null;
     }
 
-    public Data findItInList(String userName) {
-        for (Data user : super.list) {
-            if (user instanceof User){
-                if (((User) user).getUserName().equals(userName));
-                return user;
-            }
+    public Data findUserInList(String userName) {
+        for (Data user : list) {
+                if (((User) user).getUserName().equals(userName)){
+                    return user;
+                }
         }
         return null;
     }

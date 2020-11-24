@@ -1,18 +1,15 @@
 package controller;
-
-import components.Login;
 import entities.UserLibrary;
 import tools.Input;
 import tools.Menu;
 import entities.User;
-
-import java.util.ArrayList;
 
 public class Controller {
     private Input input = Input.getInstance();
     private Menu menu;
     private UserLibrary userLibrary = UserLibrary.getInstance();
     private static Controller instance = null;
+    private User currentUser = null;
 
     private Controller(){}
 
@@ -35,7 +32,6 @@ public class Controller {
 
     public void run()
     {
-        // TODO Change to Login menu once implemented
         loginMenu();
     }
     private void exit()
@@ -65,8 +61,8 @@ public class Controller {
             String choice = menu.printMenu();
             switch (choice)
             {
-                case "1" -> userLibrary.createUser();
-                case "2" -> userLibrary.login();
+                case "1" -> createUser();
+                case "2" -> login();
                 case "3" -> exit();
             }
         } while (true);
@@ -83,6 +79,7 @@ public class Controller {
                         "Activity Menu",
                         "Team Resource Menu",
                         "Statistics Menu",
+                        "Logout",
                         "Exit"
                 };
         menu = new Menu("Main Menu", options);
@@ -97,7 +94,8 @@ public class Controller {
                 case "4" -> activityMenu();
                 case "5" -> teamResourceMenu();
                 case "6" -> statisticsMenu();
-                case "7" -> exit();
+                case "7" -> logout();
+                case "8" -> exit();
             }
         } while (true);
     }
@@ -249,6 +247,25 @@ public class Controller {
                 case "5" -> exit();
             }
         } while (true);
+    }
+
+    private void login()
+    {
+        currentUser = userLibrary.login();
+        if (currentUser != null)
+        {
+            mainMenu();
+        }
+    }
+    private void logout()
+    {
+        currentUser = null;
+        mainMenu();
+    }
+
+    private void createUser()
+    {
+        userLibrary.createUser();
     }
 
 }
