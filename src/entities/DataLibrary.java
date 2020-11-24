@@ -6,7 +6,8 @@ import java.util.ArrayList;
 // If necessary, more methods can be added in the future
 
 public class DataLibrary {
-    protected ArrayList<Data> list = new ArrayList<>();
+    private ArrayList<Data> list = new ArrayList<>();
+
 
     //Exception might not be necessary for UUIDs, just wanted to be ready for other types of IDs :P
     public void addToList(Data dataToAdd){
@@ -38,7 +39,9 @@ public class DataLibrary {
 
     //need to test it
     public boolean removeItFromList(String idToRemove) {
-        return list.removeIf(data -> (data.checkID(idToRemove)));
+        boolean res = list.removeIf(data -> (data.checkID(idToRemove)));
+        if (res) System.gc();
+        return res;
     }
 
     //if all classes that extend Data can have a toString, this
@@ -54,5 +57,14 @@ public class DataLibrary {
             return listOfAll.toString();
         }
     }
+
+    ArrayList<Data> getDataList() {
+        return list;
+    }
+
+
+
+
+
 }
 

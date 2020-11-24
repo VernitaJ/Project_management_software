@@ -33,4 +33,5 @@ public class Menu
         printOptions();
         return input.getStr(Input.PURPLE + ">> Option: " + Input.RESET);
     }
+
 }

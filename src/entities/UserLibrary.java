@@ -2,16 +2,19 @@ package entities;
 
 import tools.Input;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class UserLibrary extends DataLibrary {
     Input input = Input.getInstance();
-    private static final UserLibrary instance = null;
+
+    private static UserLibrary instance = null;
 
     public static UserLibrary getInstance() {
         if (instance == null) {
-            return new UserLibrary();
-        } else {
-            return instance;
+            instance = new UserLibrary();
         }
+        return instance;
     }
 
     public void createUser() {
@@ -21,12 +24,7 @@ public class UserLibrary extends DataLibrary {
         String occupation = null;
         String companyName = null;
         do {
-            do{
-                String user = this.input.getStr("Enter desired username:");
-                if (findUserInList(user) == null){
-                    userName = user;
-                } else System.out.println("That username already exists. Try again. \n");
-            } while (userName == null);
+            userName = this.input.getStr("Enter desired username:");
             do{
                 password = passwordValidate();
             } while (password == null);
@@ -38,45 +36,22 @@ public class UserLibrary extends DataLibrary {
         System.out.println("Successfully created user.");
     }
 
+    public List<User> getAllUsers() {
+        List<Data> dataList = getDataList();
+        List<User> users = new ArrayList<>();
+        for(Data data: dataList) { users.add((User) data); }
+        return users;
+    }
+
     private String passwordValidate() {
         String password = this.input.getStr("Enter desired password:");
-        if (password.isBlank()) {
+
+        if(!password.equals(this.input.getStr("Verify password:"))) {
             password = null;
-            System.out.println("Your password can't be empty. Please try again.");
-        } else if (password.length() < 5){
-            password = null;
-            System.out.println("Your password needs to be more than 4 characters long. Please try again.");
-        } else if (!password.equals(this.input.getStr("Verify password:"))) {
-            password = null;
-            System.out.println("Passwords doesn't match. Please try again.");
+            System.out.println("Incorrect password, please try again.");
         }
+
         return(password);
     }
 
-    public User login() {
-        System.out.println("Welcome to Simple Direction. " + "\n" + "Please Log in to continue.");
-        boolean loggedIn = false;
-        do {
-            String userName = input.getStr("UserName: ");
-            String password = input.getStr("Password: ");
-            Data loggingIn = findUserInList(userName);
-            if (loggingIn !=null){
-                User user = (User) loggingIn;
-                if (user.getPassword().equals(password)){
-                    System.out.println("\n" + "Welcome back " + user.getUserName() + "!");
-                    return user;
-                } else System.out.println("Wrong username or password, please try again.");
-            } else System.out.println("Wrong username or password, please try again.");
-        } while (!loggedIn);
-        return null;
-    }
-
-    public Data findUserInList(String userName) {
-        for (Data user : list) {
-                if (((User) user).getUserName().equals(userName)){
-                    return user;
-                }
-        }
-        return null;
-    }
 }
