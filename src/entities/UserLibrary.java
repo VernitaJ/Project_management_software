@@ -2,8 +2,6 @@ package entities;
 
 import tools.Input;
 
-import java.util.ArrayList;
-
 public class UserLibrary extends DataLibrary {
     Input input = Input.getInstance();
     private static final UserLibrary instance = null;
