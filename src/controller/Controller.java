@@ -37,7 +37,6 @@ public class Controller {
 
     public void run()
     {
-        // TODO Change to Login menu once implemented
         loginMenu();
     }
     private void exit()
@@ -67,7 +66,7 @@ public class Controller {
             String choice = menu.printMenu();
             switch (choice)
             {
-                case "1" -> userLibrary.createUser();
+                case "1" -> createUser();
                 case "2" -> login();
                 case "3" -> exit();
             }
@@ -146,7 +145,7 @@ public class Controller {
             switch (choice)
             {
                 case "1" -> notImplemented();
-                case "2" -> projectLibrary.createProject(currentUser, teamLibrary);
+                case "2" -> createProject();
                 case "3" -> notImplemented();
                 case "4" -> mainMenu();
                 case "5" -> exit();
@@ -176,7 +175,7 @@ public class Controller {
                 case "3" -> notImplemented();
                 case "4" -> mainMenu();
                 case "5" -> exit();
-                case "6" -> teamLibrary.createTeam(currentUser);
+                case "6" -> createTeam();
             }
         } while (true);
     }
@@ -222,7 +221,7 @@ public class Controller {
             String choice = menu.printMenu();
             switch (choice)
             {
-                case "1" -> teamLibrary.createTeam(currentUser);
+                case "1" -> createTeam();
                 case "2" -> notImplemented();
                 case "3" -> notImplemented();
                 case "4" -> mainMenu();
@@ -283,8 +282,18 @@ public class Controller {
         return null;
     }
 
-    public User getCurrentUser() {
-        return this.currentUser;
+    private void createUser() {
+        userLibrary.createUser();
+    }
+    private void createProject() {
+        projectLibrary.createProject(currentUser, teamLibrary);
+    }
+
+//    public User getCurrentUser() {
+//        return this.currentUser;
+//    }
+    private void createTeam() {
+        teamLibrary.createTeam(currentUser);
     }
 }
 
