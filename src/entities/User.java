@@ -15,8 +15,6 @@ public class User extends Data {
     private String occupation;
     private String companyName;
 
-
-
     public User(String userName, String password, String eMail, String occupation, String companyName) {
         this.userName = userName;
         this.password = password;
