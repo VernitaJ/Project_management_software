@@ -1,9 +1,13 @@
 package entities;
 //currently just for testing Data, not the final class
 //please dont edit it yet
+import tools.*;
+import budget.*;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+
 public class Project extends Data{
     private String name;
-
     //needs to be integrated with team structure
     private String description;
     private String status; // Active/Inactive
@@ -17,7 +21,7 @@ public class Project extends Data{
     public Project(String name, User owner, String description, LocalDate startDate, LocalDate endDate) {
         this.name = name;
         //teams
-        //add owner to the team
+
         this.description = description;
         this.createdDate = LocalDate.now();
         this.taskList = new TaskLibrary();
@@ -69,6 +73,7 @@ public class Project extends Data{
         String newStatus = input.getStr("Enter the status: ");
         setStatus(newStatus);
     }
+
 
 
     //not mentioned in the user stories soooo idk

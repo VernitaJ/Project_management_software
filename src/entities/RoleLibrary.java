@@ -4,6 +4,7 @@ package entities;
 import roles.*;
 
 import java.util.HashMap;
+import controller.*;
 
 public class RoleLibrary {
 private User user;
@@ -19,8 +20,12 @@ public Roles checkRole(String userName){
 }
 
 
-public void addRole(){
-    for ()
+public void addRole(User currentUser){
+   // for ()
+   // if (currentUser.equals(){
+
+    }
+    //for ()
 
    /*if (user.getUserName().equalsIgnoreCase(userRoles.get("Owner", Owner))) {
 
@@ -29,10 +34,10 @@ public void addRole(){
 
 
 
-        userName and owner add
-    } else { userName and createRole(Developer);
+    //    userName and owner add
+    //} else { userName and createRole(Developer);
 
-    }
+   // }
 
 
     public Roles upgradeRole(String userName){
@@ -46,8 +51,8 @@ public void addRole(){
 
     public Roles getRoles(){
     return this.roles;
-    user.setUserRoles(new Developer());
+   // user.setUserRoles(new Developer());
 
-    sammaanvändare.assignRole(new Maintainer());
+    //sammaanvändare.assignRole(new Maintainer());
     }
 }
