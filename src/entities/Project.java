@@ -1,7 +1,5 @@
 package entities;
 
-// import date time for calculating Duration
-
 import tools.Input;
 
 import java.time.LocalDate;
@@ -11,7 +9,6 @@ public class Project extends Data{
     private String name;
 
     //needs to be integrated with team structure
-    private String owner; // Change to User data type
     private String description;
     private String status; // Active/Inactive
     private LocalDate createdDate;
@@ -21,9 +18,10 @@ public class Project extends Data{
     // private Team team;
     private TaskLibrary taskList;
 
-    public Project(String name, String owner, String description, LocalDate startDate, LocalDate endDate) {
+    public Project(String name, User owner, String description, LocalDate startDate, LocalDate endDate) {
         this.name = name;
-        this.owner = owner;
+        //teams
+        //add owner to the team
         this.description = description;
         this.createdDate = LocalDate.now();
         this.taskList = new TaskLibrary();
@@ -39,8 +37,8 @@ public class Project extends Data{
         this.description = description;
     }
 
-    public String getOwner() {
-        return owner;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getStatus() {
@@ -69,7 +67,7 @@ public class Project extends Data{
     }
 
 
-    //access level check needs to be added
+    //user & access level check needs to be added
     public void updateStatus(){
         Input input = Input.getInstance();
         String newStatus = input.getStr("Enter the status: ");
@@ -82,21 +80,16 @@ public class Project extends Data{
     //access level check needs to be added
     public void updateName(){
         Input input = Input.getInstance();
-        String newStatus = input.getStr("Enter the description: ");
-        setStatus(newStatus);
+        String newDesc = input.getStr("Enter the description: ");
+        setName(newDesc);
     }
 
     //access level check needs to be added
     public void updateDescription(){
         Input input = Input.getInstance();
-        String newStatus = input.getStr("Enter the description: ");
-        setStatus(newStatus);
+        String newName = input.getStr("Enter the name: ");
+        setDescription(newName);
     }
     */
 
-/*
-    public void addTask(User currentUser) {
-        this.taskList.createTask(currentUser);
-    }
-*/
 }
