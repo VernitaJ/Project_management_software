@@ -1,13 +1,14 @@
 package entities;
-
-import tools.Input;
-
+//currently just for testing Data, not the final class
+//please dont edit it yet
+import tools.*;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.WeakHashMap;
 
 public class Project extends Data{
+    private TeamLibrary team;
     private String name;
-
     //needs to be integrated with team structure
     private String description;
     private String status; // Active/Inactive
@@ -17,18 +18,17 @@ public class Project extends Data{
     //waiting for other userStories
     // private Team team;
     private TaskLibrary taskList;
-
-    public Project(String name, User owner, String description, LocalDate startDate, LocalDate endDate) {
+   // LocalDate startDate, LocalDate endDate,
+    public Project(String name, User owner, String description, TeamLibrary team) {
+        this.team = new TeamLibrary();
         this.name = name;
-        //teams
-        //add owner to the team
         this.description = description;
         this.createdDate = LocalDate.now();
         this.taskList = new TaskLibrary();
-        this.startDate = startDate;
-        this.endDate = endDate;
+        //this.startDate = startDate;
+        //this.endDate = endDate;
     }
-    
+
     private void setStatus(String status) {
         this.status = status;
     }
@@ -52,15 +52,15 @@ public class Project extends Data{
     public LocalDate getCreatedDate() {
         return createdDate;
     }
-    
+
     public LocalDate getStartDate() {
         return startDate;
     }
-    
+
     public LocalDate getEndDate() {
         return endDate;
     }
-    
+
     public long duration() {
         long daysBetween = ChronoUnit.DAYS.between(getStartDate(),getEndDate());
         return daysBetween;
@@ -73,6 +73,7 @@ public class Project extends Data{
         String newStatus = input.getStr("Enter the status: ");
         setStatus(newStatus);
     }
+
 
 
     //not mentioned in the user stories soooo idk

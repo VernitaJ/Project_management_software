@@ -1,19 +1,17 @@
 package entities;
 
-import components.Login;
-import controller.Controller;
-import tools.Input;
-
-import javax.naming.ldap.Control;
-import java.util.ArrayList;
+import access_roles.Roles;
 
 public class User extends Data {
 
+    private Roles role;
     private String userName;
     private String password;
     private String eMail;
     private String occupation;
     private String companyName;
+
+
 
     public User(String userName, String password, String eMail, String occupation, String companyName) {
         this.userName = userName;
@@ -59,4 +57,11 @@ public class User extends Data {
         this.companyName = companyName;
     }
 
+    public Roles getRole() {
+        return role;
+    }
+
+    public void setRole(Roles role) {
+        this.role = role;
+    }
 }
