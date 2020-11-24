@@ -1,5 +1,7 @@
 package tools;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -84,6 +86,25 @@ public class Input
             }
         }
         return userInput;
+    }
+    
+    public LocalDate getDate(String str)
+    {
+        String userInput = "";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("YYYY-MM-DD");
+        LocalDate date = LocalDate.now();
+        boolean complianceCheck = false;
+        while (!complianceCheck) {
+            try {
+                System.out.println(str);
+                userInput = scanner.nextLine();
+                date = LocalDate.parse(userInput, formatter);
+                complianceCheck = true;
+            } catch (InputMismatchException e) {
+                e.printStackTrace();
+            }
+        }
+        return date;
     }
 
     public void checkToContinue() {
