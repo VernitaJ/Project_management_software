@@ -1,4 +1,4 @@
-package Roles;
+package roles;
 
 import components.Task;
 import entities.User;
@@ -12,7 +12,7 @@ public class Maintainer implements Roles {
     }
 
     public boolean changeProjectStatus(){
-        return false;
+        return true;
     }
 
     public void assignRole(){
@@ -22,6 +22,18 @@ public class Maintainer implements Roles {
     }
 
 
+    public String roleType() {
+        return "Maintainer";
+    }
+
+    public boolean canCreateTask() {
+        return true;
+    }
+
+    public boolean canDelete(){
+        return false;
+    }
+    //maintainer shouldn't be able to delete, think about
     public boolean setAdminAccess() {
 
         return true;

@@ -1,6 +1,5 @@
-package Roles;
+package roles;
 
-import components.Task;
 import entities.User;
 
 public class Owner implements Roles
@@ -17,21 +16,28 @@ public class Owner implements Roles
     public void removeMember(){
 
     }
-    public boolean changeProjectStatus(){
-        return false;
+    public boolean canChangeProjectStatus(){
+        return true;
     }
 
     public void assignRole(){
-    }
-    public Task createTask() {
-        return null;
+
     }
 
-    public void deleteTask(){
+    public String roleType() {
+        return "Owner";
+    }
+
+    public boolean canCreateTask() {
+        return true;
+    }
+
+    public boolean canDelete(){
+        return true;
     }
 
     public boolean setAdminAccess() {
-         boolean access = true;
+
         return true;
     }
 }

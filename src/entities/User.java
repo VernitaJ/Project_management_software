@@ -6,14 +6,17 @@ import tools.Input;
 
 import javax.naming.ldap.Control;
 import java.util.ArrayList;
+import roles.*;
 
 public class User extends Data {
 
+    private Roles roles;
     private String userName;
     private String password;
     private String eMail;
     private String occupation;
     private String companyName;
+
 
 
 
@@ -23,6 +26,7 @@ public class User extends Data {
         this.eMail = eMail;
         this.occupation = occupation;
         this.companyName = companyName;
+
     }
 
     public String getUserName() {
