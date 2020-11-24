@@ -1,15 +1,19 @@
 package entities;
 
-import components.Login;
-import controller.Controller;
 import tools.Input;
-
+import access_roles.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.WeakHashMap;
 
 
 public class TeamLibrary extends DataLibrary{
     private static final TeamLibrary instance = null;
+    private Team team;
+    private RoleFactory roleFactory;
+    private UserLibrary userLibrary;
+    private WeakHashMap<String, User> memberList;
+
 
     public static TeamLibrary getInstance() {
         if (instance == null) {
@@ -20,21 +24,23 @@ public class TeamLibrary extends DataLibrary{
     }
 
 
-    public void createTeam(){
+    public void createTeam(User currentUser){
         Input input = Input.getInstance();
         String teamName = null;
-        User owner = Controller.getInstance().getLoggedInUser();
+        User owner = currentUser;
         User firstTeamMember = null;
         boolean escape = false;
         do {
             teamName = input.getStr("Enter desired team name:");
+
             // What if you want to escape/go back?
         } while (teamName == null);
 
-        if (escape == false) {
+        if (!escape) {
             try {
                 addToList(new Team(teamName, owner, selectUsers(owner)));
                 System.out.println("Successfully created team.");
+
             } catch(Exception e) {
 
             }
@@ -51,6 +57,7 @@ public class TeamLibrary extends DataLibrary{
         for (int i = 0; i < users.size(); i++) {
             if (!users.get(i).getID().equals(owner.getID())) {
                 System.out.println(i + "\t" + users.get(i).getUserName());
+
             }
         }
         return teamMembers;

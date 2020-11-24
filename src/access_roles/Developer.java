@@ -1,5 +1,4 @@
-package roles;
-import components.Task;
+package access_roles;
 
 public class Developer implements Roles {
 
@@ -14,7 +13,7 @@ public class Developer implements Roles {
         return true;
     }
 
-    public boolean setAdminAccess() {
+    public boolean adminAccess() {
         return false;
     }
 }

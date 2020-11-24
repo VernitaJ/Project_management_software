@@ -6,7 +6,7 @@ import java.util.ArrayList;
 // If necessary, more methods can be added in the future
 
 public class DataLibrary {
-    private ArrayList<Data> list = new ArrayList<>();
+    protected ArrayList<Data> list = new ArrayList<>();
 
 
     //Exception might not be necessary for UUIDs, just wanted to be ready for other types of IDs :P

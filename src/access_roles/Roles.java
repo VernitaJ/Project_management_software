@@ -1,8 +1,8 @@
-package roles;
+package access_roles;
 
 public interface Roles
 {
     String roleType();
     boolean canCreateTask();
-    boolean setAdminAccess();
+    boolean adminAccess();
 }

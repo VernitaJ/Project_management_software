@@ -1,31 +1,38 @@
 package entities;
 
+
+import access_roles.RoleFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.WeakHashMap;
-
+import tools.*;
 public class Team extends Data {
+
+    private UserLibrary userLibrary;
+    private Input input;
+    private RoleFactory roleFactory = new RoleFactory();
     private String teamName;
     private String ownerID;
+    private User owner;
     private WeakHashMap<String, User> memberList;
 
     public Team(String teamName, User owner) throws Exception {
         this(teamName, owner, new ArrayList<User>());
     }
-    public Team(String teamName, User owner, List<User> teamMembers) throws Exception {
+    public Team(String teamName, User currentUser, List<User> teamMembers) throws Exception {
         if (teamName == null || teamName.isBlank() || teamName.equals(""))
-            throw new Exception();
+            throw new Exception(" Try again dum dum ");
 
+        for(User member: teamMembers) {
+            this.memberList.put(member.getUserName(), member);
+        }
         this.teamName = teamName;
         // Add regular team members
         this.memberList = new WeakHashMap<>();
-
-        for(User member: teamMembers) {
-            this.memberList.put(member.getID(), member);
-        }
         // Add owner into member list
-        this.memberList.put(owner.getID(), owner);
-        this.ownerID = owner.getID();
+        this.owner.setRole(roleFactory.createOwner(currentUser));
+        this.memberList.put(getOwner().getUserName(), currentUser);
+       // this.ownerID = owner.getID();
     }
 
     public String getTeamName() {
@@ -40,27 +47,44 @@ public class Team extends Data {
         return this.memberList.get(ownerID);
     }
 
-    public void setOwner(User owner) {
+    /* public void setOwner(User owner) {
         this.memberList.remove(ownerID);
-        this.memberList.put(owner.getID(), owner);
+        this.memberList.put(getOwner().getUserName(), owner);
         this.ownerID = owner.getID();
     }
-
-    public User getTeamMember(String userID){
-        User member = this.memberList.get(userID);
-        return member;
+     */
+    public void addTeamDeveloper(User newDeveloper, User currentUser) {
+        if (currentUser.getRole().adminAccess()){
+            if (newDeveloper.equals(userLibrary.findUserInList(newDeveloper.getUserName()))) {
+                roleFactory.createDeveloper(newDeveloper);
+                this.memberList.put(newDeveloper.getUserName(), newDeveloper);
+        }
+        } else {
+            System.out.println("User does not exist or you do not have the correct access level");
+        }
     }
-
-    // Team members excluding owner
+    public void addTeamMaintainer(User newMaintainer, User currentUser) {
+        if (currentUser.getRole().adminAccess()) {
+            if (newMaintainer.equals(userLibrary.findUserInList(newMaintainer.getUserName()))) {
+                roleFactory.createMaintainer(newMaintainer);
+                this.memberList.put(newMaintainer.getUserName(), newMaintainer);
+            } else {
+                System.out.println("You do not have the correct Access");
+            }
+        } else {
+            System.out.println("You do not have the correct access");
+        }
+    }
     public List<User> getAllTeamMembers(){
         List <User> teamMemberList = new ArrayList<>(this.memberList.values());
         return teamMemberList;
     }
-
-    public void addTeamMember(User teamMember) {
-        this.memberList.put(teamMember.getID(), teamMember);
+    //WIP
+    public User getTeamMember(String userID){
+        User member = this.memberList.get(userID);
+        return member;
     }
-
+    //WIP
     public void removeTeamMember(String userID) {
         this.memberList.remove(userID);
     }

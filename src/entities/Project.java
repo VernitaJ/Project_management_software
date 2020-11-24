@@ -2,11 +2,12 @@ package entities;
 //currently just for testing Data, not the final class
 //please dont edit it yet
 import tools.*;
-import budget.*;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.WeakHashMap;
 
 public class Project extends Data{
+    private TeamLibrary team;
     private String name;
     //needs to be integrated with team structure
     private String description;
@@ -17,16 +18,15 @@ public class Project extends Data{
     //waiting for other userStories
     // private Team team;
     private TaskLibrary taskList;
-
-    public Project(String name, User owner, String description, LocalDate startDate, LocalDate endDate) {
+   // LocalDate startDate, LocalDate endDate,
+    public Project(String name, User owner, String description, TeamLibrary team) {
+        this.team = new TeamLibrary();
         this.name = name;
-        //teams
-
         this.description = description;
         this.createdDate = LocalDate.now();
         this.taskList = new TaskLibrary();
-        this.startDate = startDate;
-        this.endDate = endDate;
+        //this.startDate = startDate;
+        //this.endDate = endDate;
     }
 
     private void setStatus(String status) {

@@ -1,21 +1,11 @@
-package roles;
-
-import entities.User;
+package access_roles;
 
 public class Owner implements Roles
 {
 
-
-    public User createTeam(){
-        return null;
-    }
-
-    public User assignMember(){
-        return null;
-    }
     public void removeMember(){
-
     }
+
     public boolean canChangeProjectStatus(){
         return true;
     }
@@ -36,7 +26,7 @@ public class Owner implements Roles
         return true;
     }
 
-    public boolean setAdminAccess() {
+    public boolean adminAccess() {
 
         return true;
     }
