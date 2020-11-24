@@ -10,12 +10,13 @@ public class Budget
     private LocalDate start;
     private LocalDate finish;
     private HashMap<String, Integer> log;
-    private static final int HOURS_IN_A_WORK_DAY = 8;
+    private int workingHours;
 
-    public Budget(LocalDate start, LocalDate finish)
+    public Budget(LocalDate start, LocalDate finish, int workingHours)
     {
         this.start = start;
         this.finish = finish;
+        this.workingHours = workingHours;
         this.log = new HashMap<>();
     }
 
@@ -26,7 +27,7 @@ public class Budget
 
     public int workHoursRemaining()
     {
-        return daysRemaining() * HOURS_IN_A_WORK_DAY;
+        return daysRemaining() * workingHours;
     }
 
     public int hoursWorked()
@@ -41,7 +42,7 @@ public class Budget
 
     public double totalHours()
     {
-        return Math.abs(start.compareTo(finish)) * HOURS_IN_A_WORK_DAY;
+        return Math.abs(start.compareTo(finish)) * workingHours;
     }
 
     public int totalDays()
@@ -49,12 +50,12 @@ public class Budget
         return Math.abs(start.compareTo(finish));
     }
 
-    public void changeStartDate(LocalDate newStart)
+    public void setStartDate(LocalDate newStart)
     {
         start = newStart;
     }
 
-    public void changeFinishDate(LocalDate newFinish)
+    public void setFinishDate(LocalDate newFinish)
     {
         start = newFinish;
     }
