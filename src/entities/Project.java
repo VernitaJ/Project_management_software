@@ -1,7 +1,5 @@
 package entities;
 
-// import date time for calculating Duration
-
 import tools.Input;
 
 import java.time.LocalDate;
@@ -11,7 +9,6 @@ public class Project extends Data{
     private String name;
 
     //needs to be integrated with team structure
-    private String owner; // Change to User data type
     private String description;
     private String status; // Active/Inactive
     private LocalDate createdDate;
@@ -21,9 +18,10 @@ public class Project extends Data{
     // private Team team;
     private TaskLibrary taskList;
 
-    public Project(String name, String owner, String description, LocalDate startDate, LocalDate endDate) {
+    public Project(String name, User owner, String description, LocalDate startDate, LocalDate endDate) {
         this.name = name;
-        this.owner = owner;
+        //teams
+        //add owner to the team
         this.description = description;
         this.createdDate = LocalDate.now();
         this.taskList = new TaskLibrary();
@@ -41,10 +39,6 @@ public class Project extends Data{
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getOwner() {
-        return owner;
     }
 
     public String getStatus() {
