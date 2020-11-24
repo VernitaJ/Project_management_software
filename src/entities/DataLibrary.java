@@ -1,12 +1,13 @@
 package entities;
+import components.Login;
 import exceptions.IDAlreadyInUseException;
 import java.util.ArrayList;
 
 // If necessary, more methods can be added in the future
 
 abstract class DataLibrary {
-    private ArrayList<Data> list = new ArrayList<>();
-    
+    protected ArrayList<Data> list = new ArrayList<>();
+
     //Exception might not be necessary for UUIDs, just wanted to be ready for other types of IDs :P
     public void addToList(Data dataToAdd){
         if(doesItExist(dataToAdd.getID())){
@@ -15,7 +16,7 @@ abstract class DataLibrary {
             list.add(dataToAdd);
         }
     }
-    
+
     public boolean doesItExist(String idToSearch){
         for (Data data : list) {
             if (data.getID().equals(idToSearch)) {
@@ -24,7 +25,7 @@ abstract class DataLibrary {
         }
         return false;
     }
-    
+
     // check the return value if its null, it means data does not exist
     public Data findItInList(String idToSearch){
         for (Data data : list) {
@@ -34,12 +35,12 @@ abstract class DataLibrary {
         }
         return null;
     }
-    
+
     //need to test it
     public boolean removeItFromList(String idToRemove) {
         return list.removeIf(data -> (data.checkID(idToRemove)));
     }
-    
+
     //if all classes that extend Data can have a toString, this
     //method can be useful to print 'em all
     public String listAll(){
@@ -53,10 +54,5 @@ abstract class DataLibrary {
             return listOfAll.toString();
         }
     }
-    
-    
-    
-    
-    
 }
 
