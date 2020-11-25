@@ -1,6 +1,4 @@
 package entities;
-//currently just for testing DataLibrary, not the final class
-//please dont edit it yet
 import tools.*;
 
 
@@ -17,7 +15,6 @@ public class ProjectLibrary extends DataLibrary{
             return instance;
         }
     }
-    //user control is missing
     public void createProject(User currentUser) {
         Input input = Input.getInstance();
         String name = input.getStr("Project name: ");
@@ -28,7 +25,7 @@ public class ProjectLibrary extends DataLibrary{
     }
 
 
-    //access level and ownership check is missing
+    //not final we need to decide to menus before integrate this with them
     public boolean deleteProject(String idToDelete, User currentUser){
         if(currentUser.getRole().roleType().equals("Owner")){
             return removeItFromList(idToDelete);
