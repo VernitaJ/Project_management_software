@@ -2,6 +2,7 @@ package tools;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -100,8 +101,8 @@ public class Input
                 userInput = scanner.nextLine();
                 date = LocalDate.parse(userInput, formatter);
                 complianceCheck = true;
-            } catch (InputMismatchException e) {
-                e.printStackTrace();
+            } catch (InputMismatchException | DateTimeParseException e) {
+                System.out.println("Wrong date format, please try again: ");
             }
         }
         return date;
