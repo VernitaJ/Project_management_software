@@ -38,7 +38,7 @@ public class TeamLibrary extends DataLibrary{
 
         if (!escape) {
             try {
-                addToList(new Team(teamName, owner, selectUsers(owner)));
+                addToList(new Team (owner));
                 System.out.println("Successfully created team.");
 
             } catch(Exception e) {

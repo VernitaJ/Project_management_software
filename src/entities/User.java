@@ -1,17 +1,17 @@
 package entities;
 
 import access_roles.Roles;
+import java.util.ArrayList;
 
 public class User extends Data {
 
-    private Roles role;
+   // private Roles role;
     private String userName;
     private String password;
     private String eMail;
     private String occupation;
     private String companyName;
-
-
+    private ArrayList<Message> inbox;
 
     public User(String userName, String password, String eMail, String occupation, String companyName) {
         this.userName = userName;
@@ -19,6 +19,11 @@ public class User extends Data {
         this.eMail = eMail;
         this.occupation = occupation;
         this.companyName = companyName;
+        this.inbox = new ArrayList<>();
+    }
+
+    public ArrayList<Message> getInbox() {
+        return inbox;
     }
 
     public String getUserName() {
@@ -57,11 +62,13 @@ public class User extends Data {
         this.companyName = companyName;
     }
 
-    public Roles getRole() {
+   /* public Roles getRole() {
         return role;
     }
 
-    public void setRole(Roles role) {
-        this.role = role;
-    }
+    */
+
+  //  public void setRole(Roles role) {
+    //    this.role = role; }
+
 }

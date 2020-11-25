@@ -6,17 +6,17 @@ public class RoleFactory {
     public RoleFactory(){
     }
 
-    public Roles createOwner(User currentUser)
+    public Roles createOwner()
     {
         return new Owner();
     }
 
-    public Roles createMaintainer(User user)
+    public Roles createMaintainer()
     {
         return new Maintainer();
     }
 
-    public Roles createDeveloper(User user)
+    public Roles createDeveloper()
     {
         return new Developer();
     }
