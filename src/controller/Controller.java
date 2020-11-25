@@ -47,13 +47,11 @@ public class Controller {
     }
 
     // method just to say that a menu item has not been implemented. (temporary)
-    private void notImplemented()
-    {
+    private void notImplemented() {
         System.out.println(Input.RED + "This Feature Has Not been Implemented" + Input.RESET);
     }
 
-    private void loginMenu()
-    {
+    private void loginMenu() {
         String[] options =
                 {
                         "Create Account",
@@ -73,8 +71,7 @@ public class Controller {
         } while (true);
     }
 
-    private void mainMenu()
-    {
+    private void mainMenu() {
         // options will change but this is just so you can move around the system.
         String[] options =
                 {
@@ -84,6 +81,7 @@ public class Controller {
                         "Activity Menu",
                         "Team Resource Menu",
                         "Statistics Menu",
+                        "Logout",
                         "Exit"
                 };
         menu = new Menu("Main Menu", options);
@@ -103,8 +101,7 @@ public class Controller {
         } while (true);
     }
 
-    private void adminMenu()
-    {
+    private void adminMenu() {
         String[] options =
                 {
                         "Import (test) Data",
@@ -128,8 +125,7 @@ public class Controller {
         } while (true);
     }
 
-    private void userMenu()
-    {
+    private void userMenu() {
         String[] options =
                 {
                         "View Projects",
@@ -153,8 +149,7 @@ public class Controller {
         } while (true);
     }
 
-    private void projectMenu()
-    {
+    private void projectMenu() {
         String[] options =
                 {
                         "Activities",
@@ -170,7 +165,7 @@ public class Controller {
             String choice = menu.printMenu();
             switch (choice)
             {
-                case "1" -> notImplemented();
+                case "1" -> activityMenu();
                 case "2" -> notImplemented();
                 case "3" -> notImplemented();
                 case "4" -> mainMenu();
@@ -180,13 +175,12 @@ public class Controller {
         } while (true);
     }
 
-    private void activityMenu()
-    {
+    private void activityMenu() {
         String[] options =
                 {
-                        "Add",
-                        "Remove",
-                        "Change",
+                        "Create Message",
+                        "Read Messages",
+                        "Delete Message",
                         "Main Menu",
                         "Exit"
                 };
@@ -196,17 +190,16 @@ public class Controller {
             String choice = menu.printMenu();
             switch (choice)
             {
-                case "1" -> notImplemented();
-                case "2" -> notImplemented();
-                case "3" -> notImplemented();
+                case "1" -> createMessage();
+                case "2" -> readMessage();
+                case "3" -> deleteMessage();
                 case "4" -> mainMenu();
                 case "5" -> exit();
             }
         } while (true);
     }
 
-    private void teamResourceMenu()
-    {
+    private void teamResourceMenu() {
         String[] options =
                 {
                         "Create Team",
@@ -229,8 +222,8 @@ public class Controller {
             }
         } while (true);
     }
-    private void statisticsMenu()
-    {
+
+    private void statisticsMenu() {
         String[] options =
                 {
                         "Project KPI",
@@ -289,6 +282,17 @@ public class Controller {
         projectLibrary.createProject(currentUser, teamLibrary);
     }
 
+    private void createMessage() {
+        userLibrary.createMessage(currentUser);
+    }
+
+    private void readMessage() {
+        userLibrary.readMessage(currentUser);
+    }
+
+    private void deleteMessage() {
+        userLibrary.deleteMessage(currentUser);
+    }
 //    public User getCurrentUser() {
 //        return this.currentUser;
 //    }
