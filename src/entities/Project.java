@@ -1,32 +1,29 @@
 package entities;
-//currently just for testing Data, not the final class
-//please dont edit it yet
 import tools.*;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.WeakHashMap;
+import java.util.Collections;
 
 public class Project extends Data{
-    private TeamLibrary team;
+    private Team team;
     private String name;
-    //needs to be integrated with team structure
     private String description;
     private String status; // Active/Inactive
     private LocalDate createdDate;
     private LocalDate startDate;
     private LocalDate endDate;
-    //waiting for other userStories
-    // private Team team;
     private TaskLibrary taskList;
-   // LocalDate startDate, LocalDate endDate,
-    public Project(String name, User owner, String description, TeamLibrary team) {
-        this.team = new TeamLibrary();
+    public Project(String name, User owner, String description, LocalDate startDate, LocalDate endDate) {
         this.name = name;
         this.description = description;
         this.createdDate = LocalDate.now();
         this.taskList = new TaskLibrary();
-        //this.startDate = startDate;
-        //this.endDate = endDate;
+        try{
+            // maybe we can add one more constructor to the Team class which does now expect a List<User>
+            this.team = new Team("default-team", owner, Collections.emptyList());
+        }   catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     private void setStatus(String status) {
@@ -67,11 +64,17 @@ public class Project extends Data{
     }
 
 
-    //user & access level check needs to be added
-    public void updateStatus(){
-        Input input = Input.getInstance();
-        String newStatus = input.getStr("Enter the status: ");
-        setStatus(newStatus);
+
+    public void updateStatus(User currentUser){
+        if(currentUser.getRole().adminAccess()){
+            Input input = Input.getInstance();
+            String newStatus = input.getStr("Enter the status: ");
+            setStatus(newStatus);
+        }
+        else{
+            System.out.println("You are not authorized to perform this action!");
+        }
+
     }
 
 
@@ -80,16 +83,28 @@ public class Project extends Data{
     /*
     //access level check needs to be added
     public void updateName(){
-        Input input = Input.getInstance();
-        String newDesc = input.getStr("Enter the description: ");
-        setName(newDesc);
+        if(currentUser.getRole().adminAccess()){
+            Input input = Input.getInstance();
+            String newDesc = input.getStr("Enter the description: ");
+            setName(newDesc);
+        }
+        else{
+            System.out.println("You are not authorized to perform this action!!");
+        }
+
     }
 
     //access level check needs to be added
     public void updateDescription(){
-        Input input = Input.getInstance();
-        String newName = input.getStr("Enter the name: ");
-        setDescription(newName);
+         if(currentUser.getRole().adminAccess()){
+            Input input = Input.getInstance();
+            String newName = input.getStr("Enter the name: ");
+            setDescription(newName);
+        }
+        else{
+            System.out.println("You are not authorized to perform this action!!");
+        }
+
     }
     */
 

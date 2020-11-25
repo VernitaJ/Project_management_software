@@ -286,7 +286,7 @@ public class Controller {
         userLibrary.createUser();
     }
     private void createProject() {
-        projectLibrary.createProject(currentUser, teamLibrary);
+        projectLibrary.createProject(currentUser);
     }
 
 //    public User getCurrentUser() {
