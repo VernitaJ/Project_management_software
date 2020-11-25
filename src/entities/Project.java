@@ -34,8 +34,12 @@ public class Project extends Data{
         this.description = description;
     }
 
-    public void setName(String name) {
+    private void setName(String name) {
         this.name = name;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public String getStatus() {
@@ -63,7 +67,11 @@ public class Project extends Data{
         return daysBetween;
     }
 
-
+    public boolean isUserTeamMember(User userToSearch){
+        if(team.getTeamMember(userToSearch.getUserName()) == null){
+            return false;
+        } return true;
+    }
 
     public void updateStatus(User currentUser){
         if(currentUser.getRole().adminAccess()){

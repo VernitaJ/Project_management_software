@@ -30,6 +30,8 @@ public class Team extends Data {
         // Add regular team members
         this.memberList = new WeakHashMap<>();
         // Add owner into member list
+        this.owner = currentUser;
+        this.ownerID = currentUser.getID();
         this.owner.setRole(roleFactory.createOwner(currentUser));
         this.memberList.put(getOwner().getUserName(), currentUser);
        // this.ownerID = owner.getID();
@@ -42,10 +44,15 @@ public class Team extends Data {
     public void setTeamName(String teamName) {
         this.teamName = teamName;
     }
-
+    /*there is a problem with this one gonna create another*/
+    /*key is username in the hash map but searching with ID in this method*/
+    /*Also redundant bcs Team class stores owner as a user in a property*/
     public User getOwner() {
-        return this.memberList.get(ownerID);
+        return this.owner;
     }
+    /*public User getOwner() {
+        return this.memberList.get(ownerID);
+    }*/
 
     /* public void setOwner(User owner) {
         this.memberList.remove(ownerID);
@@ -80,8 +87,9 @@ public class Team extends Data {
         return teamMemberList;
     }
     //WIP
-    public User getTeamMember(String userID){
-        User member = this.memberList.get(userID);
+    //changed the parameter is username. it was id before. -Numan
+    public User getTeamMember(String username){
+        User member = this.memberList.get(username);
         return member;
     }
     //WIP

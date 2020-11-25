@@ -91,7 +91,7 @@ public class Input
     public LocalDate getDate(String str)
     {
         String userInput = "";
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("YYYY-MM-DD");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate date = LocalDate.now();
         boolean complianceCheck = false;
         while (!complianceCheck) {

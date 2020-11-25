@@ -5,6 +5,7 @@ import tools.*;
 
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 public class ProjectLibrary extends DataLibrary{
     private static final ProjectLibrary instance = null;
@@ -37,6 +38,43 @@ public class ProjectLibrary extends DataLibrary{
         }
             return false;
 
+    }
+
+    public ArrayList<Project> listUsersProjects(User currentUser){
+        ArrayList<Project> tempList = new ArrayList<>();
+        for(Data project : list){
+            Project currentProject = ((Project)project);
+            if((currentProject.isUserTeamMember(currentUser))){
+                tempList.add(currentProject);
+            }
+        }
+
+        if (tempList.size() == 0){
+            System.out.println("You have no projects!");
+        } else {
+            for (int i=0; i<tempList.size(); i++){
+                System.out.println(i+1 + "- " + tempList.get(i).getName());
+            }
+        }
+
+        return tempList;
+    }
+
+    public Project navigateBetweenProjects(User currentUser){
+        Input input = Input.getInstance();
+        ArrayList<Project> projectList = listUsersProjects(currentUser);
+        if(projectList.size()==0){
+            return null;
+        } else {
+            int choice;
+            do{
+                choice = input.getInt("Enter project number or 0 to return to the previous menu: ");
+            } while(choice < 0 || choice > projectList.size()+1);
+
+            if (choice == 0){
+                return null;
+            } else return projectList.get(choice-1);
+        }
     }
 
 }
