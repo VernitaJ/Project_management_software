@@ -3,15 +3,17 @@ package access_roles;
 public class Owner implements Roles
 {
 
-    public void removeMember(){
+    public boolean canRemoveMember(){
+
+        return true;
     }
 
     public boolean canChangeProjectStatus(){
         return true;
     }
 
-    public void assignRole(){
-
+    public boolean assignRole(){
+        return true;
     }
 
     public String roleType() {

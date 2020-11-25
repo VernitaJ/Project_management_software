@@ -1,6 +1,7 @@
 package entities;
 
 
+import access_roles.CustomRoles;
 import access_roles.RoleFactory;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,27 +13,17 @@ public class Team extends Data {
     private Input input;
     private RoleFactory roleFactory = new RoleFactory();
     private String teamName;
-    private String ownerID;
-    private User owner;
-    private WeakHashMap<String, User> memberList;
 
-    public Team(String teamName, User owner) throws Exception {
-        this(teamName, owner, new ArrayList<User>());
-    }
-    public Team(String teamName, User currentUser, List<User> teamMembers) throws Exception {
+    private WeakHashMap<String, TeamMember> memberList;
+
+    public Team(User currentUser) throws Exception {
         if (teamName == null || teamName.isBlank() || teamName.equals(""))
+        {
             throw new Exception(" Try again dum dum ");
-
-        for(User member: teamMembers) {
-            this.memberList.put(member.getUserName(), member);
         }
-        this.teamName = teamName;
-        // Add regular team members
+        this.teamName = input.getStr("Enter desired team name:");
         this.memberList = new WeakHashMap<>();
-        // Add owner into member list
-        this.owner.setRole(roleFactory.createOwner(currentUser));
-        this.memberList.put(getOwner().getUserName(), currentUser);
-       // this.ownerID = owner.getID();
+        this.memberList.put(currentUser.getUserName(), new TeamMember(currentUser, roleFactory.createOwner()));
     }
 
     public String getTeamName() {
@@ -44,30 +35,40 @@ public class Team extends Data {
     }
 
     public User getOwner() {
-        return this.memberList.get(ownerID);
+        User owner = null;
+        for (TeamMember user : memberList.values()){
+            if (user.getRole().roleType().equalsIgnoreCase("Owner")){
+                owner = user.getUser();
+                return owner;
+            }
+        }
+        return owner;
     }
-
     /* public void setOwner(User owner) {
         this.memberList.remove(ownerID);
         this.memberList.put(getOwner().getUserName(), owner);
         this.ownerID = owner.getID();
     }
      */
+    public TeamMember findTeamMember(User toFind){
+        return this.memberList.get(toFind.getUserName());
+    }
     public void addTeamDeveloper(User newDeveloper, User currentUser) {
-        if (currentUser.getRole().adminAccess()){
-            if (newDeveloper.equals(userLibrary.findUserInList(newDeveloper.getUserName()))) {
-                roleFactory.createDeveloper(newDeveloper);
-                this.memberList.put(newDeveloper.getUserName(), newDeveloper);
+        TeamMember currentMember = findTeamMember(currentUser);
+        if (currentMember != null && currentMember.getRole().adminAccess()){
+            if (newDeveloper.getUserName().equals(userLibrary.findUserInList(newDeveloper.getUserName()))) {
+                this.memberList.put(newDeveloper.getUserName(),new TeamMember(newDeveloper, roleFactory.createDeveloper()));
         }
         } else {
             System.out.println("User does not exist or you do not have the correct access level");
         }
     }
     public void addTeamMaintainer(User newMaintainer, User currentUser) {
-        if (currentUser.getRole().adminAccess()) {
-            if (newMaintainer.equals(userLibrary.findUserInList(newMaintainer.getUserName()))) {
-                roleFactory.createMaintainer(newMaintainer);
-                this.memberList.put(newMaintainer.getUserName(), newMaintainer);
+        TeamMember currentMember = findTeamMember(currentUser);
+        if (currentMember != null && currentMember.getRole().adminAccess()){
+            if (newMaintainer.getUserName().equals(userLibrary.findUserInList(newMaintainer.getUserName())))
+            {
+                this.memberList.put(newMaintainer.getUserName(), new TeamMember(newMaintainer, roleFactory.createOwner()));
             } else {
                 System.out.println("You do not have the correct Access");
             }
@@ -75,18 +76,55 @@ public class Team extends Data {
             System.out.println("You do not have the correct access");
         }
     }
-    public List<User> getAllTeamMembers(){
-        List <User> teamMemberList = new ArrayList<>(this.memberList.values());
-        return teamMemberList;
+   /*  public List<TeamMember> getAllTeamMembers(){
+        return new ArrayList<>(this.memberList.values());
     }
-    //WIP
-    public User getTeamMember(String userID){
-        User member = this.memberList.get(userID);
-        return member;
+
+    */
+
+
+    public User getTeamMember(User user) throws Exception {
+        if (memberList.containsKey(user.getUserName())) {
+            return this.memberList.get(user.getUserName()).getUser();
+        } else {
+            throw new Exception("User does not exist");
+        }
     }
-    //WIP
-    public void removeTeamMember(String userID) {
-        this.memberList.remove(userID);
+
+    /* public void removeTeamMember() throws Exception {
+        if (memberList.containsValue(userName)){
+            this.memberList.remove(memberList.get(userName.getUserName()));
+        }else{
+            throw new Exception("User does not exist");
+        }
+    }
+     */
+    public void addMemberWithCustomRole(User user)
+    {
+        if (hasAdminAccess(user)){
+            String roleType = input.getStr("Enter role name: ");
+            String canCreateTask = input.getStr("Can role create a task?: Y/N");
+            String adminAccess = input.getStr("Does the role have admin access?: Y/N");
+            boolean createTask = false;
+            boolean hasAdminAccess = false;
+            if (canCreateTask.equalsIgnoreCase("Y")){
+                createTask = true;
+            }
+            if (adminAccess.equalsIgnoreCase("Y")){
+                hasAdminAccess = true;
+            }
+            memberList.put(user.getUserName(), new TeamMember(user, new CustomRoles(roleType,createTask,hasAdminAccess)));
+        }else{
+            System.out.println("You do not have the required access level.");
+        }
+    }
+    private boolean hasAdminAccess(User currentUser) {
+        TeamMember currentMember = findTeamMember(currentUser);
+        if (currentMember != null && currentMember.getRole().adminAccess()) {
+
+            return true;
+        }
+        return false;
     }
 }
 
