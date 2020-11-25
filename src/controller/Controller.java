@@ -269,6 +269,7 @@ public class Controller {
 
     public void logout(){
         currentUser = null;
+        loginMenu();
     }
 
     public User userProfile(String name) {
