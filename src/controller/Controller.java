@@ -96,7 +96,8 @@ public class Controller {
                 case "4" -> activityMenu();
                 case "5" -> teamResourceMenu();
                 case "6" -> statisticsMenu();
-                case "7" -> exit();
+                case "7" -> logout();
+                case "8" -> exit();
             }
         } while (true);
     }
@@ -264,6 +265,10 @@ public class Controller {
                 } else System.out.println("Wrong username or password, please try again.");
             } else System.out.println("Wrong username or password, please try again.");
         } while (!loggedIn);
+    }
+
+    public void logout(){
+        currentUser = null;
     }
 
     public User userProfile(String name) {
