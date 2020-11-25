@@ -23,8 +23,7 @@ public class Team extends Data {
         }
         this.teamName = input.getStr("Enter desired team name:");
         this.memberList = new WeakHashMap<>();
-        this.memberList.put(getOwner().getUserName(),(TeamMember) currentUser);
-        this.memberList.get(getOwner().getUserName()).setRole(roleFactory.createOwner());
+        this.memberList.put(currentUser.getUserName(), new TeamMember(currentUser, roleFactory.createOwner()));
     }
 
     public String getTeamName() {
@@ -36,32 +35,40 @@ public class Team extends Data {
     }
 
     public User getOwner() {
-        return this.memberList.get(getOwner().getUserName());
+        User owner = null;
+        for (TeamMember user : memberList.values()){
+            if (user.getRole().roleType().equalsIgnoreCase("Owner")){
+                owner = user.getUser();
+                return owner;
+            }
+        }
+        return owner;
     }
-
     /* public void setOwner(User owner) {
         this.memberList.remove(ownerID);
         this.memberList.put(getOwner().getUserName(), owner);
         this.ownerID = owner.getID();
     }
      */
+    public TeamMember findTeamMember(User toFind){
+        return this.memberList.get(toFind.getUserName());
+    }
     public void addTeamDeveloper(User newDeveloper, User currentUser) {
-        if (currentUser.getRole().adminAccess()){
-            if (newDeveloper.equals(userLibrary.findUserInList(newDeveloper.getUserName()))) {
-                this.memberList.put(newDeveloper.getUserName(),(TeamMember) newDeveloper);
-                memberList.get(currentUser.getUserName()).setRole(roleFactory.createDeveloper());
+        TeamMember currentMember = findTeamMember(currentUser);
+        if (currentMember != null && currentMember.getRole().adminAccess()){
+            if (newDeveloper.getUserName().equals(userLibrary.findUserInList(newDeveloper.getUserName()))) {
+                this.memberList.put(newDeveloper.getUserName(),new TeamMember(newDeveloper, roleFactory.createDeveloper()));
         }
         } else {
             System.out.println("User does not exist or you do not have the correct access level");
         }
     }
     public void addTeamMaintainer(User newMaintainer, User currentUser) {
-        if (currentUser.getRole().adminAccess())
-        {
-            if (newMaintainer.equals(userLibrary.findUserInList(newMaintainer.getUserName())))
+        TeamMember currentMember = findTeamMember(currentUser);
+        if (currentMember != null && currentMember.getRole().adminAccess()){
+            if (newMaintainer.getUserName().equals(userLibrary.findUserInList(newMaintainer.getUserName())))
             {
-                this.memberList.put(currentUser.getUserName(), (TeamMember) currentUser);
-                memberList.get(currentUser.getUserName()).setRole(roleFactory.createMaintainer());
+                this.memberList.put(newMaintainer.getUserName(), new TeamMember(newMaintainer, roleFactory.createOwner()));
             } else {
                 System.out.println("You do not have the correct Access");
             }
@@ -69,26 +76,29 @@ public class Team extends Data {
             System.out.println("You do not have the correct access");
         }
     }
-    public List<User> getAllTeamMembers(){
+   /*  public List<TeamMember> getAllTeamMembers(){
         return new ArrayList<>(this.memberList.values());
     }
 
+    */
+
+
     public User getTeamMember(User user) throws Exception {
-        if (memberList.containsValue(user)) {
-            return this.memberList.get(user.getUserName());
+        if (memberList.containsKey(user.getUserName())) {
+            return this.memberList.get(user.getUserName()).getUser();
         } else {
             throw new Exception("User does not exist");
         }
     }
 
-    public void removeTeamMember(TeamMember userName) throws Exception {
+    /* public void removeTeamMember() throws Exception {
         if (memberList.containsValue(userName)){
             this.memberList.remove(memberList.get(userName.getUserName()));
         }else{
             throw new Exception("User does not exist");
         }
-
     }
+     */
     public void addMemberWithCustomRole(User user)
     {
         if (hasAdminAccess(user)){
@@ -103,14 +113,18 @@ public class Team extends Data {
             if (adminAccess.equalsIgnoreCase("Y")){
                 hasAdminAccess = true;
             }
-            memberList.put(user.getUserName(), (TeamMember) user);
-            memberList.get(user.getUserName()).setRole(new CustomRoles(roleType,createTask,hasAdminAccess));
+            memberList.put(user.getUserName(), new TeamMember(user, new CustomRoles(roleType,createTask,hasAdminAccess)));
         }else{
             System.out.println("You do not have the required access level.");
         }
     }
-    private boolean hasAdminAccess(User currentUser){
-        return currentUser.getRole().adminAccess();
+    private boolean hasAdminAccess(User currentUser) {
+        TeamMember currentMember = findTeamMember(currentUser);
+        if (currentMember != null && currentMember.getRole().adminAccess()) {
+
+            return true;
+        }
+        return false;
     }
 }
 

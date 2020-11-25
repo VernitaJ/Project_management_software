@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 public class User extends Data {
 
-    private Roles role;
+   // private Roles role;
     private String userName;
     private String password;
     private String eMail;
@@ -62,11 +62,13 @@ public class User extends Data {
         this.companyName = companyName;
     }
 
-    public Roles getRole() {
+   /* public Roles getRole() {
         return role;
     }
 
-    public void setRole(Roles role) {
-        this.role = role;
-    }
+    */
+
+  //  public void setRole(Roles role) {
+    //    this.role = role; }
+
 }
