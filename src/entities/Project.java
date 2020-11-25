@@ -20,7 +20,7 @@ public class Project extends Data{
         this.taskList = new TaskLibrary();
         try{
             // maybe we can add one more constructor to the Team class which does now expect a List<User>
-            this.team = new Team("default-team", owner, Collections.emptyList());
+            this.team = new Team(owner);
         }   catch (Exception e){
             e.printStackTrace();
         }
@@ -68,13 +68,31 @@ public class Project extends Data{
     }
 
     public boolean isUserTeamMember(User userToSearch){
-        if(team.getTeamMember(userToSearch.getUserName()) == null){
+        if(team.findTeamMember(userToSearch) == null){
             return false;
         } return true;
     }
+    public boolean isUserOwner(User userToSearch){
+        TeamMember member = team.findTeamMember(userToSearch);
+        if(member == null){
+            return false;
+        } else {
+            if(member.getRole().equals("Owner")){
+                return true;
+            }return false;
+        }
+    }
+    public boolean isUserAdmin(User userToSearch){
+        TeamMember member = team.findTeamMember(userToSearch);
+        if(member == null){
+            return false;
+        } return member.getRole().adminAccess();
+    }
+
 
     public void updateStatus(User currentUser){
-        if(currentUser.getRole().adminAccess()){
+
+        if(team.findTeamMember(currentUser).getRole().adminAccess()){
             Input input = Input.getInstance();
             String newStatus = input.getStr("Enter the status: ");
             setStatus(newStatus);
@@ -89,9 +107,8 @@ public class Project extends Data{
 
     //not mentioned in the user stories soooo idk
     /*
-    //access level check needs to be added
     public void updateName(){
-        if(currentUser.getRole().adminAccess()){
+        if(team.findTeamMember(currentUser).getRole().adminAccess()){
             Input input = Input.getInstance();
             String newDesc = input.getStr("Enter the description: ");
             setName(newDesc);
@@ -102,9 +119,8 @@ public class Project extends Data{
 
     }
 
-    //access level check needs to be added
     public void updateDescription(){
-         if(currentUser.getRole().adminAccess()){
+         if(team.findTeamMember(currentUser).getRole().adminAccess()){
             Input input = Input.getInstance();
             String newName = input.getStr("Enter the name: ");
             setDescription(newName);

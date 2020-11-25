@@ -27,13 +27,15 @@ public class ProjectLibrary extends DataLibrary{
 
     //not final we need to decide to menus before integrate this with them
     public boolean deleteProject(String idToDelete, User currentUser){
-        if(currentUser.getRole().roleType().equals("Owner")){
+        Project projectToDelete = (Project)findItInList(idToDelete);
+        if(projectToDelete==null){
+            return false;
+        }
+        if(projectToDelete.isUserOwner(currentUser)){
             return removeItFromList(idToDelete);
         }
-        else {
-            System.out.println("You are not authorized to perform this action!");
-        }
-            return false;
+        System.out.println("You are not authorized to perform this action!");
+        return false;
 
     }
 
