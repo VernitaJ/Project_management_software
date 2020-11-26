@@ -15,13 +15,9 @@ public class Team extends Data {
     private String teamName;
 
     private WeakHashMap<String, TeamMember> memberList;
-
-    public Team(User currentUser) throws Exception {
-        if (teamName == null || teamName.isBlank() || teamName.equals(""))
-        {
-            throw new Exception(" Try again dum dum ");
-        }
-        this.teamName = input.getStr("Enter desired team name:");
+    //deleted the name check
+    public Team(User currentUser){
+        //this.teamName = input.getStr("Enter desired team name:");
         this.memberList = new WeakHashMap<>();
         this.memberList.put(currentUser.getUserName(), new TeamMember(currentUser, roleFactory.createOwner()));
     }

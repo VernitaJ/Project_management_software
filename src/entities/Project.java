@@ -19,7 +19,6 @@ public class Project extends Data{
         this.createdDate = LocalDate.now();
         this.taskList = new TaskLibrary();
         try{
-            // maybe we can add one more constructor to the Team class which does now expect a List<User>
             this.team = new Team(owner);
         }   catch (Exception e){
             e.printStackTrace();
