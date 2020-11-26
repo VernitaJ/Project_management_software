@@ -1,2 +1,9 @@
-User,drakula,drakula,who has Emails,who Working for a Living, I dont have a job dude...
-Project,project name,drakula,this is my project yo,2020,8,20,2020,12,20
+User,drake,drake,who has Emails,who Working for a Living, I dont have a job dude...
+User,karl,karl,something@something.com,programmer,SEM
+User,vernita,vernita,something@something.com,programmer,SEM
+User,anna,pumpkinpie,something@something.com,programmer,SEM
+User,axel,axel,something@something.com,programmer,SEM
+User,numan,numan,something@something.com,programmer,SEM
+User,jens,jens,something@something.com,programmer,SEM
+Project,project name,drake,this is my project yo,2020,8,20,2020,12,20
+Project,project name,vernita,this is my project yo,2018,4,12,2019,12,20

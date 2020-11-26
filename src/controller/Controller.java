@@ -63,7 +63,11 @@ public class Controller {
                 String[] token = line.split(",");
                 switch (token[0].toLowerCase()) {
                     case "user" -> userLibrary.addUserToList(new User(token[1],token[2],token[3], token[4],token[5]));
-                    case "project" -> projectLibrary.addProjectToList(new Project(token[1], (User) userLibrary.findUserInList(token[2]), token[3], LocalDate.of(Integer.parseInt(token[4]), Integer.parseInt(token[5]), Integer.parseInt(token[6])), LocalDate.of(Integer.parseInt(token[7]), Integer.parseInt(token[8]), Integer.parseInt(token[9]))));
+                    case "project" -> {
+                        this.currentUser = (User) userLibrary.findUserInList(token[2]);
+                        projectLibrary.addProjectToList(new Project(token[1], currentUser, token[3], LocalDate.of(Integer.parseInt(token[4]), Integer.parseInt(token[5]), Integer.parseInt(token[6])), LocalDate.of(Integer.parseInt(token[7]), Integer.parseInt(token[8]), Integer.parseInt(token[9]))));
+                        this.currentUser = null;
+                    }
                     case "task" -> notImplemented();
                 }
             }
@@ -101,7 +105,6 @@ public class Controller {
     }
 
     private void mainMenu() {
-        // options will change but this is just so you can move around the system.
         String[] options =
                 {
                         "Leaderboard",
