@@ -5,6 +5,12 @@ import entities.*;
 import tools.Input;
 import tools.Menu;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class Controller {
@@ -17,6 +23,7 @@ public class Controller {
     private static Controller instance = null;
     private User currentUser = null;
     private Project currentProject = null;
+    private File testFile = new File("src/temptestdata.txt");
 
     private Controller(){}
 
@@ -35,6 +42,7 @@ public class Controller {
 
     public void run()
     {
+        readFile();
         loginMenu();
     }
     private void exit()
@@ -42,6 +50,27 @@ public class Controller {
         input.teardown();
         teardown();
         System.exit(0);
+    }
+
+    private void readFile()
+    {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        BufferedReader br;
+        String line;
+        try {
+            br = new BufferedReader(new FileReader(testFile));
+            while((line = br.readLine()) != null) {
+                String[] token = line.split(",");
+                switch (token[0].toLowerCase()) {
+                    case "user" -> userLibrary.addUserToList(new User(token[1],token[2],token[3], token[4],token[5]));
+                    case "project" -> projectLibrary.addProjectToList(new Project(token[1], (User) userLibrary.findUserInList(token[2]), token[3], LocalDate.of(Integer.parseInt(token[4]), Integer.parseInt(token[5]), Integer.parseInt(token[6])), LocalDate.of(Integer.parseInt(token[7]), Integer.parseInt(token[8]), Integer.parseInt(token[9]))));
+                    case "task" -> notImplemented();
+                }
+            }
+            br.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     // method just to say that a menu item has not been implemented. (temporary)
@@ -348,9 +377,7 @@ public class Controller {
     private void deleteMessage() {
         userLibrary.deleteMessage(currentUser);
     }
-//    public User getCurrentUser() {
-//        return this.currentUser;
-//    }
+
     private void createTeam() {
         teamLibrary.createTeam(currentUser);
     }

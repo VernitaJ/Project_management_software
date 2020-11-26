@@ -17,6 +17,8 @@ public class Project extends Data{
         this.name = name;
         this.description = description;
         this.createdDate = LocalDate.now();
+        this.startDate = startDate;
+        this.endDate = endDate;
         this.taskList = new TaskLibrary();
         try{
             this.team = new Team(owner);
