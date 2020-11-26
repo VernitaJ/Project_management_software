@@ -24,6 +24,11 @@ public class ProjectLibrary extends DataLibrary{
         addToList(new Project(name, currentUser, description, startDate, endDate));
     }
 
+    public void addProjectToList(Project project)
+    {
+        list.add(project);
+    }
+
 
     //not final we need to decide to menus before integrate this with them
     public boolean deleteProject(String idToDelete, User currentUser){

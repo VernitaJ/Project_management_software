@@ -36,6 +36,11 @@ public class UserLibrary extends DataLibrary {
         System.out.println("Successfully created user.");
     }
 
+    public void addUserToList(User userToAdd)
+    {
+        list.add(userToAdd);
+    }
+
     public List<User> getAllUsers() {
         List<Data> dataList = getDataList();
         List<User> users = new ArrayList<>();
