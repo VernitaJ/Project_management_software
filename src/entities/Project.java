@@ -1,32 +1,28 @@
 package entities;
-//currently just for testing Data, not the final class
-//please dont edit it yet
 import tools.*;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.WeakHashMap;
+import java.util.Collections;
 
 public class Project extends Data{
-    private TeamLibrary team;
+    private Team team;
     private String name;
-    //needs to be integrated with team structure
     private String description;
     private String status; // Active/Inactive
     private LocalDate createdDate;
     private LocalDate startDate;
     private LocalDate endDate;
-    //waiting for other userStories
-    // private Team team;
     private TaskLibrary taskList;
-   // LocalDate startDate, LocalDate endDate,
-    public Project(String name, User owner, String description, TeamLibrary team) {
-        this.team = new TeamLibrary();
+    public Project(String name, User owner, String description, LocalDate startDate, LocalDate endDate) {
         this.name = name;
         this.description = description;
         this.createdDate = LocalDate.now();
         this.taskList = new TaskLibrary();
-        //this.startDate = startDate;
-        //this.endDate = endDate;
+        try{
+            this.team = new Team(owner);
+        }   catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     private void setStatus(String status) {
@@ -37,8 +33,12 @@ public class Project extends Data{
         this.description = description;
     }
 
-    public void setName(String name) {
+    private void setName(String name) {
         this.name = name;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public String getStatus() {
@@ -66,30 +66,68 @@ public class Project extends Data{
         return daysBetween;
     }
 
+    public boolean isUserTeamMember(User userToSearch){
+        if(team.findTeamMember(userToSearch) == null){
+            return false;
+        } return true;
+    }
+    public boolean isUserOwner(User userToSearch){
+        TeamMember member = team.findTeamMember(userToSearch);
+        if(member == null){
+            return false;
+        } else {
+            if(member.getRole().equals("Owner")){
+                return true;
+            }return false;
+        }
+    }
+    public boolean isUserAdmin(User userToSearch){
+        TeamMember member = team.findTeamMember(userToSearch);
+        if(member == null){
+            return false;
+        } return member.getRole().adminAccess();
+    }
 
-    //user & access level check needs to be added
-    public void updateStatus(){
-        Input input = Input.getInstance();
-        String newStatus = input.getStr("Enter the status: ");
-        setStatus(newStatus);
+
+    public void updateStatus(User currentUser){
+
+        if(team.findTeamMember(currentUser).getRole().adminAccess()){
+            Input input = Input.getInstance();
+            String newStatus = input.getStr("Enter the status: ");
+            setStatus(newStatus);
+        }
+        else{
+            System.out.println("You are not authorized to perform this action!");
+        }
+
     }
 
 
 
     //not mentioned in the user stories soooo idk
     /*
-    //access level check needs to be added
     public void updateName(){
-        Input input = Input.getInstance();
-        String newDesc = input.getStr("Enter the description: ");
-        setName(newDesc);
+        if(team.findTeamMember(currentUser).getRole().adminAccess()){
+            Input input = Input.getInstance();
+            String newDesc = input.getStr("Enter the description: ");
+            setName(newDesc);
+        }
+        else{
+            System.out.println("You are not authorized to perform this action!!");
+        }
+
     }
 
-    //access level check needs to be added
     public void updateDescription(){
-        Input input = Input.getInstance();
-        String newName = input.getStr("Enter the name: ");
-        setDescription(newName);
+         if(team.findTeamMember(currentUser).getRole().adminAccess()){
+            Input input = Input.getInstance();
+            String newName = input.getStr("Enter the name: ");
+            setDescription(newName);
+        }
+        else{
+            System.out.println("You are not authorized to perform this action!!");
+        }
+
     }
     */
 

@@ -29,7 +29,6 @@ public class Owner implements Roles
     }
 
     public boolean adminAccess() {
-
         return true;
     }
 }

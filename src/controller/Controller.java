@@ -141,7 +141,7 @@ public class Controller {
             String choice = menu.printMenu();
             switch (choice)
             {
-                case "1" -> notImplemented();
+                case "1" -> navigateBetweenProjects();
                 case "2" -> createProject();
                 case "3" -> notImplemented();
                 case "4" -> mainMenu();
@@ -285,7 +285,13 @@ public class Controller {
         userLibrary.createUser();
     }
     private void createProject() {
-        projectLibrary.createProject(currentUser, teamLibrary);
+        projectLibrary.createProject(currentUser);
+    }
+    private void navigateBetweenProjects() {
+        projectLibrary.navigateBetweenProjects(currentUser);
+    }
+    private void deleteProject(){
+
     }
 
     private void createMessage() {
