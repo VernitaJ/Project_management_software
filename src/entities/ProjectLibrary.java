@@ -98,4 +98,16 @@ public class ProjectLibrary extends DataLibrary{
         
     }
 
+    public void viewProjectDetails(Project currentProject){
+        if(findItInList(currentProject.getID()) != null){
+            System.out.println("Project Name: " + currentProject.getName());
+            if(!currentProject.getStatus().isEmpty()){
+                System.out.println("Status: "+ currentProject.getStatus());
+            }
+            System.out.println("Start Date: " + currentProject.getStartDate());
+            System.out.println("End Date: " + currentProject.getEndDate());
+        }
+
+    }
+
 }

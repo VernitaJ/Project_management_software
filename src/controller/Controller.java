@@ -366,9 +366,7 @@ public class Controller {
     private void createProject() {
         projectLibrary.createProject(currentUser);
     }
-    
-    private void deleteProject(){
-    }
+
     
     private void createMessage() {
         userLibrary.createMessage(currentUser);

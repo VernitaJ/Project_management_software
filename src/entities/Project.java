@@ -2,7 +2,7 @@ package entities;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
-public class Project extends Data{
+public class Project extends Data {
     protected Team team;
     private String name;
     private String description;
@@ -11,6 +11,7 @@ public class Project extends Data{
     private LocalDate startDate;
     private LocalDate endDate;
     private TaskLibrary taskList;
+
     public Project(String name, User owner, String description, LocalDate startDate, LocalDate endDate) {
         this.name = name;
         this.description = description;
@@ -18,17 +19,18 @@ public class Project extends Data{
         this.startDate = startDate;
         this.endDate = endDate;
         this.taskList = new TaskLibrary();
-        try{
+        this.status = "";
+        try {
             this.team = new Team(owner);
-        }   catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    
+
     public void setStatus(String status) {
         this.status = status;
     }
-    
+
     public void setDescription(String description) {
         this.description = description;
     }
@@ -62,7 +64,7 @@ public class Project extends Data{
     }
 
     public long duration() {
-        long daysBetween = ChronoUnit.DAYS.between(getStartDate(),getEndDate());
+        long daysBetween = ChronoUnit.DAYS.between(getStartDate(), getEndDate());
         return daysBetween;
     }
 /*
@@ -100,10 +102,10 @@ public class Project extends Data{
         else{
             System.out.println("You are not authorized to perform this action!");
         }
-*/
+
 
     }
-
+*/
 
 
     //not mentioned in the user stories soooo idk
@@ -132,5 +134,6 @@ public class Project extends Data{
 
     }
     */
+}
 
 
