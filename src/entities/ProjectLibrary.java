@@ -73,7 +73,7 @@ public class ProjectLibrary extends DataLibrary{
             int choice;
             do{
                 choice = input.getInt("Enter project number or 0 to return to the previous menu: ");
-            } while(choice < 0 || choice > projectList.size()+1);
+            } while(choice < 0 || choice > projectList.size());
 
             if (choice == 0){
                 return null;

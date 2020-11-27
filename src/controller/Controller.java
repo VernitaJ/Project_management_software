@@ -208,7 +208,7 @@ public class Controller {
             String choice = menu.printMenu();
             switch (choice)
             {
-                case "1" -> notImplemented();
+                case "1" -> projectLibrary.viewProjectDetails(currentProject);
                 case "2" -> notImplemented();
                 case "3" -> notImplemented();
                 case "4" -> notImplemented();
