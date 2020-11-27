@@ -23,9 +23,9 @@ public class Controller {
     private User currentUser = null;
     private Project currentProject = null;
     private File testFile = new File("src/temptestdata.txt");
-
+    
     private Controller(){}
-
+    
     public static Controller getInstance()
     {
         if (instance == null) {
@@ -33,12 +33,12 @@ public class Controller {
         }
         return instance;
     }
-
+    
     public void teardown()
     {
         instance = null;
     }
-
+    
     public void run()
     {
         readFile();
@@ -50,7 +50,7 @@ public class Controller {
         teardown();
         System.exit(0);
     }
-
+    
     private void readFile()
     {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -75,12 +75,12 @@ public class Controller {
             e.printStackTrace();
         }
     }
-
+    
     // method just to say that a menu item has not been implemented. (temporary)
     private void notImplemented() {
         System.out.println(Input.RED + "This Feature Has Not been Implemented" + Input.RESET);
     }
-
+    
     private void loginMenu() {
         String[] options =
                 {
@@ -102,7 +102,7 @@ public class Controller {
             }
         } while (true);
     }
-
+    
     private void mainMenu() {
         String[] options =
                 {
@@ -128,7 +128,7 @@ public class Controller {
             }
         } while (true);
     }
-
+    
     private void sysAdminMenu() {
         String[] options =
                 {
@@ -154,7 +154,7 @@ public class Controller {
             }
         } while (true);
     }
-
+    
     private void projectMenu() {
         String[] options =
                 {
@@ -171,7 +171,12 @@ public class Controller {
             String choice = menu.printMenu();
             switch (choice)
             {
-                case "1" -> notImplemented();
+                case "1" -> {
+                    Project a = projectLibrary.navigateBetweenProjects(currentUser);
+                        if(a != null) {
+                            currentProjectMenu(a);
+                        }
+                }
                 case "2" -> createProject();
                 case "3" -> notImplemented();
                 case "4" -> mainMenu();
@@ -180,8 +185,8 @@ public class Controller {
             }
         } while (true);
     }
-
-    private void currentProjectMenu() {
+    
+    private void currentProjectMenu(Project currentProject) {
         String[] options =
                 {
                         "View Project Details",
@@ -218,7 +223,7 @@ public class Controller {
             }
         } while (true);
     }
-
+    
     private void messageMenu() {
         String[] options =
                 {
@@ -244,7 +249,7 @@ public class Controller {
             }
         } while (true);
     }
-
+    
     private void profileMenu() {
         String[] options =
                 {
@@ -268,7 +273,7 @@ public class Controller {
             }
         } while (true);
     }
-
+    
     private void editProfileMenu() {
         String[] options =
                 {
@@ -298,7 +303,7 @@ public class Controller {
             }
         } while (true);
     }
-
+    
     private void leaderboardMenu() {
         String[] options =
                 {
@@ -320,14 +325,14 @@ public class Controller {
             }
         } while (true);
     }
-
+    
     public void login() {
         System.out.println("Heyyy. Welcome to the log in page");
         boolean loggedIn = false;
         do {
             String userName = input.getStr("UserName: ");
             String password = input.getStr("Password: ");
-
+            
             User loggingIn = userProfile(userName);
             if (loggingIn !=null){
                 if (loggingIn.getPassword().equals(password)){
@@ -339,12 +344,12 @@ public class Controller {
             } else System.out.println("Wrong username or password, please try again.");
         } while (!loggedIn);
     }
-
+    
     public void logout(){
         currentUser = null;
         loginMenu();
     }
-
+    
     public User userProfile(String name) {
         for (User user : userLibrary.getAllUsers()) {
             if (user.getUserName().equals(name)){
@@ -353,29 +358,26 @@ public class Controller {
         }
         return null;
     }
-
+    
     private void createUser() {
         userLibrary.createUser();
     }
-
+    
     private void createProject() {
         projectLibrary.createProject(currentUser);
     }
-    private void navigateBetweenProjects() {
-        projectLibrary.navigateBetweenProjects(currentUser);
-    }
+    
     private void deleteProject(){
-
     }
-
+    
     private void createMessage() {
         userLibrary.createMessage(currentUser);
     }
-
+    
     private void readMessage() {
         userLibrary.readMessage(currentUser);
     }
-
+    
     private void deleteMessage() {
         userLibrary.deleteMessage(currentUser);
     }

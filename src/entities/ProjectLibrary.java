@@ -36,7 +36,7 @@ public class ProjectLibrary extends DataLibrary{
         if(projectToDelete==null){
             return false;
         }
-        if(projectToDelete.isUserOwner(currentUser)){
+        if(projectToDelete.team.findTeamMember(currentUser).getRole().equals("Owner")){
             return removeItFromList(idToDelete);
         }
         System.out.println("You are not authorized to perform this action!");
@@ -44,11 +44,11 @@ public class ProjectLibrary extends DataLibrary{
 
     }
 
-    public ArrayList<Project> listUsersProjects(User currentUser){
+   public ArrayList<Project> listUsersProjects(User currentUser){
         ArrayList<Project> tempList = new ArrayList<>();
         for(Data project : list){
             Project currentProject = ((Project)project);
-            if((currentProject.isUserTeamMember(currentUser))){
+            if((currentProject.team.findTeamMember(currentUser) != null)){
                 tempList.add(currentProject);
             }
         }
@@ -77,7 +77,8 @@ public class ProjectLibrary extends DataLibrary{
 
             if (choice == 0){
                 return null;
-            } else return projectList.get(choice-1);
+            } else
+                return projectList.get(choice-1);
         }
     }
     

@@ -15,7 +15,6 @@ public class Task extends Data{
         this.description = description;
         this.status = "Default";
         this.assignees = new Team();
-        
     }
     
     public String getName() {
@@ -58,7 +57,7 @@ public class Task extends Data{
     
     }
     
-    public void updateName() {
+/*    public void updateName() {
         // if(role == ?) ADMIN
         if(team.findTeamMember(currentUser).getRole().adminAccess()){
             Input input = Input.getInstance();
@@ -67,9 +66,7 @@ public class Task extends Data{
         }
         else{
             System.out.println("You are not authorized to perform this action!");
-        }
-
-    }
+        }*/
     
     public void updateDescription() {
         // if(role == ?) ADMIN
