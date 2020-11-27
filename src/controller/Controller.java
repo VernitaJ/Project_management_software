@@ -140,7 +140,7 @@ public class Controller {
                         "Logout",
                         "Exit"
                 };
-        menu = new Menu("Admin Menu", options);
+        menu = new Menu("System Admin Menu", options);
         do
         {
             String choice = menu.printMenu();
@@ -230,7 +230,7 @@ public class Controller {
                         "logout",
                         "Exit"
                 };
-        menu = new Menu("Activity Menu", options);
+        menu = new Menu(currentUser.getUserName() + " Inbox", options);
         do
         {
             String choice = menu.printMenu();
@@ -282,7 +282,7 @@ public class Controller {
                         "Logout",
                         "Exit"
                 };
-        menu = new Menu("Team Resource Menu", options);
+        menu = new Menu("Edit Profile", options);
         do
         {
             String choice = menu.printMenu();
