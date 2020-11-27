@@ -11,7 +11,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 
 public class Controller {
     private Input input = Input.getInstance();
@@ -282,13 +281,13 @@ public class Controller {
                         "Logout",
                         "Exit"
                 };
-        menu = new Menu("Team Resource Menu", options);
+        menu = new Menu("Edit Profile", options);
         do
         {
             String choice = menu.printMenu();
             switch (choice)
             {
-                case "1" -> createTeam();
+                case "1" -> notImplemented();
                 case "2" -> notImplemented();
                 case "3" -> notImplemented();
                 case "4" -> notImplemented();
