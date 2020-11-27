@@ -112,9 +112,10 @@ public class ProjectLibrary extends DataLibrary{
     public boolean deleteProject(Project currentProject, User currentUser){
         Project projectToDelete = (Project)findItInList(currentProject.getID());
         if(projectToDelete==null){
+            System.out.println("Project does not exist!");
             return false;
         }
-        if(projectToDelete.team.findTeamMember(currentUser).getRole().equals("Owner")){
+        if(currentProject.team.findTeamMember(currentUser).getRole().equals("Owner")){
             Input input = Input.getInstance();
             System.out.println("Warning!");
             System.out.println("You are about to delete the entire project!");
