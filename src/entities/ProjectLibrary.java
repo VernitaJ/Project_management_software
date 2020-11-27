@@ -80,5 +80,21 @@ public class ProjectLibrary extends DataLibrary{
             } else return projectList.get(choice-1);
         }
     }
+    
+    public void updateName(User currentUser){
+        Project currentProject = null;
+        for(Data project : list) {
+            currentProject = ((Project) project);
+        }
+            if(currentProject.team.findTeamMember(currentUser).getRole().adminAccess()){
+            Input input = Input.getInstance();
+            String newDesc = input.getStr("Enter the description: ");
+            currentProject.setName(newDesc);
+        }
+        else{
+            System.out.println("You are not authorized to perform this action!!");
+        }
+        
+    }
 
 }

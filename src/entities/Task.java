@@ -4,16 +4,18 @@ import tools.Input;
 
 public class Task extends Data{
     private User createdBy;
-    private String status; //NotStarted/Ongoing/Completed?
     private String name;
     private String description;
-   // private Team assignees;
+    private String status; //NotStarted/Ongoing/Completed?
+    private Team assignees;
     
     public Task(User createdBy, String name, String description){
         this.createdBy = createdBy;
         this.name = name;
         this.description = description;
         this.status = "Default";
+        this.assignees = new Team();
+        
     }
     
     public String getName() {
@@ -28,11 +30,9 @@ public class Task extends Data{
         return status;
     }
     
-/*
     public Team getAssignees() {
         return assignees;
     }
-*/
     
     public User getCreatedBy() {
         return createdBy;
@@ -59,27 +59,34 @@ public class Task extends Data{
     }
     
     public void updateName() {
-        // if(role == ?)
-        Input input = Input.getInstance();
-        String newStatus = input.getStr("Enter the name: ");
+        // if(role == ?) ADMIN
+        if(team.findTeamMember(currentUser).getRole().adminAccess()){
+            Input input = Input.getInstance();
+            String newStatus = input.getStr("Enter the name: ");
+            setStatus(newStatus);
+        }
+        else{
+            System.out.println("You are not authorized to perform this action!");
+        }
+
     }
     
     public void updateDescription() {
-        // if(role == ?)
+        // if(role == ?) ADMIN
         Input input = Input.getInstance();
         String newStatus = input.getStr("Enter the description: ");
     }
     
     public void updateStatus() {
         // Waiting to see if status is an object for tasks etc..
-        // if(role == ?)
+        // if(role == ?) ADMIN
         Input input = Input.getInstance();
         String newStatus = input.getStr("Enter the description: ");
         setStatus(newStatus);
     }
     
     public void updateAssignees() {
-        // if(role == ?)
+        // if(role == ?) ALL
         // addAssignee() OR removeAssignee()
     }
     

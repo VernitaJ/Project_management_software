@@ -1,11 +1,9 @@
 package entities;
-import tools.*;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.Collections;
 
 public class Project extends Data{
-    private Team team;
+    protected Team team;
     private String name;
     private String description;
     private String status; // Active/Inactive
@@ -26,16 +24,16 @@ public class Project extends Data{
             e.printStackTrace();
         }
     }
-
-    private void setStatus(String status) {
+    
+    public void setStatus(String status) {
         this.status = status;
     }
-
-    private void setDescription(String description) {
+    
+    public void setDescription(String description) {
         this.description = description;
     }
 
-    private void setName(String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -67,7 +65,7 @@ public class Project extends Data{
         long daysBetween = ChronoUnit.DAYS.between(getStartDate(),getEndDate());
         return daysBetween;
     }
-
+/*
     public boolean isUserTeamMember(User userToSearch){
         if(team.findTeamMember(userToSearch) == null){
             return false;
@@ -89,8 +87,9 @@ public class Project extends Data{
             return false;
         } return member.getRole().adminAccess();
     }
+*/
 
-
+/*
     public void updateStatus(User currentUser){
 
         if(team.findTeamMember(currentUser).getRole().adminAccess()){
@@ -101,6 +100,7 @@ public class Project extends Data{
         else{
             System.out.println("You are not authorized to perform this action!");
         }
+*/
 
     }
 
