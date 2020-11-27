@@ -1,13 +1,16 @@
 package controller;
 
 import components.Login;
-import entities.ProjectLibrary;
-import entities.TeamLibrary;
-import entities.UserLibrary;
+import entities.*;
 import tools.Input;
 import tools.Menu;
-import entities.User;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class Controller {
@@ -19,6 +22,8 @@ public class Controller {
     private ProjectLibrary projectLibrary = ProjectLibrary.getInstance();
     private static Controller instance = null;
     private User currentUser = null;
+    private Project currentProject = null;
+    private File testFile = new File("src/temptestdata.txt");
 
     private Controller(){}
 
@@ -37,6 +42,7 @@ public class Controller {
 
     public void run()
     {
+        readFile();
         loginMenu();
     }
     private void exit()
@@ -44,6 +50,31 @@ public class Controller {
         input.teardown();
         teardown();
         System.exit(0);
+    }
+
+    private void readFile()
+    {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        BufferedReader br;
+        String line;
+        try {
+            br = new BufferedReader(new FileReader(testFile));
+            while((line = br.readLine()) != null) {
+                String[] token = line.split(",");
+                switch (token[0].toLowerCase()) {
+                    case "user" -> userLibrary.addUserToList(new User(token[1],token[2],token[3], token[4],token[5]));
+                    case "project" -> {
+                        this.currentUser = (User) userLibrary.findUserInList(token[2]);
+                        projectLibrary.addProjectToList(new Project(token[1], currentUser, token[3], LocalDate.of(Integer.parseInt(token[4]), Integer.parseInt(token[5]), Integer.parseInt(token[6])), LocalDate.of(Integer.parseInt(token[7]), Integer.parseInt(token[8]), Integer.parseInt(token[9]))));
+                        this.currentUser = null;
+                    }
+                    case "task" -> notImplemented();
+                }
+            }
+            br.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     // method just to say that a menu item has not been implemented. (temporary)
@@ -56,6 +87,7 @@ public class Controller {
                 {
                         "Create Account",
                         "Login",
+                        "System Administrator Login",
                         "Exit"
                 };
         menu = new Menu("Login Menu", options);
@@ -66,21 +98,19 @@ public class Controller {
             {
                 case "1" -> createUser();
                 case "2" -> login();
-                case "3" -> exit();
+                case "3" -> notImplemented();
+                case "4" -> exit();
             }
         } while (true);
     }
 
     private void mainMenu() {
-        // options will change but this is just so you can move around the system.
         String[] options =
                 {
-                        "Admin Menu",
-                        "User Menu",
-                        "Project Menu",
-                        "Activity Menu",
-                        "Team Resource Menu",
-                        "Statistics Menu",
+                        "Leaderboard",
+                        "Projects",
+                        "Profile",
+                        "Inbox",
                         "Logout",
                         "Exit"
                 };
@@ -90,25 +120,24 @@ public class Controller {
             String choice = menu.printMenu();
             switch (choice)
             {
-                case "1" -> adminMenu();
-                case "2" -> userMenu();
-                case "3" -> projectMenu();
-                case "4" -> activityMenu();
-                case "5" -> teamResourceMenu();
-                case "6" -> statisticsMenu();
-                case "7" -> logout();
-                case "8" -> exit();
+                case "1" -> leaderboardMenu();
+                case "2" -> projectMenu();
+                case "3" -> profileMenu();
+                case "4" -> messageMenu();
+                case "5" -> logout();
+                case "6" -> exit();
             }
         } while (true);
     }
 
-    private void adminMenu() {
+    private void sysAdminMenu() {
         String[] options =
                 {
                         "Import (test) Data",
                         "Export (test) Data",
                         "Remove User",
                         "Main Menu",
+                        "Logout",
                         "Exit"
                 };
         menu = new Menu("Admin Menu", options);
@@ -121,31 +150,8 @@ public class Controller {
                 case "2" -> notImplemented();
                 case "3" -> notImplemented();
                 case "4" -> mainMenu();
-                case "5" -> exit();
-            }
-        } while (true);
-    }
-
-    private void userMenu() {
-        String[] options =
-                {
-                        "View Projects",
-                        "Create Project",
-                        "Remove Project",
-                        "Main Menu",
-                        "Exit"
-                };
-        menu = new Menu("User Menu", options);
-        do
-        {
-            String choice = menu.printMenu();
-            switch (choice)
-            {
-                case "1" -> navigateBetweenProjects();
-                case "2" -> createProject();
-                case "3" -> notImplemented();
-                case "4" -> mainMenu();
-                case "5" -> exit();
+                case "5" -> logout();
+                case "61" -> exit();
             }
         } while (true);
     }
@@ -153,12 +159,12 @@ public class Controller {
     private void projectMenu() {
         String[] options =
                 {
-                        "Activities",
-                        "Team Resources",
-                        "Statistics",
+                        "View Projects",
+                        "Create Project",
+                        "Remove Project",
                         "Main Menu",
-                        "Exit",
-                        "Add team"
+                        "Logout",
+                        "Exit"
                 };
         menu = new Menu("Project Menu", options);
         do
@@ -166,23 +172,62 @@ public class Controller {
             String choice = menu.printMenu();
             switch (choice)
             {
-                case "1" -> activityMenu();
-                case "2" -> notImplemented();
+                case "1" -> notImplemented();
+                case "2" -> createProject();
                 case "3" -> notImplemented();
                 case "4" -> mainMenu();
-                case "5" -> exit();
-                case "6" -> createTeam();
+                case "5" -> logout();
+                case "6" -> exit();
             }
         } while (true);
     }
 
-    private void activityMenu() {
+    private void currentProjectMenu() {
+        String[] options =
+                {
+                        "View Project Details",
+                        "Countdown",
+                        "Gantt Chart",
+                        "View Team",
+                        "Add Team Member",
+                        "Remove Team Member",
+                        "View Tasks",
+                        "Add Task",
+                        "Remove Task",
+                        "Main Menu",
+                        "Logout",
+                        "Exit"
+                };
+        menu = new Menu(currentProject.getName() + " Menu", options);
+        do
+        {
+            String choice = menu.printMenu();
+            switch (choice)
+            {
+                case "1" -> notImplemented();
+                case "2" -> notImplemented();
+                case "3" -> notImplemented();
+                case "4" -> notImplemented();
+                case "5" -> notImplemented();
+                case "6" -> notImplemented();
+                case "7" -> notImplemented();
+                case "8" -> notImplemented();
+                case "9" -> notImplemented();
+                case "10" -> mainMenu();
+                case "11" -> logout();
+                case "12" -> exit();
+            }
+        } while (true);
+    }
+
+    private void messageMenu() {
         String[] options =
                 {
                         "Create Message",
                         "Read Messages",
                         "Delete Message",
                         "Main Menu",
+                        "logout",
                         "Exit"
                 };
         menu = new Menu("Activity Menu", options);
@@ -195,18 +240,46 @@ public class Controller {
                 case "2" -> readMessage();
                 case "3" -> deleteMessage();
                 case "4" -> mainMenu();
+                case "5" -> logout();
+                case "6" -> exit();
+            }
+        } while (true);
+    }
+
+    private void profileMenu() {
+        String[] options =
+                {
+                        "View Profile",
+                        "Edit Profile",
+                        "Main Menu",
+                        "Logout",
+                        "Exit"
+                };
+        menu = new Menu("Profile Menu", options);
+        do
+        {
+            String choice = menu.printMenu();
+            switch (choice)
+            {
+                case "1" -> notImplemented();
+                case "2" -> editProfileMenu();
+                case "3" -> mainMenu();
+                case "4" -> logout();
                 case "5" -> exit();
             }
         } while (true);
     }
 
-    private void teamResourceMenu() {
+    private void editProfileMenu() {
         String[] options =
                 {
-                        "Create Team",
-                        "Remove",
-                        "Change",
+                        "Change Username",
+                        "Change Password",
+                        "Update Email",
+                        "Update Company",
+                        "Update Occupation",
                         "Main Menu",
+                        "Logout",
                         "Exit"
                 };
         menu = new Menu("Team Resource Menu", options);
@@ -218,32 +291,33 @@ public class Controller {
                 case "1" -> createTeam();
                 case "2" -> notImplemented();
                 case "3" -> notImplemented();
-                case "4" -> mainMenu();
-                case "5" -> exit();
+                case "4" -> notImplemented();
+                case "5" -> notImplemented();
+                case "6" -> mainMenu();
+                case "7" -> logout();
+                case "8" -> exit();
             }
         } while (true);
     }
 
-    private void statisticsMenu() {
+    private void leaderboardMenu() {
         String[] options =
                 {
-                        "Project KPI",
-                        "Create Project",
-                        "Remove Project",
+                        "View Leaderboard",
                         "Main Menu",
+                        "Logout",
                         "Exit"
                 };
-        menu = new Menu("Statistics Menu", options);
+        menu = new Menu("Leaderboard", options);
         do
         {
             String choice = menu.printMenu();
             switch (choice)
             {
                 case "1" -> notImplemented();
-                case "2" -> notImplemented();
-                case "3" -> notImplemented();
-                case "4" -> mainMenu();
-                case "5" -> exit();
+                case "2" -> mainMenu();
+                case "3" -> logout();
+                case "4" -> exit();
             }
         } while (true);
     }
@@ -284,6 +358,7 @@ public class Controller {
     private void createUser() {
         userLibrary.createUser();
     }
+
     private void createProject() {
         projectLibrary.createProject(currentUser);
     }
@@ -305,9 +380,7 @@ public class Controller {
     private void deleteMessage() {
         userLibrary.deleteMessage(currentUser);
     }
-//    public User getCurrentUser() {
-//        return this.currentUser;
-//    }
+
     private void createTeam() {
         teamLibrary.createTeam(currentUser);
     }
