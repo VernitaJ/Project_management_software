@@ -198,6 +198,7 @@ public class Controller {
                         "View Tasks",
                         "Add Task",
                         "Remove Task",
+                        "Delete Project",
                         "Main Menu",
                         "Logout",
                         "Exit"
@@ -217,9 +218,15 @@ public class Controller {
                 case "7" -> notImplemented();
                 case "8" -> notImplemented();
                 case "9" -> notImplemented();
-                case "10" -> mainMenu();
-                case "11" -> logout();
-                case "12" -> exit();
+                case "10" -> {
+                    Boolean isSuccessful = projectLibrary.deleteProject(currentProject, currentUser);
+                    if(isSuccessful){
+                        mainMenu();
+                    }
+                }
+                case "11" -> mainMenu();
+                case "12" -> logout();
+                case "13" -> exit();
             }
         } while (true);
     }

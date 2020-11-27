@@ -29,21 +29,6 @@ public class ProjectLibrary extends DataLibrary{
         list.add(project);
     }
 
-
-    //not final we need to decide to menus before integrate this with them
-    public boolean deleteProject(String idToDelete, User currentUser){
-        Project projectToDelete = (Project)findItInList(idToDelete);
-        if(projectToDelete==null){
-            return false;
-        }
-        if(projectToDelete.team.findTeamMember(currentUser).getRole().equals("Owner")){
-            return removeItFromList(idToDelete);
-        }
-        System.out.println("You are not authorized to perform this action!");
-        return false;
-
-    }
-
    public ArrayList<Project> listUsersProjects(User currentUser){
         ArrayList<Project> tempList = new ArrayList<>();
         for(Data project : list){
@@ -106,8 +91,44 @@ public class ProjectLibrary extends DataLibrary{
             }
             System.out.println("Start Date: " + currentProject.getStartDate());
             System.out.println("End Date: " + currentProject.getEndDate());
+        } else {
+            System.out.println("Project does not exist!");
         }
 
     }
+
+    //not final we need to decide to menus before integrate this with them
+    public boolean deleteProject(Project currentProject, User currentUser){
+        Project projectToDelete = (Project)findItInList(currentProject.getID());
+        if(projectToDelete==null){
+            return false;
+        }
+        if(projectToDelete.team.findTeamMember(currentUser).getRole().equals("Owner")){
+            Input input = Input.getInstance();
+            System.out.println("Warning!");
+            System.out.println("You are about to delete the entire project!");
+            System.out.println("This action is irreversible!");
+            String email = input.getStr("Please enter email address to confirm the deletion: ");
+            String password = input.getStr("Please enter password: ");
+            if(currentUser.getEmail().equals(email) && currentUser.getPassword().equals(password)){
+                if(removeItFromList(currentProject.getID())){
+                    System.out.println("Project successfully deleted!");
+                    System.out.println("Returning to main menu...");
+                    return true;
+                } else {
+                    System.out.println("Something went wrong");
+                    return false;
+                }
+            } else {
+                System.out.println("Confirmation Failed!");
+                return false;
+            }
+
+        }
+        System.out.println("You are not authorized to perform this action!");
+        return false;
+
+    }
+
 
 }
