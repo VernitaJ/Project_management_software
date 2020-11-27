@@ -67,46 +67,6 @@ public class Project extends Data {
         long daysBetween = ChronoUnit.DAYS.between(getStartDate(), getEndDate());
         return daysBetween;
     }
-/*
-    public boolean isUserTeamMember(User userToSearch){
-        if(team.findTeamMember(userToSearch) == null){
-            return false;
-        } return true;
-    }
-    public boolean isUserOwner(User userToSearch){
-        TeamMember member = team.findTeamMember(userToSearch);
-        if(member == null){
-            return false;
-        } else {
-            if(member.getRole().equals("Owner")){
-                return true;
-            }return false;
-        }
-    }
-    public boolean isUserAdmin(User userToSearch){
-        TeamMember member = team.findTeamMember(userToSearch);
-        if(member == null){
-            return false;
-        } return member.getRole().adminAccess();
-    }
-*/
-
-/*
-    public void updateStatus(User currentUser){
-
-        if(team.findTeamMember(currentUser).getRole().adminAccess()){
-            Input input = Input.getInstance();
-            String newStatus = input.getStr("Enter the status: ");
-            setStatus(newStatus);
-        }
-        else{
-            System.out.println("You are not authorized to perform this action!");
-        }
-
-
-    }
-*/
-
 
     //not mentioned in the user stories soooo idk
     /*

@@ -97,7 +97,18 @@ public class ProjectLibrary extends DataLibrary{
 
     }
 
-    //not final we need to decide to menus before integrate this with them
+    public void updateStatus(Project currentProject, User currentUser){
+        if(currentProject.team.findTeamMember(currentUser).getRole().adminAccess()){
+            Input input = Input.getInstance();
+            String newStatus = input.getStr("Enter the status: ");
+            currentProject.setStatus(newStatus);
+        }
+        else{
+            System.out.println("You are not authorized to perform this action!");
+        }
+    }
+
+
     public boolean deleteProject(Project currentProject, User currentUser){
         Project projectToDelete = (Project)findItInList(currentProject.getID());
         if(projectToDelete==null){
@@ -129,6 +140,7 @@ public class ProjectLibrary extends DataLibrary{
         return false;
 
     }
+
 
 
 }
