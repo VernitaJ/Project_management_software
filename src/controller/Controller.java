@@ -379,9 +379,6 @@ public class Controller {
     private void deleteMessage() {
         userLibrary.deleteMessage(currentUser);
     }
-
-    private void createTeam() {
-        teamLibrary.createTeam(currentUser);
-    }
+    
 }
 
