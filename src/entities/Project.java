@@ -10,7 +10,7 @@ public class Project extends Data {
     private LocalDate createdDate;
     private LocalDate startDate;
     private LocalDate endDate;
-    private TaskLibrary taskList;
+    protected TaskLibrary taskList;
 
     public Project(String name, User owner, String description, LocalDate startDate, LocalDate endDate) {
         this.name = name;
