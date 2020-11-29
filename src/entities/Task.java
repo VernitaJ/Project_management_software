@@ -1,7 +1,5 @@
 package entities;
 
-import tools.Input;
-
 public class Task extends Data{
     private User createdBy;
     private String name;
@@ -37,54 +35,16 @@ public class Task extends Data{
         return createdBy;
     }
     
-    private void setName(String name) {
+    public void setName(String name) {
         this.name = name;
     }
     
-    private void setDescription(String description) {
+    public void setDescription(String description) {
         this.description = description;
     }
     
-    private void setStatus(String status) {
+    public void setStatus(String status) {
         this.status = status;
-    }
-    
-    private void addAssignee() {
-    
-    }
-    
-    private void removeAssignee() {
-    
-    }
-    
-/*    public void updateName() {
-        // if(role == ?) ADMIN
-        if(team.findTeamMember(currentUser).getRole().adminAccess()){
-            Input input = Input.getInstance();
-            String newStatus = input.getStr("Enter the name: ");
-            setStatus(newStatus);
-        }
-        else{
-            System.out.println("You are not authorized to perform this action!");
-        }*/
-    
-    public void updateDescription() {
-        // if(role == ?) ADMIN
-        Input input = Input.getInstance();
-        String newStatus = input.getStr("Enter the description: ");
-    }
-    
-    public void updateStatus() {
-        // Waiting to see if status is an object for tasks etc..
-        // if(role == ?) ADMIN
-        Input input = Input.getInstance();
-        String newStatus = input.getStr("Enter the description: ");
-        setStatus(newStatus);
-    }
-    
-    public void updateAssignees() {
-        // if(role == ?) ALL
-        // addAssignee() OR removeAssignee()
     }
     
 }
