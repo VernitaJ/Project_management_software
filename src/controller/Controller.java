@@ -19,9 +19,11 @@ public class Controller {
     private UserLibrary userLibrary = UserLibrary.getInstance();
     private TeamLibrary teamLibrary = TeamLibrary.getInstance();
     private ProjectLibrary projectLibrary = ProjectLibrary.getInstance();
+    private TaskLibrary taskLibrary = TaskLibrary.getInstance();
     private static Controller instance = null;
     private User currentUser = null;
     private Project currentProject = null;
+    private Task currentTask = null;
     private File testFile = new File("src/temptestdata.txt");
     
     private Controller(){}
@@ -216,8 +218,13 @@ public class Controller {
                 case "4" -> notImplemented();
                 case "5" -> notImplemented();
                 case "6" -> notImplemented();
-                case "7" -> notImplemented();
-                case "8" -> notImplemented();
+                case "7" -> {
+                    Task currentTask = taskLibrary.navigateBetweenTasks(currentProject);
+                    if (currentTask != null) {
+                        currentTaskMenu(currentProject, currentTask, currentUser);
+                    }
+                } // taskMenu
+                case "8" -> taskLibrary.createTask(currentUser);
                 case "9" -> notImplemented();
                 case "10" -> projectLibrary.updateStatus(currentProject, currentUser);
                 case "11" -> {
@@ -233,6 +240,38 @@ public class Controller {
         } while (true);
     }
     
+    private void currentTaskMenu(Project currentProject, Task currentTask, User currentUser) {
+        String[] options =
+                {
+                        "View Task Details",
+                        "Add Team Member",
+                        "Remove Team Member",
+                        "Update Name",
+                        "Update Description",
+                        "Update Status",
+                        "Main Menu",
+                        "Logout",
+                        "Exit"
+                };
+        menu = new Menu(currentTask.getName() + " Task", options);
+        do
+        {
+            String choice = menu.printMenu();
+            switch (choice)
+            {
+                case "1" -> taskLibrary.viewTaskDetails(currentTask);
+                case "2" -> taskLibrary.addAssignee(currentProject, currentTask);
+                case "3" -> taskLibrary.removeAssignee(currentProject, currentTask);
+                case "4" -> notImplemented();
+                case "5" -> notImplemented();
+                case "6" -> taskLibrary.updateStatus(currentProject, currentTask, currentUser);
+                case "7" -> mainMenu();
+                case "8" -> logout();
+                case "9" -> exit();
+            }
+        } while (true);
+    }
+    
     private void messageMenu() {
         String[] options =
                 {
@@ -240,7 +279,7 @@ public class Controller {
                         "Read Messages",
                         "Delete Message",
                         "Main Menu",
-                        "logout",
+                        "Logout",
                         "Exit"
                 };
         menu = new Menu(currentUser.getUserName() + " Inbox", options);
