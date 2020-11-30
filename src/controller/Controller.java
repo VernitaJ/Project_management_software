@@ -11,7 +11,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 
 public class Controller {
     private Input input = Input.getInstance();
@@ -20,9 +19,11 @@ public class Controller {
     private UserLibrary userLibrary = UserLibrary.getInstance();
     private TeamLibrary teamLibrary = TeamLibrary.getInstance();
     private ProjectLibrary projectLibrary = ProjectLibrary.getInstance();
+    private TaskLibrary taskLibrary = TaskLibrary.getInstance();
     private static Controller instance = null;
     private User currentUser = null;
     private Project currentProject = null;
+    private Task currentTask = null;
     private File testFile = new File("src/temptestdata.txt");
 
     private Controller(){}
@@ -52,8 +53,7 @@ public class Controller {
         System.exit(0);
     }
 
-    private void readFile()
-    {
+    private void readFile() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         BufferedReader br;
         String line;
@@ -110,7 +110,7 @@ public class Controller {
                         "Leaderboard",
                         "Projects",
                         "Profile",
-                        "Inbox",
+                        "Messaging",
                         "Logout",
                         "Exit"
                 };
@@ -172,7 +172,12 @@ public class Controller {
             String choice = menu.printMenu();
             switch (choice)
             {
-                case "1" -> notImplemented();
+                case "1" -> {
+                    Project a = projectLibrary.navigateBetweenProjects(currentUser);
+                        if(a != null) {
+                            currentProjectMenu(a);
+                        }
+                }
                 case "2" -> createProject();
                 case "3" -> notImplemented();
                 case "4" -> mainMenu();
@@ -181,8 +186,8 @@ public class Controller {
             }
         } while (true);
     }
-
-    private void currentProjectMenu() {
+    
+    private void currentProjectMenu(Project currentProject) {
         String[] options =
                 {
                         "View Project Details",
@@ -194,6 +199,8 @@ public class Controller {
                         "View Tasks",
                         "Add Task",
                         "Remove Task",
+                        "Update Status",
+                        "Delete Project",
                         "Main Menu",
                         "Logout",
                         "Exit"
@@ -204,18 +211,62 @@ public class Controller {
             String choice = menu.printMenu();
             switch (choice)
             {
-                case "1" -> notImplemented();
+                case "1" -> projectLibrary.viewProjectDetails(currentProject);
                 case "2" -> notImplemented();
                 case "3" -> notImplemented();
                 case "4" -> notImplemented();
                 case "5" -> notImplemented();
                 case "6" -> notImplemented();
-                case "7" -> notImplemented();
-                case "8" -> notImplemented();
-                case "9" -> notImplemented();
-                case "10" -> mainMenu();
-                case "11" -> logout();
-                case "12" -> exit();
+                case "7" -> {
+                    Task currentTask = taskLibrary.navigateBetweenTasks(currentProject);
+                    if (currentTask != null) {
+                        currentTaskMenu(currentProject, currentTask, currentUser);
+                    }
+                } // taskMenu
+                case "8" -> taskLibrary.createTask(currentProject, currentUser);
+                case "9" -> taskLibrary.deleteTask(currentProject, currentUser);
+                case "10" -> projectLibrary.updateStatus(currentProject, currentUser);
+                case "11" -> {
+                //    Boolean isSuccessful = projectLibrary.deleteProject(currentProject, currentUser);
+                //    if(isSuccessful){
+                //        mainMenu();
+                //    }
+                 }
+                case "12" -> mainMenu();
+                case "13" -> logout();
+                case "14" -> exit();
+            }
+        } while (true);
+    }
+    
+    private void currentTaskMenu(Project currentProject, Task currentTask, User currentUser) {
+        String[] options =
+                {
+                        "View Task Details",
+                        "Add Team Member",
+                        "Remove Team Member",
+                        "Update Name",
+                        "Update Description",
+                        "Update Status",
+                        "Main Menu",
+                        "Logout",
+                        "Exit"
+                };
+        menu = new Menu(currentTask.getName() + " Task", options);
+        do
+        {
+            String choice = menu.printMenu();
+            switch (choice)
+            {
+                case "1" -> taskLibrary.viewTaskDetails(currentTask);
+                case "2" -> taskLibrary.addAssignee(currentProject, currentTask);
+                case "3" -> taskLibrary.removeAssignee(currentProject, currentTask);
+                case "4" -> notImplemented();
+                case "5" -> notImplemented();
+                case "6" -> taskLibrary.updateStatus(currentProject, currentTask, currentUser);
+                case "7" -> mainMenu();
+                case "8" -> logout();
+                case "9" -> exit();
             }
         } while (true);
     }
@@ -227,10 +278,10 @@ public class Controller {
                         "Read Messages",
                         "Delete Message",
                         "Main Menu",
-                        "logout",
+                        "Logout",
                         "Exit"
                 };
-        menu = new Menu(currentUser.getUserName() + " Inbox", options);
+        menu = new Menu(currentUser.getUserName() + " Messaging", options);
         do
         {
             String choice = menu.printMenu();
@@ -288,7 +339,7 @@ public class Controller {
             String choice = menu.printMenu();
             switch (choice)
             {
-                case "1" -> createTeam();
+                case "1" -> notImplemented();
                 case "2" -> notImplemented();
                 case "3" -> notImplemented();
                 case "4" -> notImplemented();
@@ -351,27 +402,19 @@ public class Controller {
     private void createProject() {
         projectLibrary.createProject(currentUser);
     }
-    private void navigateBetweenProjects() {
-        projectLibrary.navigateBetweenProjects(currentUser);
-    }
-    private void deleteProject(){
 
-    }
-
+    
     private void createMessage() {
         userLibrary.createMessage(currentUser);
     }
-
+    
     private void readMessage() {
         userLibrary.readMessage(currentUser);
     }
-
+    
     private void deleteMessage() {
         userLibrary.deleteMessage(currentUser);
     }
-
-    private void createTeam() {
-        teamLibrary.createTeam(currentUser);
-    }
+    
 }
 

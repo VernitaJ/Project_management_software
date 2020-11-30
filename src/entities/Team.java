@@ -3,10 +3,9 @@ package entities;
 
 import access_roles.CustomRoles;
 import access_roles.RoleFactory;
-import java.util.ArrayList;
-import java.util.List;
+import tools.Input;
+
 import java.util.WeakHashMap;
-import tools.*;
 public class Team extends Data {
 
     private UserLibrary userLibrary;
@@ -20,6 +19,10 @@ public class Team extends Data {
         //this.teamName = input.getStr("Enter desired team name:");
         this.memberList = new WeakHashMap<>();
         this.memberList.put(currentUser.getUserName(), new TeamMember(currentUser, roleFactory.createOwner()));
+    }
+    
+    public Team() {
+        this.memberList = new WeakHashMap<>();
     }
 
     public String getTeamName() {
