@@ -73,7 +73,7 @@ public class UserLibrary extends DataLibrary {
         System.out.println("Welcome to Simple Direction. " + "\n" + "Please Log in to continue.");
         String userLogin = "";
         do {
-            String userName = input.getStr("UserName: ");
+            String userName = input.getStr("Username: ");
             String password = input.getStr("Password: ");
             Data loggingIn = findUserInList(userName);
             if (loggingIn !=null){

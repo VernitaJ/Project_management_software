@@ -96,11 +96,13 @@ public class Project extends Data {
         }
     }
 
+    // move to projectlibrary
     public void addMaintainer(User currentUser)
     {
         UserLibrary.getInstance().printAllUsers();
         String toAdd = input.getStr("Member to Add: ");
-        team.addTeamMaintainer((User) UserLibrary.getInstance().findUserInList(toAdd), currentUser);
+        Data newTeamMember = UserLibrary.getInstance().findUserInList(toAdd);
+        team.addTeamMaintainer((User) newTeamMember, currentUser);
     }
 
     public void addDeveloper(User currentUser)

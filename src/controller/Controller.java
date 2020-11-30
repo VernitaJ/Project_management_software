@@ -175,9 +175,9 @@ public class Controller {
             switch (choice)
             {
                 case "1" -> {
-                    Project a = projectLibrary.navigateBetweenProjects(currentUser);
-                        if(a != null) {
-                            currentProjectMenu(a);
+                    currentProject = projectLibrary.navigateBetweenProjects(currentUser);
+                        if(currentProject != null) {
+                            currentProjectMenu();
                         }
                 }
                 case "2" -> createProject();
@@ -189,7 +189,7 @@ public class Controller {
         } while (true);
     }
     
-    private void currentProjectMenu(Project currentProject) {
+    private void currentProjectMenu() {
         String[] options =
                 {
                         "View Project Details",
@@ -234,7 +234,11 @@ public class Controller {
                 //        mainMenu();
                 //    }
                  }
-                case "12" -> mainMenu();
+                case "12" ->
+                        {
+                            currentProject = null;
+                            mainMenu();
+                        }
                 case "13" -> logout();
                 case "14" -> exit();
             }

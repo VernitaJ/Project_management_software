@@ -8,7 +8,7 @@ import tools.Input;
 import java.util.WeakHashMap;
 public class Team extends Data {
 
-    private UserLibrary userLibrary;
+    private UserLibrary userLibrary = UserLibrary.getInstance();
     private Input input;
     private RoleFactory roleFactory = new RoleFactory();
     private String teamName;
