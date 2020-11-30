@@ -1,18 +1,17 @@
 package entities;
-import tools.*;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.Collections;
 
-public class Project extends Data{
-    private Team team;
+public class Project extends Data {
+    protected Team team;
     private String name;
     private String description;
     private String status; // Active/Inactive
     private LocalDate createdDate;
     private LocalDate startDate;
     private LocalDate endDate;
-    private TaskLibrary taskList;
+    protected TaskLibrary taskList;
+
     public Project(String name, User owner, String description, LocalDate startDate, LocalDate endDate) {
         this.name = name;
         this.description = description;
@@ -20,22 +19,23 @@ public class Project extends Data{
         this.startDate = startDate;
         this.endDate = endDate;
         this.taskList = new TaskLibrary();
-        try{
+        this.status = "";
+        try {
             this.team = new Team(owner);
-        }   catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void setStatus(String status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
-    private void setDescription(String description) {
+    public void setDescription(String description) {
         this.description = description;
     }
 
-    private void setName(String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -64,47 +64,9 @@ public class Project extends Data{
     }
 
     public long duration() {
-        long daysBetween = ChronoUnit.DAYS.between(getStartDate(),getEndDate());
+        long daysBetween = ChronoUnit.DAYS.between(getStartDate(), getEndDate());
         return daysBetween;
     }
-
-    public boolean isUserTeamMember(User userToSearch){
-        if(team.findTeamMember(userToSearch) == null){
-            return false;
-        } return true;
-    }
-    public boolean isUserOwner(User userToSearch){
-        TeamMember member = team.findTeamMember(userToSearch);
-        if(member == null){
-            return false;
-        } else {
-            if(member.getRole().equals("Owner")){
-                return true;
-            }return false;
-        }
-    }
-    public boolean isUserAdmin(User userToSearch){
-        TeamMember member = team.findTeamMember(userToSearch);
-        if(member == null){
-            return false;
-        } return member.getRole().adminAccess();
-    }
-
-
-    public void updateStatus(User currentUser){
-
-        if(team.findTeamMember(currentUser).getRole().adminAccess()){
-            Input input = Input.getInstance();
-            String newStatus = input.getStr("Enter the status: ");
-            setStatus(newStatus);
-        }
-        else{
-            System.out.println("You are not authorized to perform this action!");
-        }
-
-    }
-
-
 
     //not mentioned in the user stories soooo idk
     /*
@@ -132,5 +94,6 @@ public class Project extends Data{
 
     }
     */
-
 }
+
+
