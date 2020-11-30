@@ -216,7 +216,7 @@ public class Controller {
                 case "1" -> projectLibrary.viewProjectDetails(currentProject);
                 case "2" -> notImplemented();
                 case "3" -> notImplemented();
-                case "4" -> notImplemented();
+                case "4" -> showTeam(currentProject);
                 case "5" -> notImplemented();
                 case "6" -> notImplemented();
                 case "7" -> {
@@ -395,6 +395,11 @@ public class Controller {
             }
         }
         return null;
+    }
+
+    private void showTeam(Project currentProject)
+    {
+        currentProject.printTeam();
     }
 
     private void createUser() {

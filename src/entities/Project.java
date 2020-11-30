@@ -78,6 +78,14 @@ public class Project extends Data {
                 + timeLeftBeforeExceedingBudget();
     }
 
+    public void printTeam()
+    {
+        for (String member : team.getMemberList().keySet())
+        {
+            System.out.println(team.getMemberList().get(member).getRole().roleType() + ": " + member);
+        }
+    }
+
 
     //not mentioned in the user stories soooo idk
     /*

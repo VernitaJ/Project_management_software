@@ -75,11 +75,11 @@ public class Team extends Data {
             System.out.println("You do not have the correct access");
         }
     }
-   /*  public List<TeamMember> getAllTeamMembers(){
-        return new ArrayList<>(this.memberList.values());
-    }
 
-    */
+    public WeakHashMap<String, TeamMember> getMemberList()
+    {
+        return memberList;
+    }
 
 
     public User getTeamMember(User user) throws Exception {
