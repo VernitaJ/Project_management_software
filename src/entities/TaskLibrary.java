@@ -21,7 +21,6 @@ public class TaskLibrary extends DataLibrary{
         } else {
             return false;
         }
-        
             // Below can be used in other methods for testing access.
         /*
         if (!confirmAccess(currentProject, currentUser)) {
