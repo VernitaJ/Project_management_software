@@ -23,7 +23,7 @@ public class TaskLibrary extends DataLibrary{
         }
     }
     
-    public void createTask(Project currentProject, User currentUser){
+    public void createTask(Project currentProject, User currentUser) {
         if (!confirmAccess(currentProject, currentUser)) {
             System.out.println("You are not authorized to perform this action!!");
             return;
@@ -32,12 +32,16 @@ public class TaskLibrary extends DataLibrary{
         System.out.println("Enter 0 at any step to return to the previous menu: ");
         Input input = Input.getInstance();
         String name = input.getStr("Task Name: ");
-        if(input.abort(name))
+        if (input.abort(name)) {
+            System.out.println("Returning to project menu...");
             return;
+        }
         
         String description = input.getStr("Task Description: ");
-        if(input.abort(description))
+        if (input.abort(description)) {
+            System.out.println("Returning to project menu...");
             return;
+        }
         
         addToList(new Task(currentUser, name, description));
     }
@@ -66,12 +70,12 @@ public class TaskLibrary extends DataLibrary{
         if(choice.toUpperCase().equals("Y")) {
             if (removeItFromList(currentTask.getID())) {
                 System.out.println("Task successfully deleted");
-                System.out.println("Returning to main menu...");
+                System.out.println("Returning to project menu...");
                 return;
             }
         } else {
             System.out.println("Task not deleted");
-            System.out.println("Returning to main menu...");
+            System.out.println("Returning to project menu...");
             return;
         }
     }
