@@ -3,7 +3,10 @@ package entities;
 import tools.Input;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+
+import static entities.Message.sortByName;
 
 public class UserLibrary extends DataLibrary {
     Input input = Input.getInstance();
@@ -105,8 +108,9 @@ public class UserLibrary extends DataLibrary {
     }
 
     public void readMessage(User user){
-        System.out.println("Inbox \n");
+        System.out.println("Inbox \n _______________");
         ArrayList<Message> inbox = user.getInbox();
+        Collections.sort(inbox, sortByName);
         if (inbox.size()>0){
             for (Message message: inbox){
                 System.out.println(message.toString() + "\n");
