@@ -1,7 +1,11 @@
 package entities;
 import budget.Budget;
+import tools.Input;
+import tools.Menu;
+
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.WeakHashMap;
 
 public class Project extends Data {
     protected Team team;
@@ -13,6 +17,7 @@ public class Project extends Data {
     private LocalDate endDate;
     private Budget budget;
     protected TaskLibrary taskList;
+    private Input input = Input.getInstance();
 
     public Project(String name, User owner, String description, LocalDate startDate, LocalDate endDate, float totalBudget) {
         this.name = name;
@@ -78,12 +83,38 @@ public class Project extends Data {
                 + timeLeftBeforeExceedingBudget();
     }
 
+    public Team getTeam()
+    {
+        return team;
+    }
+
     public void printTeam()
     {
         for (String member : team.getMemberList().keySet())
         {
             System.out.println(team.getMemberList().get(member).getRole().roleType() + ": " + member);
         }
+    }
+
+    public void addMaintainer(User currentUser)
+    {
+        UserLibrary.getInstance().printAllUsers();
+        String toAdd = input.getStr("Member to Add: ");
+        team.addTeamMaintainer((User) UserLibrary.getInstance().findUserInList(toAdd), currentUser);
+    }
+
+    public void addDeveloper(User currentUser)
+    {
+        UserLibrary.getInstance().printAllUsers();
+        String toAdd = input.getStr("Member to Add: ");
+        team.addTeamDeveloper((User) UserLibrary.getInstance().findUserInList(toAdd), currentUser);
+    }
+
+    public void addMemberWithCustomRole(User currentUser)
+    {
+        UserLibrary.getInstance().printAllUsers();
+        String toAdd = input.getStr("Member to Add: ");
+        team.addMemberWithCustomRole((User) UserLibrary.getInstance().findUserInList(toAdd));
     }
 
 

@@ -140,4 +140,15 @@ public class UserLibrary extends DataLibrary {
             }
         } else System.out.println("ID doesn't exist");
     }
+
+    public void printAllUsers()
+    {
+        for (Data user : list)
+        {
+            if (user instanceof User)
+            {
+                System.out.println(((User) user).getUserName());
+            }
+        }
+    }
 }

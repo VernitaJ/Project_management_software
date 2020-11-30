@@ -52,6 +52,7 @@ public class Team extends Data {
     public TeamMember findTeamMember(User toFind){
         return this.memberList.get(toFind.getUserName());
     }
+
     public void addTeamDeveloper(User newDeveloper, User currentUser) {
         TeamMember currentMember = findTeamMember(currentUser);
         if (currentMember != null && currentMember.getRole().adminAccess()){

@@ -217,7 +217,7 @@ public class Controller {
                 case "2" -> notImplemented();
                 case "3" -> notImplemented();
                 case "4" -> showTeam(currentProject);
-                case "5" -> notImplemented();
+                case "5" -> addMember();
                 case "6" -> notImplemented();
                 case "7" -> {
                     Task currentTask = taskLibrary.navigateBetweenTasks(currentProject);
@@ -375,6 +375,33 @@ public class Controller {
         } while (true);
     }
 
+    private void addMember() {
+        String[] options =
+                {
+                        "Maintainer",
+                        "Developer",
+                        "Custom Role",
+                        "Main Menu",
+                        "Logout",
+                        "Exit"
+                };
+        menu = new Menu("Add Member", options);
+        do
+        {
+            String choice = menu.printMenu();
+            switch (choice)
+            {
+                case "1" -> addMaintainerToTeam();
+                case "2" -> addDeveloperToTeam();
+                case "3" -> addCustomRoleToTeam();
+                case "4" -> mainMenu();
+                case "5" -> logout();
+                case "6" -> exit();
+            }
+        } while (true);
+    }
+
+
     private void login() {
        currentUser = (userLibrary.login());
        if (currentUser !=null)
@@ -421,6 +448,19 @@ public class Controller {
     
     private void deleteMessage() {
         userLibrary.deleteMessage(currentUser);
+    }
+
+    private void addMaintainerToTeam()
+    {
+        currentProject.addMaintainer(currentUser);
+    }
+    private void addDeveloperToTeam()
+    {
+        currentProject.addDeveloper(currentUser);
+    }
+    private void addCustomRoleToTeam()
+    {
+        currentProject.addMemberWithCustomRole(currentUser);
     }
     
 }
