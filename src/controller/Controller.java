@@ -1,5 +1,6 @@
 package controller;
 
+import budget.Budget;
 import components.Login;
 import entities.*;
 import tools.Input;
@@ -65,7 +66,7 @@ public class Controller {
                     case "user" -> userLibrary.addUserToList(new User(token[1],token[2],token[3], token[4],token[5]));
                     case "project" -> {
                         this.currentUser = (User) userLibrary.findUserInList(token[2]);
-                        projectLibrary.addProjectToList(new Project(token[1], currentUser, token[3], LocalDate.of(Integer.parseInt(token[4]), Integer.parseInt(token[5]), Integer.parseInt(token[6])), LocalDate.of(Integer.parseInt(token[7]), Integer.parseInt(token[8]), Integer.parseInt(token[9]))));
+                        projectLibrary.addProjectToList(new Project(token[1], currentUser, token[3], LocalDate.of(Integer.parseInt(token[4]), Integer.parseInt(token[5]), Integer.parseInt(token[6])), LocalDate.of(Integer.parseInt(token[7]), Integer.parseInt(token[8]), Integer.parseInt(token[9])), Float.parseFloat(token[10])));
                         this.currentUser = null;
                     }
                     case "task" -> notImplemented();

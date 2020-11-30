@@ -1,4 +1,5 @@
 package entities;
+import budget.Budget;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
@@ -10,9 +11,10 @@ public class Project extends Data {
     private LocalDate createdDate;
     private LocalDate startDate;
     private LocalDate endDate;
+    private Budget budget;
     protected TaskLibrary taskList;
 
-    public Project(String name, User owner, String description, LocalDate startDate, LocalDate endDate) {
+    public Project(String name, User owner, String description, LocalDate startDate, LocalDate endDate, float totalBudget) {
         this.name = name;
         this.description = description;
         this.createdDate = LocalDate.now();
@@ -20,6 +22,7 @@ public class Project extends Data {
         this.endDate = endDate;
         this.taskList = new TaskLibrary();
         this.status = "";
+        this.budget = new Budget(totalBudget);
         try {
             this.team = new Team(owner);
         } catch (Exception e) {
@@ -67,6 +70,8 @@ public class Project extends Data {
         long daysBetween = ChronoUnit.DAYS.between(getStartDate(), getEndDate());
         return daysBetween;
     }
+
+
 
     //not mentioned in the user stories soooo idk
     /*

@@ -21,7 +21,8 @@ public class ProjectLibrary extends DataLibrary{
         String description = input.getStr("Project description: ");
         LocalDate startDate = input.getDate("Project start date (YYYY-MM-DD): ");
         LocalDate endDate = input.getDate("Project end date (YYYY-MM-DD): ");
-        addToList(new Project(name, currentUser, description, startDate, endDate));
+        float totalBudget = input.getFloat("Total Budget of Project: ");
+        addToList(new Project(name, currentUser, description, startDate, endDate, totalBudget));
     }
 
     public void addProjectToList(Project project)

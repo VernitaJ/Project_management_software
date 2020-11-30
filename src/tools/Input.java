@@ -73,6 +73,23 @@ public class Input
         return userInput;
     }
 
+    public float getFloat(String str)
+    {
+        float userInput = 0;
+        boolean complianceCheck = false;
+        while (!complianceCheck) {
+            try {
+                System.out.print(str);
+                userInput = scanner.nextFloat();
+                scanner.nextLine();
+                complianceCheck = true;
+            } catch (InputMismatchException e){
+                e.printStackTrace();
+            }
+        }
+        return userInput;
+    }
+
     public double getDouble(String str)
     {
         double userInput = 0.0;
