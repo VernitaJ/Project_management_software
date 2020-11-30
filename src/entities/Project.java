@@ -116,7 +116,7 @@ public class Project extends Data {
     {
         UserLibrary.getInstance().printAllUsers();
         String toAdd = input.getStr("Member to Add: ");
-        team.addMemberWithCustomRole((User) UserLibrary.getInstance().findUserInList(toAdd));
+        team.addTeamMemberWithCustomRole(((User) UserLibrary.getInstance().findUserInList(toAdd)), currentUser);
     }
 
 
