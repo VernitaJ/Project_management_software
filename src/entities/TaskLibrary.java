@@ -81,16 +81,10 @@ public class TaskLibrary extends DataLibrary{
     }
     
     public ArrayList<Task> listProjectsTasks(Project currentProject){
-/*        if((currentProject.taskList == null)) {
-            return null;
-        }*/
         ArrayList<Task> tempList = new ArrayList<>();
         for(Data task : list){
             Task currentTask = ((Task)task);
-            
-            //if((currentProject.team.findTeamMember(currentProject) != null)){
             tempList.add(currentTask);
-            //}
         }
         if (tempList.size() == 0){
             System.out.println("This project does not have any tasks!");
@@ -99,7 +93,6 @@ public class TaskLibrary extends DataLibrary{
                 System.out.println(i+1 + "- " + tempList.get(i).getName());
             }
         }
-        
         return tempList;
     }
     
