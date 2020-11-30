@@ -108,6 +108,13 @@ public class Input
         return date;
     }
 
+    public boolean abort(String input) {
+        if(input.equals("0")) {
+            return true;
+        }
+        return false;
+    }
+    
     public void checkToContinue() {
         String check = ">> Press" + RED + " 'Enter' " + RESET + "to continue: ";
         System.out.print(check);
