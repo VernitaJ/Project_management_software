@@ -224,8 +224,8 @@ public class Controller {
                         currentTaskMenu(currentProject, currentTask, currentUser);
                     }
                 } // taskMenu
-                case "8" -> taskLibrary.createTask(currentUser);
-                case "9" -> notImplemented();
+                case "8" -> taskLibrary.createTask(currentProject, currentUser);
+                case "9" -> taskLibrary.deleteTask(currentProject, currentUser);
                 case "10" -> projectLibrary.updateStatus(currentProject, currentUser);
                 case "11" -> {
                     Boolean isSuccessful = projectLibrary.deleteProject(currentProject, currentUser);
