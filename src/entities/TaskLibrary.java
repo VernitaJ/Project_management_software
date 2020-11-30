@@ -21,14 +21,17 @@ public class TaskLibrary extends DataLibrary{
         } else {
             return false;
         }
-    }
-    
-    public void createTask(Project currentProject, User currentUser) {
+        
+            // Below can be used in other methods for testing access.
+        /*
         if (!confirmAccess(currentProject, currentUser)) {
             System.out.println("You are not authorized to perform this action!!");
             return;
         }
-        
+        */
+    }
+    
+    public void createTask(Project currentProject, User currentUser) {
         System.out.println("Enter 0 at any step to return to the previous menu: ");
         Input input = Input.getInstance();
         String name = input.getStr("Task Name: ");
@@ -56,11 +59,6 @@ public class TaskLibrary extends DataLibrary{
             System.out.println("Task does not exist!");
             return;
         }
-        if (!confirmAccess(currentProject, currentUser)) {
-            System.out.println("You are not authorized to perform this action!!");
-            return;
-        }
-        
         Input input = Input.getInstance();
         String choice = "";
         System.out.println("You are about to delete this task!");
