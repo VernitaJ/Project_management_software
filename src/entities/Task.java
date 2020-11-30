@@ -1,17 +1,22 @@
 package entities;
 
+import java.time.LocalDate;
+import java.util.Comparator;
+
 public class Task extends Data{
     private User createdBy;
     private String name;
     private String description;
     private String status; //NotStarted/Ongoing/Completed?
+    private LocalDate deadline;
     private Team assignees;
     
-    public Task(User createdBy, String name, String description){
+    public Task(User createdBy, String name, String description, LocalDate deadline){
         this.createdBy = createdBy;
         this.name = name;
         this.description = description;
         this.status = "Default";
+        this.deadline = deadline;
         this.assignees = new Team();
     }
     
@@ -46,5 +51,26 @@ public class Task extends Data{
     public void setStatus(String status) {
         this.status = status;
     }
-    
+
+    public LocalDate getDeadline() {
+        return deadline;
+    }
+
+    public void setDeadline(LocalDate deadline) {
+        this.deadline = deadline;
+    }
+
+    public static Comparator<Data> sortByDate = new Comparator<Data>() {
+
+        @Override
+        public int compare(Data o1, Data o2) {
+            Task object2 = (Task) o2;
+            Task object1 = (Task) o1;
+            return object1.getDeadline().compareTo(object2.getDeadline());
+        }
+    };
+
+    public String toString(Task task) {
+        return "Task: " + task.getName() + "\n" + task.getDescription() + "" + "\n" + "Team Members: " + task.getAssignees().toString() + "\n";
+    }
 }

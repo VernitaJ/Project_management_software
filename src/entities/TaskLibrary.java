@@ -2,7 +2,14 @@ package entities;
 
 import tools.Input;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+
+import static entities.Message.sortByName;
+import static entities.Task.sortByDate;
 
 public class TaskLibrary extends DataLibrary{
     private static final TaskLibrary instance = null;
@@ -21,7 +28,6 @@ public class TaskLibrary extends DataLibrary{
         } else {
             return false;
         }
-        
             // Below can be used in other methods for testing access.
         /*
         if (!confirmAccess(currentProject, currentUser)) {
@@ -45,8 +51,13 @@ public class TaskLibrary extends DataLibrary{
             System.out.println("Returning to project menu...");
             return;
         }
-        
-        addToList(new Task(currentUser, name, description));
+
+        LocalDate deadline = input.getDate("Task Deadline (YYYY-MM-DD): ");
+        if (input.abort(description)) {
+            System.out.println("Returning to project menu...");
+            return;
+        }
+        currentProject.taskList.addToList(new Task(currentUser, name, description, deadline));
     }
     
     public void deleteTask(Project currentProject, User currentUser) {
@@ -123,9 +134,9 @@ public class TaskLibrary extends DataLibrary{
         } else {
             System.out.println("Task does not exist!");
         }
-        
+
     }
-    
+
     public void updateStatus(Project currentProject, Task currentTask, User currentUser){
         if(confirmAccess(currentProject, currentUser)){
             Input input = Input.getInstance();
@@ -150,7 +161,17 @@ public class TaskLibrary extends DataLibrary{
     
     public void removeAssignee(Project currentProject, Task currentTask) {
     }
-    
+
+    public void countdown(Project currentProject) {
+        ArrayList<Data> countdown = currentProject.taskList.list;
+        Collections.sort(countdown, sortByDate);
+        for (Data task : countdown){
+            Task projectTask = (Task) task;
+            long daysToDeadline = ChronoUnit.DAYS.between(LocalDate.now(), projectTask.getDeadline());
+            Team members = projectTask.getAssignees();
+            System.out.println("Days to Deadline: " + daysToDeadline + "\n" +"Task: " + projectTask.getName() + "\n" + "Description" + projectTask.getDescription() + "" + "\n" + "Team Members: " + members.toString() + "\n");
+        }
+    }
 }
 
 
