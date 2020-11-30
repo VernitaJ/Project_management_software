@@ -45,7 +45,7 @@ public class TaskLibrary extends DataLibrary{
             return;
         }
         
-        addToList(new Task(currentUser, name, description));
+        currentProject.taskList.addToList(new Task(currentUser, name, description));
     }
     
     public void deleteTask(Project currentProject, User currentUser) {
@@ -53,7 +53,7 @@ public class TaskLibrary extends DataLibrary{
         if (currentTask == null) {
             return;
         }
-        Task taskToDelete = (Task)findItInList(currentTask.getID());
+        Task taskToDelete = (Task)currentProject.taskList.findItInList(currentTask.getID());
         if(taskToDelete==null) {
             System.out.println("Task does not exist!");
             return;
@@ -65,7 +65,7 @@ public class TaskLibrary extends DataLibrary{
             choice = input.getStr("Are you sure you want to delete this task? Y/N: ");
         } while(!choice.toUpperCase().equals("Y") && !choice.toUpperCase().equals("N"));
         if(choice.toUpperCase().equals("Y")) {
-            if (removeItFromList(currentTask.getID())) {
+            if (currentProject.taskList.removeItFromList(currentTask.getID())) {
                 System.out.println("Task successfully deleted");
                 System.out.println("Returning to project menu...");
                 return;
@@ -112,18 +112,13 @@ public class TaskLibrary extends DataLibrary{
     }
     
     public void viewTaskDetails(Task currentTask){
-        if(findItInList(currentTask.getID()) != null){
             System.out.println("Task Name: " + currentTask.getName());
             if(!currentTask.getStatus().isEmpty()){
                 System.out.println("Status: "+ currentTask.getStatus());
             }
             System.out.println("Description: " + currentTask.getDescription());
             System.out.println("Assignees: " + currentTask.getAssignees().toString());
-        } else {
-            System.out.println("Task does not exist!");
         }
-        
-    }
     
     public void updateStatus(Project currentProject, Task currentTask, User currentUser){
         if(confirmAccess(currentProject, currentUser)){
