@@ -322,8 +322,12 @@ public class Controller {
         } while (true);
     }
 
-    public void login() {
-        userLibrary.login();
+    private void login() {
+       currentUser = (userLibrary.login());
+       if (currentUser !=null)
+       {
+           mainMenu();
+       }
     }
 
     public void logout(){
