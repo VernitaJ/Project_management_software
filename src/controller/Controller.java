@@ -323,22 +323,7 @@ public class Controller {
     }
 
     public void login() {
-        System.out.println("Heyyy. Welcome to the log in page");
-        boolean loggedIn = false;
-        do {
-            String userName = input.getStr("UserName: ");
-            String password = input.getStr("Password: ");
-
-            User loggingIn = userProfile(userName);
-            if (loggingIn !=null){
-                if (loggingIn.getPassword().equals(password)){
-                    System.out.println("\n" + "Welcome back " + loggingIn.getUserName() + "!");
-                    loggedIn = true;
-                    this.currentUser = loggingIn;
-                    mainMenu();
-                } else System.out.println("Wrong username or password, please try again.");
-            } else System.out.println("Wrong username or password, please try again.");
-        } while (!loggedIn);
+        userLibrary.login();
     }
 
     public void logout(){

@@ -24,13 +24,16 @@ public class UserLibrary extends DataLibrary {
         String occupation = null;
         String companyName = null;
         do {
-            userName = this.input.getStr("Enter desired username:");
-            do{
-                password = passwordValidate();
-            } while (password == null);
-            eMail = this.input.getStr("Enter your e-mail:");
-            occupation = this.input.getStr("Enter your current occupation:");
-            companyName = this.input.getStr("Enter your company name:");
+            userName = this.input.getStr("Enter desired username: ");
+            Data user = findUserInList(userName);
+            if (user == null){
+                do{
+                    password = passwordValidate();
+                } while (password == null);
+                eMail = this.input.getStr("Enter your e-mail: ");
+                occupation = this.input.getStr("Enter your current occupation: ");
+                companyName = this.input.getStr("Enter your company name: ");
+            } else System.out.println("This username is already in use, please try another.\n");
         } while (userName == null || eMail == null || occupation == null || companyName == null);
         list.add(new User(userName, password, eMail, occupation, companyName));
         System.out.println("Successfully created user.");
