@@ -15,11 +15,65 @@ public class TaskLibrary extends DataLibrary{
         }
     }
     
-    public void createTask(User createdBy){
+    public boolean confirmAccess(Project currentProject, User currentUser) {
+        if(currentProject.team.findTeamMember(currentUser).getRole().adminAccess()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    public void createTask(Project currentProject, User currentUser){
+        if (!confirmAccess(currentProject, currentUser)) {
+            System.out.println("You are not authorized to perform this action!!");
+            return;
+        }
+        
+        System.out.println("Enter 0 at any step to return to the previous menu: ");
         Input input = Input.getInstance();
         String name = input.getStr("Task Name: ");
+        if(input.abort(name))
+            return;
+        
         String description = input.getStr("Task Description: ");
-        addToList(new Task(createdBy, name, description));
+        if(input.abort(description))
+            return;
+        
+        addToList(new Task(currentUser, name, description));
+    }
+    
+    public void deleteTask(Project currentProject, User currentUser) {
+        Task currentTask = navigateBetweenTasks(currentProject);
+        if (currentTask == null) {
+            return;
+        }
+        Task taskToDelete = (Task)findItInList(currentTask.getID());
+        if(taskToDelete==null) {
+            System.out.println("Task does not exist!");
+            return;
+        }
+        if (!confirmAccess(currentProject, currentUser)) {
+            System.out.println("You are not authorized to perform this action!!");
+            return;
+        }
+        
+        Input input = Input.getInstance();
+        String choice = "";
+        System.out.println("You are about to delete this task!");
+        do {
+            choice = input.getStr("Are you sure you want to delete this task? Y/N: ");
+        } while(!choice.toUpperCase().equals("Y") && !choice.toUpperCase().equals("N"));
+        if(choice.toUpperCase().equals("Y")) {
+            if (removeItFromList(currentTask.getID())) {
+                System.out.println("Task successfully deleted");
+                System.out.println("Returning to main menu...");
+                return;
+            }
+        } else {
+            System.out.println("Task not deleted");
+            System.out.println("Returning to main menu...");
+            return;
+        }
     }
     
     public ArrayList<Task> listProjectsTasks(Project currentProject){
@@ -78,7 +132,7 @@ public class TaskLibrary extends DataLibrary{
     }
     
     public void updateStatus(Project currentProject, Task currentTask, User currentUser){
-        if(currentProject.team.findTeamMember(currentUser).getRole().adminAccess()){
+        if(confirmAccess(currentProject, currentUser)){
             Input input = Input.getInstance();
             String newStatus = input.getStr("Enter the status: ");
             currentTask.setStatus(newStatus);
@@ -101,13 +155,6 @@ public class TaskLibrary extends DataLibrary{
     
     public void removeAssignee(Project currentProject, Task currentTask) {
     }
-    
-/*
-    public void deleteTask(User currentUser, String taskIDToRemove){
-        if(accesslevel>3)
-            removeItFromList(taskIDToRemove);
-    }
-*/
     
     
     //public void importTask(){}
