@@ -71,6 +71,13 @@ public class Project extends Data {
         return daysBetween;
     }
 
+    public String timeLeftBeforeExceedingBudget()
+    {
+        return "Total Time Before Exceeding budget\n" +
+                "Recommend Member to cut" // to be implemented
+                + timeLeftBeforeExceedingBudget();
+    }
+
 
     //not mentioned in the user stories soooo idk
     /*
