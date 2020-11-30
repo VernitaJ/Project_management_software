@@ -3,6 +3,7 @@ package entities;
 import tools.UniqueID;
 
 import java.time.LocalDate;
+import java.util.Comparator;
 
 public class Message extends Data {
     private String sender;
@@ -60,6 +61,14 @@ public class Message extends Data {
     public void setStatus(boolean status) {
         this.status = status;
     }
+
+    public static Comparator<Message> sortByName = new Comparator<Message>() {
+
+        @Override
+        public int compare(Message o1, Message o2) {
+            return o2.getDateSent().compareTo(o1.getDateSent());
+        }
+    };
 
     public String toString() {
         return getStatus() + "\n" + getID() + "\n" + "From: " + getSender() + "\n" + "Sent: " + getDateSent() + "\n" + getContent();
