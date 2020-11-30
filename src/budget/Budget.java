@@ -8,4 +8,9 @@ public class Budget
     {
         this.totalBudget = totalBudget;
     }
+
+    public float timeLeftBeforeExceedingBudget()
+    {
+        return 0.0f;
+    }
 }

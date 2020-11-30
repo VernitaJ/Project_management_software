@@ -6,6 +6,7 @@ import entities.*;
 import tools.Input;
 import tools.Menu;
 
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -63,7 +64,7 @@ public class Controller {
             while((line = br.readLine()) != null) {
                 String[] token = line.split(",");
                 switch (token[0].toLowerCase()) {
-                    case "user" -> userLibrary.addUserToList(new User(token[1],token[2],token[3], token[4],token[5]));
+                    case "user" -> userLibrary.addUserToList(new User(token[1],token[2],token[3], token[4],token[5], Float.parseFloat(token[6]), Float.parseFloat(token[7])));
                     case "project" -> {
                         this.currentUser = (User) userLibrary.findUserInList(token[2]);
                         projectLibrary.addProjectToList(new Project(token[1], currentUser, token[3], LocalDate.of(Integer.parseInt(token[4]), Integer.parseInt(token[5]), Integer.parseInt(token[6])), LocalDate.of(Integer.parseInt(token[7]), Integer.parseInt(token[8]), Integer.parseInt(token[9])), Float.parseFloat(token[10])));

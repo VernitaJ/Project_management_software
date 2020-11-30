@@ -72,7 +72,6 @@ public class Project extends Data {
     }
 
 
-
     //not mentioned in the user stories soooo idk
     /*
     public void updateName(){
