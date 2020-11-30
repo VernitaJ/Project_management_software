@@ -52,8 +52,7 @@ public class Controller {
         System.exit(0);
     }
 
-    private void readFile()
-    {
+    private void readFile() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         BufferedReader br;
         String line;
@@ -110,7 +109,7 @@ public class Controller {
                         "Leaderboard",
                         "Projects",
                         "Profile",
-                        "Inbox",
+                        "Messaging",
                         "Logout",
                         "Exit"
                 };
@@ -230,7 +229,7 @@ public class Controller {
                         "logout",
                         "Exit"
                 };
-        menu = new Menu(currentUser.getUserName() + " Inbox", options);
+        menu = new Menu(currentUser.getUserName() + " Messaging", options);
         do
         {
             String choice = menu.printMenu();

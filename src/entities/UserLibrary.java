@@ -105,19 +105,31 @@ public class UserLibrary extends DataLibrary {
     }
 
     public void readMessage(User user){
+        System.out.println("Inbox \n");
         ArrayList<Message> inbox = user.getInbox();
         if (inbox.size()>0){
-            System.out.println("Messages:" + "\n");
             for (Message message: inbox){
                 System.out.println(message.toString() + "\n");
                 message.setStatus(true);
             }
-        } else System.out.println("You have no messages");
+        } else System.out.println("Inbox is Empty");
     }
 
     public void deleteMessage(User user){
+        ArrayList<Message> inbox = user.getInbox();
         readMessage(user);
         String messageId = input.getStr("ID of message to delete: ");
-        user.getInbox().removeIf(message -> (message.getID().equals(messageId)));
+        boolean itemExists = inbox.stream().map(Message::getID).anyMatch(messageId::equals);
+        if (itemExists){
+            inbox.removeIf(message -> (
+                    message.getID().equals(messageId)));
+            System.out.println("Message deleted");
+            if (inbox.size()>0){
+                String userChoice = input.getStr("Would you like to delete another? Y/N: ");
+                if (userChoice.equalsIgnoreCase("y")){
+                    deleteMessage(user);
+                }
+            }
+        } else System.out.println("ID doesn't exist");
     }
 }
