@@ -405,7 +405,6 @@ public class Controller {
         } while (true);
     }
 
-
     private void login() {
        currentUser = (userLibrary.login());
        if (currentUser !=null)
@@ -466,6 +465,8 @@ public class Controller {
     {
         currentProject.addMemberWithCustomRole(currentUser);
     }
+
+
     
 }
 

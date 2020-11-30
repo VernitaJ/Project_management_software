@@ -22,4 +22,8 @@ public class TeamMember {
     public Roles getRole() {
         return role;
     }
+
+    public String getRoleType(){
+       return role.roleType();
+    }
 }

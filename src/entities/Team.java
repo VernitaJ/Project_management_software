@@ -9,7 +9,7 @@ import java.util.WeakHashMap;
 public class Team extends Data {
 
     private UserLibrary userLibrary = UserLibrary.getInstance();
-    private Input input;
+    private Input input = Input.getInstance();
     private RoleFactory roleFactory = new RoleFactory();
     private String teamName;
 
@@ -56,11 +56,16 @@ public class Team extends Data {
     public void addTeamDeveloper(User newTeamMember, User currentUser) {
         TeamMember currentMember = findTeamMember(currentUser);
         if (currentMember != null && currentMember.getRole().adminAccess()){
-            if (memberList.containsValue(newTeamMember.getUserName())){
+            if (memberList.containsKey(newTeamMember.getUserName())){
                 System.out.println("You already have this User on your team.");
             } else {
                 if (userLibrary.findUserInList(newTeamMember.getUserName()) != null) {
-                    this.memberList.put(newTeamMember.getUserName(), new TeamMember(newTeamMember, roleFactory.createDeveloper()));
+                    if (isOwner(newTeamMember)){
+                        System.out.println("You're not allowed to change the role of owner");
+
+                    } else {
+                        this.memberList.put(newTeamMember.getUserName(), new TeamMember(newTeamMember, roleFactory.createDeveloper()));
+                    }
                 } else {
                     System.out.println("You do not have the correct Access");
                 }
@@ -72,17 +77,22 @@ public class Team extends Data {
     public void addTeamMaintainer(User newTeamMember, User currentUser) {
         TeamMember currentMember = findTeamMember(currentUser);
         if (currentMember != null && currentMember.getRole().adminAccess()){
-            if (memberList.containsValue(newTeamMember.getUserName())){
+            if (memberList.containsKey(newTeamMember.getUserName())){
                 System.out.println("You already have this User on your team.");
             } else {
                 if (userLibrary.findUserInList(newTeamMember.getUserName()) != null) {
-                    this.memberList.put(newTeamMember.getUserName(), new TeamMember(newTeamMember, roleFactory.createMaintainer()));
+                    if (isOwner(newTeamMember)) {
+                        System.out.println("You're not allowed to change the role of owner");
+
+                    } else {
+                        this.memberList.put(newTeamMember.getUserName(), new TeamMember(newTeamMember, roleFactory.createMaintainer()));
+                    }
                 } else {
                     System.out.println("You do not have the correct Access");
                 }
             }
         } else {
-            System.out.println("You do not have the correct access");
+            System.out.println("You do not have the correct access or the user you are trying to add are already an owner.");
         }
     }
 
@@ -110,6 +120,7 @@ public class Team extends Data {
      */
     public void addMemberWithCustomRole(User user)
     {
+
         if (hasAdminAccess(user)){
             String roleType = input.getStr("Enter role name: ");
             String canCreateTask = input.getStr("Can role create a task?: Y/N");
@@ -129,11 +140,19 @@ public class Team extends Data {
     }
     private boolean hasAdminAccess(User currentUser) {
         TeamMember currentMember = findTeamMember(currentUser);
-        if (currentMember != null && currentMember.getRole().adminAccess()) {
-
+        if (currentMember.getRole().adminAccess()) {
             return true;
+        } else {
+            return false;
         }
-        return false;
+    }
+    private boolean isOwner (User currentUser) {
+        TeamMember currentMember = findTeamMember(currentUser);
+        if (currentMember != null && currentMember.getRoleType().equalsIgnoreCase("Owner")){
+            return true;
+        } else {
+            return false;
+        }
     }
 }
 

@@ -21,7 +21,6 @@ public class Maintainer implements Roles {
     }
     //maintainer shouldn't be able to delete, think about
     public boolean adminAccess() {
-
         return true;
     }
 }
