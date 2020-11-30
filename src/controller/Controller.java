@@ -385,7 +385,7 @@ public class Controller {
                         "Maintainer",
                         "Developer",
                         "Custom Role",
-                        "Main Menu",
+                        currentProject.getName() + " Menu",
                         "Logout",
                         "Exit"
                 };
@@ -398,7 +398,7 @@ public class Controller {
                 case "1" -> addMaintainerToTeam();
                 case "2" -> addDeveloperToTeam();
                 case "3" -> addCustomRoleToTeam();
-                case "4" -> mainMenu();
+                case "4" -> currentProjectMenu();
                 case "5" -> logout();
                 case "6" -> exit();
             }

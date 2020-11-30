@@ -53,24 +53,33 @@ public class Team extends Data {
         return this.memberList.get(toFind.getUserName());
     }
 
-    public void addTeamDeveloper(User newDeveloper, User currentUser) {
+    public void addTeamDeveloper(User newTeamMember, User currentUser) {
         TeamMember currentMember = findTeamMember(currentUser);
         if (currentMember != null && currentMember.getRole().adminAccess()){
-            if (newDeveloper.getUserName().equals(userLibrary.findUserInList(newDeveloper.getUserName()))) {
-                this.memberList.put(newDeveloper.getUserName(),new TeamMember(newDeveloper, roleFactory.createDeveloper()));
-        }
+            if (memberList.containsValue(newTeamMember.getUserName())){
+                System.out.println("You already have this User on your team.");
+            } else {
+                if (userLibrary.findUserInList(newTeamMember.getUserName()) != null) {
+                    this.memberList.put(newTeamMember.getUserName(), new TeamMember(newTeamMember, roleFactory.createDeveloper()));
+                } else {
+                    System.out.println("You do not have the correct Access");
+                }
+            }
         } else {
-            System.out.println("User does not exist or you do not have the correct access level");
+            System.out.println("You do not have the correct access");
         }
     }
-    public void addTeamMaintainer(User newMaintainer, User currentUser) {
+    public void addTeamMaintainer(User newTeamMember, User currentUser) {
         TeamMember currentMember = findTeamMember(currentUser);
         if (currentMember != null && currentMember.getRole().adminAccess()){
-            if (newMaintainer.getUserName().equals(userLibrary.findUserInList(newMaintainer.getUserName())))
-            {
-                this.memberList.put(newMaintainer.getUserName(), new TeamMember(newMaintainer, roleFactory.createOwner()));
+            if (memberList.containsValue(newTeamMember.getUserName())){
+                System.out.println("You already have this User on your team.");
             } else {
-                System.out.println("You do not have the correct Access");
+                if (userLibrary.findUserInList(newTeamMember.getUserName()) != null) {
+                    this.memberList.put(newTeamMember.getUserName(), new TeamMember(newTeamMember, roleFactory.createMaintainer()));
+                } else {
+                    System.out.println("You do not have the correct Access");
+                }
             }
         } else {
             System.out.println("You do not have the correct access");

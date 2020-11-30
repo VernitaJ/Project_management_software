@@ -43,7 +43,7 @@ public class ProjectLibrary extends DataLibrary{
             System.out.println("You have no projects!");
         } else {
             for (int i=0; i<tempList.size(); i++){
-                System.out.println(i+1 + "- " + tempList.get(i).getName());
+                System.out.println(" " + (i + 1) + ") " + tempList.get(i).getName());
             }
         }
 
@@ -140,9 +140,5 @@ public class ProjectLibrary extends DataLibrary{
         }
         System.out.println("You are not authorized to perform this action!");
         return false;
-
     }
-
-
-
 }
