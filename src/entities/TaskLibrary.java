@@ -65,8 +65,8 @@ public class TaskLibrary extends DataLibrary {
         if (currentTask == null) {
             return;
         }
-        Task taskToDelete = (Task) findItInList(currentTask.getID());
-        if (taskToDelete == null) {
+        Task taskToDelete = (Task)currentProject.taskList.findItInList(currentTask.getID());
+        if(taskToDelete==null) {
             System.out.println("Task does not exist!");
             return;
         }
@@ -75,9 +75,9 @@ public class TaskLibrary extends DataLibrary {
         System.out.println("You are about to delete this task!");
         do {
             choice = input.getStr("Are you sure you want to delete this task? Y/N: ");
-        } while (!choice.toUpperCase().equals("Y") && !choice.toUpperCase().equals("N"));
-        if (choice.toUpperCase().equals("Y")) {
-            if (removeItFromList(currentTask.getID())) {
+        } while(!choice.toUpperCase().equals("Y") && !choice.toUpperCase().equals("N"));
+        if(choice.toUpperCase().equals("Y")) {
+            if (currentProject.taskList.removeItFromList(currentTask.getID())) {
                 System.out.println("Task successfully deleted");
                 System.out.println("Returning to project menu...");
                 return;
@@ -122,23 +122,18 @@ public class TaskLibrary extends DataLibrary {
                 return taskList.get(choice - 1);
         }
     }
-
-    public void viewTaskDetails(Task currentTask) {
-        if (findItInList(currentTask.getID()) != null) {
+    
+    public void viewTaskDetails(Task currentTask){
             System.out.println("Task Name: " + currentTask.getName());
             if (!currentTask.getStatus().isEmpty()) {
                 System.out.println("Status: " + currentTask.getStatus());
             }
             System.out.println("Description: " + currentTask.getDescription());
             System.out.println("Assignees: " + currentTask.getAssignees().toString());
-        } else {
-            System.out.println("Task does not exist!");
         }
-
-    }
-
-    public void updateStatus(Project currentProject, Task currentTask, User currentUser) {
-        if (confirmAccess(currentProject, currentUser)) {
+    
+    public void updateStatus(Project currentProject, Task currentTask, User currentUser){
+        if(confirmAccess(currentProject, currentUser)){
             Input input = Input.getInstance();
             String newStatus = input.getStr("Enter the status: ");
             currentTask.setStatus(newStatus);
