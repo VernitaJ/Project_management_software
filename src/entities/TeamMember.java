@@ -26,4 +26,9 @@ public class TeamMember {
     public String getRoleType(){
        return role.roleType();
     }
+
+    public void setRole(Roles role)
+    {
+        this.role = role;
+    }
 }

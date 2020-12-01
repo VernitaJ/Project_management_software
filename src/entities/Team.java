@@ -2,6 +2,8 @@ package entities;
 
 
 import access_roles.CustomRoles;
+import access_roles.Developer;
+import access_roles.Maintainer;
 import access_roles.RoleFactory;
 import tools.Input;
 
@@ -145,6 +147,31 @@ public class Team extends Data {
             System.out.println("You do not have the correct access or the user you are trying to add are already an owner.");
         }
     }
+    public void changeToMaintainer (User currentUser)
+    {
+        for (String team : memberList.keySet()){
+            System.out.println(team);
+        }
+        String userToChange = input.getStr("Team member whose role you want to update: ");
+
+        memberList.get(userToChange).setRole(new Maintainer());
+    }
+    public void changeToDeveloper (User currentUser)
+    {
+        for (String team : memberList.keySet()){
+            System.out.println(team);
+        }
+        String userToChange = input.getStr("Team member whose role you want to update: ");
+
+        memberList.get(userToChange).setRole(new Developer());
+    }
+
+
+    public void changeToCustomerRole (User currentUser)
+    {
+
+    }
+
 
     private boolean isAdmin(User currentUser)
     {
