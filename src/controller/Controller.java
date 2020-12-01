@@ -214,26 +214,34 @@ public class Controller {
             switch (choice)
             {
                 case "1" -> projectLibrary.viewProjectDetails(currentProject);
+                case "2" -> taskLibrary.countdown(currentProject);
+                case "3" -> taskLibrary.completedTasks(currentProject);
+                case "4" -> notImplemented();
+                case "5" -> notImplemented();
                 case "2" -> notImplemented();
                 case "3" -> notImplemented();
                 case "4" -> showTeam(currentProject);
                 case "5" -> addMember();
                 case "6" -> notImplemented();
-                case "7" -> {
+                case "7" -> notImplemented();
+                case "8" -> {
                     Task currentTask = taskLibrary.navigateBetweenTasks(currentProject);
                     if (currentTask != null) {
                         currentTaskMenu(currentProject, currentTask, currentUser);
                     }
                 } // taskMenu
-                case "8" -> taskLibrary.createTask(currentProject, currentUser);
-                case "9" -> taskLibrary.deleteTask(currentProject, currentUser);
-                case "10" -> projectLibrary.updateStatus(currentProject, currentUser);
-                case "11" -> {
+                case "9" -> taskLibrary.createTask(currentProject, currentUser);
+                case "10" -> taskLibrary.deleteTask(currentProject, currentUser);
+                case "11" -> projectLibrary.updateStatus(currentProject, currentUser);
+                case "12" -> {
                 //    Boolean isSuccessful = projectLibrary.deleteProject(currentProject, currentUser);
                 //    if(isSuccessful){
                 //        mainMenu();
                 //    }
                  }
+                case "13" -> mainMenu();
+                case "14" -> logout();
+                case "15" -> exit();
                 case "12" ->
                         {
                             currentProject = null;
@@ -467,6 +475,6 @@ public class Controller {
     }
 
 
-    
+
 }
 

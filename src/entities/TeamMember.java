@@ -12,7 +12,6 @@ public class TeamMember {
    public TeamMember(User teamMember, Roles role){
        this.user = teamMember;
        this.role = role;
-
    }
 
     public User getUser() {

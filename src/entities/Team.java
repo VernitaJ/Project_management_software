@@ -167,5 +167,10 @@ public class Team extends Data {
             return false;
         }
     }
+
+//to be changed when getTeamMember function is implemented
+    private String toString(Team team){
+        return team.getOwner().toString();
+    }
 }
 
