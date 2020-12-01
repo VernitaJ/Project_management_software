@@ -164,11 +164,19 @@ public class TaskLibrary extends DataLibrary {
     public void countdown(Project currentProject) {
         ArrayList<Data> countdown = currentProject.taskList.list;
         Collections.sort(countdown, sortByDate);
+        String displayedDays = "";
         for (Data task : countdown) {
             Task projectTask = (Task) task;
-            long daysToDeadline = ChronoUnit.DAYS.between(LocalDate.now(), projectTask.getDeadline());
-            Team members = projectTask.getAssignees();
-            System.out.println("Days to Deadline: " + daysToDeadline + "\n" + "Task: " + projectTask.getName() + "\n" + "Description" + projectTask.getDescription() + "" + "\n" + "Team Members: " + members.toString() + "\n");
+            if (!projectTask.getStatus().equalsIgnoreCase("completed")){
+                long daysToDeadline = ChronoUnit.DAYS.between(LocalDate.now(), projectTask.getDeadline());
+                if (daysToDeadline < 4) {
+                    displayedDays = Input.RED + daysToDeadline + Input.RESET;
+                } else {
+                    displayedDays = Input.BLUE + daysToDeadline + Input.RESET;
+                }
+                Team members = projectTask.getAssignees();
+                System.out.println("Days to Deadline: " + displayedDays + "\n" + "Task: " + projectTask.getName() + "\n" + "Description: " + projectTask.getDescription() + "" + "\n" + "Team Members: " + members.toString() + "\n");
+            }
         }
     }
 

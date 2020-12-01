@@ -213,8 +213,8 @@ public class Controller {
             switch (choice)
             {
                 case "1" -> projectLibrary.viewProjectDetails(currentProject);
-                case "2" -> taskLibrary.completedTasks(currentProject);
-                case "3" -> taskLibrary.countdown(currentProject);
+                case "2" -> taskLibrary.countdown(currentProject);
+                case "3" -> taskLibrary.completedTasks(currentProject);
                 case "4" -> notImplemented();
                 case "5" -> notImplemented();
                 case "6" -> notImplemented();
