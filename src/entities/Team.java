@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.WeakHashMap;
 public class Team extends Data {
 
-    private UserLibrary userLibrary;
     private Input input;
     private RoleFactory roleFactory = new RoleFactory();
     private String teamName;
@@ -72,7 +71,7 @@ public class Team extends Data {
     public void addTeamDeveloper(User newDeveloper, User currentUser) {
         TeamMember currentMember = findTeamMember(currentUser);
         if (currentMember != null && currentMember.getRole().adminAccess()){
-            if (newDeveloper.getUserName().equals(userLibrary.findUserInList(newDeveloper.getUserName()))) {
+            if (newDeveloper.getUserName().equals(UserLibrary.getInstance().findUserInList(newDeveloper.getUserName()))) {
                 this.memberList.put(newDeveloper.getUserName(),new TeamMember(newDeveloper, roleFactory.createDeveloper()));
         }
         } else {
@@ -82,22 +81,28 @@ public class Team extends Data {
     public void addTeamMaintainer(User newMaintainer, User currentUser) {
         TeamMember currentMember = findTeamMember(currentUser);
         if (currentMember != null && currentMember.getRole().adminAccess()){
-            if (newMaintainer.getUserName().equals(userLibrary.findUserInList(newMaintainer.getUserName())))
-            {
-                this.memberList.put(newMaintainer.getUserName(), new TeamMember(newMaintainer, roleFactory.createOwner()));
+            if (UserLibrary.getInstance().doesItExist(newMaintainer.getID())) {
+                this.memberList.put(newMaintainer.getUserName(), new TeamMember(newMaintainer, roleFactory.createMaintainer()));
+                System.out.println("'" + newMaintainer.getUserName() + "' successfully added as a maintainer.");
             } else {
-                System.out.println("You do not have the correct access level");
+                System.out.println("Invalid user provided for the team.");
             }
         } else {
             System.out.println("You do not have the correct access level");
         }
     }
-   /*  public List<TeamMember> getAllTeamMembers(){
-        return new ArrayList<>(this.memberList.values());
+
+    public boolean isMember(User user) {
+        return memberList.containsKey(user.getUserName());
     }
 
-    */
-
+    public List<User> getAllTeamMembers(){
+        List<User> users = new ArrayList<>();
+        for (TeamMember member: memberList.values()) {
+            users.add(member.getUser());
+        }
+        return users;
+    }
 
     public User getTeamMember(User user) throws Exception {
         if (memberList.containsKey(user.getUserName())) {

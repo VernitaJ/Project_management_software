@@ -197,8 +197,8 @@ public class Controller {
                         "Create Team",
                         "View Team",
                         "Edit Team Name",
-                        "Add Team Member",
-                        "Remove Team Member",
+                        "Add Team Maintainer",
+                        "Remove Team Maintainer",
                         "Remove Team",
                         "View Tasks",
                         "Add Task",
@@ -222,27 +222,29 @@ public class Controller {
                 case "5" -> teamLibrary.createTeam(currentProject);
                 case "6" -> teamLibrary.viewTeam(currentProject.getTeam());
                 case "7" -> teamLibrary.editTeamName(currentProject.getTeam());
-                case "8" -> notImplemented();
-                case "9" -> notImplemented();
-                case "10" -> teamLibrary.removeTeam(currentProject);
-                case "11" -> {
+                case "8" -> teamLibrary.addTeamMaintainer(currentProject.getTeam(), currentUser);
+                case "9" -> teamLibrary.removeTeamMaintainer(currentProject.getTeam(), currentUser);
+                case "10" -> teamLibrary.addTeamMaintainer(currentProject.getTeam(), currentUser);
+                case "11" -> teamLibrary.removeTeamMaintainer(currentProject.getTeam(), currentUser);
+                case "12" -> teamLibrary.removeTeam(currentProject);
+                case "13" -> {
                     Task currentTask = taskLibrary.navigateBetweenTasks(currentProject);
                     if (currentTask != null) {
                         currentTaskMenu(currentProject, currentTask, currentUser);
                     }
                 } // taskMenu
-                case "12" -> taskLibrary.createTask(currentProject, currentUser);
-                case "13" -> taskLibrary.deleteTask(currentProject, currentUser);
-                case "14" -> projectLibrary.updateStatus(currentProject, currentUser);
-                case "15" -> {
+                case "14" -> taskLibrary.createTask(currentProject, currentUser);
+                case "15" -> taskLibrary.deleteTask(currentProject, currentUser);
+                case "16" -> projectLibrary.updateStatus(currentProject, currentUser);
+                case "17" -> {
                 //    Boolean isSuccessful = projectLibrary.deleteProject(currentProject, currentUser);
                 //    if(isSuccessful){
                 //        mainMenu();
                 //    }
                  }
-                case "16" -> mainMenu();
-                case "17" -> logout();
-                case "18" -> exit();
+                case "18" -> mainMenu();
+                case "19" -> logout();
+                case "20" -> exit();
             }
         } while (true);
     }

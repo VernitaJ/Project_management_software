@@ -2,9 +2,9 @@ package entities;
 
 import tools.Input;
 import access_roles.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.WeakHashMap;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 public class TeamLibrary extends DataLibrary{
@@ -69,13 +69,18 @@ public class TeamLibrary extends DataLibrary{
             System.out.println("Owner: " + team.getOwner().getUser().getUserName());
             System.out.println("Maintainer(s): ");
             int count = 1;
-            for (User maintainer: team.getMaintainers()) {
+            List<User> maintainers = team.getMaintainers();
+            maintainers.sort(Comparator.comparing(User::getUserName));
+            List<User> developers = team.getDevelopers();
+            developers.sort(Comparator.comparing(User::getUserName));
+
+            for (User maintainer: maintainers) {
                 System.out.println(count + ". " + maintainer.getUserName());
                 count ++;
             }
             count = 1;
             System.out.println("Developer(s): ");
-            for (User developer: team.getDevelopers()) {
+            for (User developer: developers) {
                 System.out.println(count + ". " + developer.getUserName());
                 count ++;
             }
@@ -99,6 +104,61 @@ public class TeamLibrary extends DataLibrary{
                 System.out.println("Team successfully removed from the project.");
             } else {
                 System.out.println("Team was not removed.");
+            }
+        }
+    }
+
+    public void addTeamMaintainer(Team team, User currentUser) {
+        if (team == null) {
+            System.out.println("Team does not exist.");
+        } else {
+            List<User> nonMemberUsers = new ArrayList<>();
+            int count = 1;
+            System.out.println("Available users: ");
+            List<User> allUsers = UserLibrary.getInstance().getAllUsers();
+            allUsers.sort(Comparator.comparing(User::getUserName));
+
+            for (User user: allUsers) {
+                if (!team.isMember(user)) {
+                    nonMemberUsers.add(user);
+                    System.out.println(count + ". " + user.getUserName());
+                    count++;
+                }
+            }
+            int choice = Input.getInstance().getInt("Select a new team maintainer: ");
+            if (choice >= 1 || choice < count) {
+                try {
+                    team.addTeamMaintainer(nonMemberUsers.get(choice - 1), currentUser);
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
+            }
+        }
+    }
+
+    public void removeTeamMaintainer(Team team, User currentUser) {
+        if (team == null) {
+            System.out.println("Team does not exist");
+        } else {
+            List<User> maintainers = team.getMaintainers();
+            if (maintainers.size() == 0) {
+                System.out.println("Team '" + team.getTeamName() + "' has no maintainer team members.");
+            } else {
+                maintainers.sort(Comparator.comparing(User::getUserName));
+                int count = 1;
+                for (User maintainer: maintainers) {
+                    System.out.println(count + ". " + maintainer.getUserName());
+                    count ++;
+                }
+                Input input = Input.getInstance();
+                int choice = input.getInt("Select the maintainer you want to remove: ");
+                if (choice >= 1 || choice < count) {
+                    try {
+                        team.removeTeamMember(maintainers.get(choice - 1), currentUser);
+                    } catch (Exception e) {
+                        System.out.println(e.getMessage());
+                    }
+                }
             }
         }
     }
