@@ -33,7 +33,14 @@ public class ProjectLibrary extends DataLibrary{
         ArrayList<Project> tempList = new ArrayList<>();
         for(Data project : list){
             Project currentProject = ((Project)project);
-            if((currentProject.team.findTeamMember(currentUser) != null)){
+
+
+            if ((currentProject.getTeam() == null &&
+                 currentProject.getProjectManager().getUserName().equals(currentUser.getUserName()))
+                ||
+                (currentProject.getTeam() != null &&
+                 currentProject.getTeam().findTeamMember(currentUser) != null)) {
+
                 tempList.add(currentProject);
             }
         }
@@ -72,7 +79,7 @@ public class ProjectLibrary extends DataLibrary{
         for(Data project : list) {
             currentProject = ((Project) project);
         }
-            if(currentProject.team.findTeamMember(currentUser).getRole().adminAccess()){
+            if(currentProject.getTeam().findTeamMember(currentUser).getRole().adminAccess()){
             Input input = Input.getInstance();
             String newDesc = input.getStr("Enter the description: ");
             currentProject.setName(newDesc);
@@ -98,7 +105,7 @@ public class ProjectLibrary extends DataLibrary{
     }
 
     public void updateStatus(Project currentProject, User currentUser){
-        if(currentProject.team.findTeamMember(currentUser).getRole().adminAccess()){
+        if(currentProject.getTeam().findTeamMember(currentUser).getRole().adminAccess()){
             Input input = Input.getInstance();
             String newStatus = input.getStr("Enter the status: ");
             currentProject.setStatus(newStatus);
@@ -115,7 +122,7 @@ public class ProjectLibrary extends DataLibrary{
             System.out.println("Project does not exist!");
             return false;
         }
-        if(currentProject.team.findTeamMember(currentUser).getRole().equals("Owner")){
+        if(currentProject.getTeam().findTeamMember(currentUser).getRole().equals("Owner")){
             Input input = Input.getInstance();
             System.out.println("Warning!");
             System.out.println("You are about to delete the entire project!");
