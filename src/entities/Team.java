@@ -5,6 +5,8 @@ import access_roles.CustomRoles;
 import access_roles.RoleFactory;
 import tools.Input;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.WeakHashMap;
 public class Team extends Data {
 
@@ -12,15 +14,21 @@ public class Team extends Data {
     private Input input;
     private RoleFactory roleFactory = new RoleFactory();
     private String teamName;
+    private String ownerUserName;
 
     private WeakHashMap<String, TeamMember> memberList;
-    //deleted the name check
-    public Team(User currentUser){
-        //this.teamName = input.getStr("Enter desired team name:");
-        this.memberList = new WeakHashMap<>();
-        this.memberList.put(currentUser.getUserName(), new TeamMember(currentUser, roleFactory.createOwner()));
+
+    /*
+        Create a team with 1 team member: the team's owner.
+     */
+    public Team(User teamOwner, String teamName){
+        // this.teamName = input.getStr("Enter desired team name:");
+        this.teamName = teamName;
+        this.memberList = new WeakHashMap<String, TeamMember>();
+        this.ownerUserName = teamOwner.getUserName();
+        this.memberList.put(teamOwner.getUserName(), new TeamMember(teamOwner, roleFactory.createOwner()));
     }
-    
+
     public Team() {
         this.memberList = new WeakHashMap<>();
     }
@@ -33,15 +41,23 @@ public class Team extends Data {
         this.teamName = teamName;
     }
 
-    public User getOwner() {
-        User owner = null;
+    public TeamMember getOwner() {
+        /*
+            Without a direct reference (i.e. ownerNameList), the WeakHashMap is instead used as a list with an O(n)
+            search time, instead of O(1). The 'owner = null' and searching through the Map as a list adds complexity and
+            ambiguity given that Team must always have an 'Owner' user. The Team is always initialized with an owner
+            user in the constructor.
+        */
+        return memberList.get(ownerUserName);
+
+        /*User owner = null;
         for (TeamMember user : memberList.values()){
             if (user.getRole().roleType().equalsIgnoreCase("Owner")){
                 owner = user.getUser();
                 return owner;
             }
         }
-        return owner;
+        return owner;*/
     }
     /* public void setOwner(User owner) {
         this.memberList.remove(ownerID);
@@ -52,6 +68,7 @@ public class Team extends Data {
     public TeamMember findTeamMember(User toFind){
         return this.memberList.get(toFind.getUserName());
     }
+
     public void addTeamDeveloper(User newDeveloper, User currentUser) {
         TeamMember currentMember = findTeamMember(currentUser);
         if (currentMember != null && currentMember.getRole().adminAccess()){
@@ -69,10 +86,10 @@ public class Team extends Data {
             {
                 this.memberList.put(newMaintainer.getUserName(), new TeamMember(newMaintainer, roleFactory.createOwner()));
             } else {
-                System.out.println("You do not have the correct Access");
+                System.out.println("You do not have the correct access level");
             }
         } else {
-            System.out.println("You do not have the correct access");
+            System.out.println("You do not have the correct access level");
         }
     }
    /*  public List<TeamMember> getAllTeamMembers(){
@@ -86,18 +103,63 @@ public class Team extends Data {
         if (memberList.containsKey(user.getUserName())) {
             return this.memberList.get(user.getUserName()).getUser();
         } else {
-            throw new Exception("User does not exist");
+            throw new Exception("User '" + user.getUserName() + "' is not part of the team + '" + teamName + "'.");
         }
     }
 
-    /* public void removeTeamMember() throws Exception {
-        if (memberList.containsValue(userName)){
-            this.memberList.remove(memberList.get(userName.getUserName()));
-        }else{
-            throw new Exception("User does not exist");
+    public void removeTeamMember(User teamMember, User teamOwnerUser) throws Exception {
+        TeamMember currentMember = findTeamMember(teamOwnerUser);
+        // The target team member cannot be null
+        if (teamMember == null)
+            throw new Exception("Cannot remove a 'null' member from the team '" + this.teamName + "'.");
+        // Team leader cannot be null
+        if (currentMember == null)
+            throw new Exception(teamOwnerUser.getUserName() + " is not part of the team '" + this.teamName + "'.");
+        // Only team leader can remove others from the team
+        if (teamOwnerUser.getUserName().equals(getOwner().getUser().getUserName()) == false)
+            throw new Exception(teamOwnerUser.getUserName() + " is not the team leader of the team '" + this.teamName + "'.");
+        // Team leader should not be able to remove self from the team
+        if (teamOwnerUser.getUserName().equals(teamMember.getUserName()))
+            throw new Exception("The team leader " + teamOwnerUser.getUserName() + " cannot remove self from the team '" + this.teamName + "'.");
+
+        if (memberList.containsKey(teamMember.getUserName())){
+            this.memberList.remove(teamMember.getUserName());
+        } else {
+            throw new Exception("Cannot remove " + teamMember.getUserName() + " from the team '" + teamName + "'. The user is not part of this team.");
         }
     }
+
+    public List<User> getMaintainers() {
+        List<User> users = new ArrayList<>();
+        for (TeamMember member: memberList.values()) {
+            if (member.getRole().roleType().equals("Maintainer"))
+                users.add(member.getUser());
+        }
+        return users;
+    }
+
+    public List<User> getDevelopers() {
+        List<User> users = new ArrayList<>();
+        for (TeamMember member: memberList.values()) {
+            if (member.getRole().roleType().equals("Developer"))
+                users.add(member.getUser());
+        }
+        return users;
+    }
+
+    /*
+        public void removeTeamMember(User newDeveloper, User currentUser) throws Exception {
+            TeamMember currentMember = findTeamMember(currentUser);
+            if (currentMember != null && currentMember.getRole().adminAccess()){
+                if (this.memberList.containsValue(userName)){
+                    this.memberList.remove(memberList.get(userName.getUserName()));
+                } else {
+                    throw new Exception("User does not exist or you do not have the correct access level");
+                }
+            }
+    }
      */
+
     public void addMemberWithCustomRole(User user)
     {
         if (hasAdminAccess(user)){
@@ -128,7 +190,7 @@ public class Team extends Data {
 
 //to be changed when getTeamMember function is implemented
     private String toString(Team team){
-        return team.getOwner().toString();
+        return team.getOwner().getUser().getUserName();
     }
 }
 

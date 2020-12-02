@@ -23,7 +23,7 @@ public class TaskLibrary extends DataLibrary {
     }
 
     public boolean confirmAccess(Project currentProject, User currentUser) {
-        if (currentProject.team.findTeamMember(currentUser).getRole().adminAccess()) {
+        if (currentProject.getTeam().findTeamMember(currentUser).getRole().adminAccess()) {
             return true;
         } else {
             return false;

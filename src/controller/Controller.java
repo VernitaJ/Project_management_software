@@ -151,7 +151,7 @@ public class Controller {
                 case "3" -> notImplemented();
                 case "4" -> mainMenu();
                 case "5" -> logout();
-                case "61" -> exit();
+                case "6" -> exit();
             }
         } while (true);
     }
@@ -194,9 +194,12 @@ public class Controller {
                         "Countdown",
                         "Completed Tasks",
                         "Gantt Chart",
+                        "Create Team",
                         "View Team",
+                        "Edit Team Name",
                         "Add Team Member",
                         "Remove Team Member",
+                        "Remove Team",
                         "View Tasks",
                         "Add Task",
                         "Remove Task",
@@ -206,9 +209,9 @@ public class Controller {
                         "Logout",
                         "Exit"
                 };
-        menu = new Menu(currentProject.getName() + " Menu", options);
+        menu = new Menu("Project: '" + currentProject.getName() + "' Menu", options);
         do
-        {
+            {
             String choice = menu.printMenu();
             switch (choice)
             {
@@ -216,27 +219,30 @@ public class Controller {
                 case "2" -> taskLibrary.countdown(currentProject);
                 case "3" -> taskLibrary.completedTasks(currentProject);
                 case "4" -> notImplemented();
-                case "5" -> notImplemented();
-                case "6" -> notImplemented();
-                case "7" -> notImplemented();
-                case "8" -> {
+                case "5" -> teamLibrary.createTeam(currentProject);
+                case "6" -> teamLibrary.viewTeam(currentProject.getTeam());
+                case "7" -> teamLibrary.editTeamName(currentProject.getTeam());
+                case "8" -> notImplemented();
+                case "9" -> notImplemented();
+                case "10" -> teamLibrary.removeTeam(currentProject);
+                case "11" -> {
                     Task currentTask = taskLibrary.navigateBetweenTasks(currentProject);
                     if (currentTask != null) {
                         currentTaskMenu(currentProject, currentTask, currentUser);
                     }
                 } // taskMenu
-                case "9" -> taskLibrary.createTask(currentProject, currentUser);
-                case "10" -> taskLibrary.deleteTask(currentProject, currentUser);
-                case "11" -> projectLibrary.updateStatus(currentProject, currentUser);
-                case "12" -> {
+                case "12" -> taskLibrary.createTask(currentProject, currentUser);
+                case "13" -> taskLibrary.deleteTask(currentProject, currentUser);
+                case "14" -> projectLibrary.updateStatus(currentProject, currentUser);
+                case "15" -> {
                 //    Boolean isSuccessful = projectLibrary.deleteProject(currentProject, currentUser);
                 //    if(isSuccessful){
                 //        mainMenu();
                 //    }
                  }
-                case "13" -> mainMenu();
-                case "14" -> logout();
-                case "15" -> exit();
+                case "16" -> mainMenu();
+                case "17" -> logout();
+                case "18" -> exit();
             }
         } while (true);
     }
