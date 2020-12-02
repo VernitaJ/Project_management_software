@@ -199,6 +199,8 @@ public class Controller {
                         "Edit Team Name",
                         "Add Team Maintainer",
                         "Remove Team Maintainer",
+                        "Add Team Developer",
+                        "Remove Team Developer",
                         "Remove Team",
                         "View Tasks",
                         "Add Task",
@@ -224,8 +226,8 @@ public class Controller {
                 case "7" -> teamLibrary.editTeamName(currentProject.getTeam());
                 case "8" -> teamLibrary.addTeamMaintainer(currentProject.getTeam(), currentUser);
                 case "9" -> teamLibrary.removeTeamMaintainer(currentProject.getTeam(), currentUser);
-                case "10" -> teamLibrary.addTeamMaintainer(currentProject.getTeam(), currentUser);
-                case "11" -> teamLibrary.removeTeamMaintainer(currentProject.getTeam(), currentUser);
+                case "10" -> teamLibrary.addTeamDeveloper(currentProject.getTeam(), currentUser);
+                case "11" -> teamLibrary.removeTeamDeveloper(currentProject.getTeam(), currentUser);
                 case "12" -> teamLibrary.removeTeam(currentProject);
                 case "13" -> {
                     Task currentTask = taskLibrary.navigateBetweenTasks(currentProject);

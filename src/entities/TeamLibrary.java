@@ -163,6 +163,61 @@ public class TeamLibrary extends DataLibrary{
         }
     }
 
+    public void addTeamDeveloper(Team team, User currentUser) {
+        if (team == null) {
+            System.out.println("Team does not exist.");
+        } else {
+            List<User> nonMemberUsers = new ArrayList<>();
+            int count = 1;
+            System.out.println("Available users: ");
+            List<User> allUsers = UserLibrary.getInstance().getAllUsers();
+            allUsers.sort(Comparator.comparing(User::getUserName));
+
+            for (User user: allUsers) {
+                if (!team.isMember(user)) {
+                    nonMemberUsers.add(user);
+                    System.out.println(count + ". " + user.getUserName());
+                    count++;
+                }
+            }
+            int choice = Input.getInstance().getInt("Select a new team developer: ");
+            if (choice >= 1 || choice < count) {
+                try {
+                    team.addTeamDeveloper(nonMemberUsers.get(choice - 1), currentUser);
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
+            }
+        }
+    }
+
+    public void removeTeamDeveloper(Team team, User currentUser) {
+        if (team == null) {
+            System.out.println("Team does not exist");
+        } else {
+            List<User> developers = team.getDevelopers();
+            if (developers.size() == 0) {
+                System.out.println("Team '" + team.getTeamName() + "' has no developer team members.");
+            } else {
+                developers.sort(Comparator.comparing(User::getUserName));
+                int count = 1;
+                for (User developer: developers) {
+                    System.out.println(count + ". " + developer.getUserName());
+                    count ++;
+                }
+                Input input = Input.getInstance();
+                int choice = input.getInt("Select the developer you want to remove: ");
+                if (choice >= 1 || choice < count) {
+                    try {
+                        team.removeTeamMember(developers.get(choice - 1), currentUser);
+                    } catch (Exception e) {
+                        System.out.println(e.getMessage());
+                    }
+                }
+            }
+        }
+    }
+
     // WIP WIP WIP WIP
     private List<User> selectUsers(User owner) {
         List<User> teamMembers = new ArrayList<User>();

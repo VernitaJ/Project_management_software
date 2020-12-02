@@ -71,11 +71,14 @@ public class Team extends Data {
     public void addTeamDeveloper(User newDeveloper, User currentUser) {
         TeamMember currentMember = findTeamMember(currentUser);
         if (currentMember != null && currentMember.getRole().adminAccess()){
-            if (newDeveloper.getUserName().equals(UserLibrary.getInstance().findUserInList(newDeveloper.getUserName()))) {
-                this.memberList.put(newDeveloper.getUserName(),new TeamMember(newDeveloper, roleFactory.createDeveloper()));
-        }
+            if (UserLibrary.getInstance().doesItExist(newDeveloper.getID())) {
+                this.memberList.put(newDeveloper.getUserName(), new TeamMember(newDeveloper, roleFactory.createDeveloper()));
+                System.out.println("'" + newDeveloper.getUserName() + "' successfully added as a developer.");
+            } else {
+                System.out.println("Invalid user provided for the team.");
+            }
         } else {
-            System.out.println("User does not exist or you do not have the correct access level");
+            System.out.println("You do not have the correct access level");
         }
     }
     public void addTeamMaintainer(User newMaintainer, User currentUser) {
