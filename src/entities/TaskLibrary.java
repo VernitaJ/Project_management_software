@@ -25,12 +25,12 @@ public class TaskLibrary extends DataLibrary {
         if (projectTeam.findTeamMember(currentUser).getRole().adminAccess()) {
             return true;
         } else {
+            System.out.println("You are not authorized to perform this action!");
             return false;
         }
         // Below can be used in other methods for testing access.
         /*
         if (!confirmAccess(currentProject, currentUser)) {
-            System.out.println("You are not authorized to perform this action!!");
             return;
         }
         */
@@ -132,18 +132,27 @@ public class TaskLibrary extends DataLibrary {
     }
     
     public void updateStatus(Project currentProject, Task currentTask, User currentUser){
-        if(confirmAccess(currentProject.getTeam(), currentUser)){
-            Input input = Input.getInstance();
-            String newStatus = input.getStr("Enter the status: ");
-            currentTask.setStatus(newStatus);
-        } else {
-            System.out.println("You are not authorized to perform this action!");
+        if(!confirmAccess(currentProject.getTeam(), currentUser)) {
+            return;
         }
+        Input input = Input.getInstance();
+        String newStatus = input.getStr("Enter the status: ");
+        if(newStatus.equalsIgnoreCase("completed")) {
+            for (int i = 0; i < currentTask.getAssignees().size(); i++) {
+                String message = "The task " + currentTask.getName() +
+                        " in the project: " +
+                        currentProject.getName() +
+                        " has been completed.";
+                sendNotification(currentTask.getAssignees().get(i),message);
+            }
+        }
+        currentTask.setStatus(newStatus);
     }
     
-    public void addAssignee(Team projectTeam, ArrayList<User> taskTeam, User currentUser) {
+    public void addAssignee(Project currentProject, Task currentTask, User currentUser) {
+        Team projectTeam = currentProject.getTeam();
+        ArrayList<User> taskTeam = currentTask.getAssignees();
         if (!confirmAccess(projectTeam, currentUser)) {
-            System.out.println("You are not authorized to perform this action!!");
             return;
         }
         Input input = Input.getInstance();
@@ -153,23 +162,27 @@ public class TaskLibrary extends DataLibrary {
                 System.out.println(i+1 + ". " + tempList.get(i).getUserName());
             }
         }
-            int choice;
-            do{
-                choice = input.getInt("Enter user number or 0 to return to the previous menu: ");
-            } while(choice < 0 || choice > tempList.size());
+        int choice;
+        do{
+            choice = input.getInt("Enter user number or 0 to return to the previous menu: ");
+        } while(choice < 0 || choice > tempList.size());
         
-            if (choice == 0){
-                return;
-            }
-            User userToAdd = tempList.get(choice-1);
-                taskTeam.add(userToAdd);
-            System.out.println("Successfully assigned " + userToAdd.getUserName() + " to the task");
-            sendNotification(userToAdd, "You have been assigned a new task");
+        if (choice == 0){
+            return;
+        }
+        User userToAdd = tempList.get(choice-1);
+        taskTeam.add(userToAdd);
+        System.out.println("Successfully assigned " + userToAdd.getUserName() + " to the task");
+        String message =
+                "You have been assigned a new task: " +
+                        currentTask.getName() +
+                        " in the project: " +
+                        currentProject.getName();
+        sendNotification(userToAdd, message);
     }
     
     public void removeAssignee(Team projectTeam, ArrayList<User> taskTeam, User currentUser) {
         if (!confirmAccess(projectTeam, currentUser)) {
-            System.out.println("You are not authorized to perform this action!!");
             return;
         }
         Input input = Input.getInstance();
@@ -183,7 +196,7 @@ public class TaskLibrary extends DataLibrary {
         do{
             choice = input.getInt("Enter user number or 0 to return to the previous menu: ");
         } while(choice < 0 || choice > taskTeam.size());
-    
+        
         if (choice == 0){
             return;
         }
@@ -224,7 +237,7 @@ public class TaskLibrary extends DataLibrary {
     }
     
     public void sendNotification(User userToNotify, String message) {
-    userToNotify.getInbox().add(new Message("System", userToNotify.getUserName(), message));
+        userToNotify.getInbox().add(new Message("System", userToNotify.getUserName(), message));
     }
 }
 
