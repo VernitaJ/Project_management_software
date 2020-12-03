@@ -72,34 +72,6 @@ public class Project extends Data {
         long daysBetween = ChronoUnit.DAYS.between(getStartDate(), getEndDate());
         return daysBetween;
     }
-
-
-    //not mentioned in the user stories soooo idk
-    /*
-    public void updateName(){
-        if(team.findTeamMember(currentUser).getRole().adminAccess()){
-            Input input = Input.getInstance();
-            String newDesc = input.getStr("Enter the description: ");
-            setName(newDesc);
-        }
-        else{
-            System.out.println("You are not authorized to perform this action!!");
-        }
-
-    }
-
-    public void updateDescription(){
-         if(team.findTeamMember(currentUser).getRole().adminAccess()){
-            Input input = Input.getInstance();
-            String newName = input.getStr("Enter the name: ");
-            setDescription(newName);
-        }
-        else{
-            System.out.println("You are not authorized to perform this action!!");
-        }
-
-    }
-    */
 }
 
 
