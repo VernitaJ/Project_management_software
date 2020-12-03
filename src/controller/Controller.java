@@ -226,10 +226,10 @@ public class Controller {
                 case "7" -> taskLibrary.createTask(currentProject, currentUser);
                 case "8" -> projectLibrary.updateStatus(currentProject, currentUser);
                 case "9" -> {
-                //    Boolean isSuccessful = projectLibrary.deleteProject(currentProject, currentUser);
-                //    if(isSuccessful){
-                //        mainMenu();
-                //    }
+                    Boolean isSuccessful = projectLibrary.deleteProject(currentProject, currentUser);
+                    if(isSuccessful){
+                        mainMenu();
+                    }
                  }
                 case "10" -> mainMenu();
                 case "11" -> logout();
