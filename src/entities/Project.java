@@ -1,4 +1,6 @@
 package entities;
+import budget.Budget;
+
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
@@ -15,7 +17,7 @@ public class Project extends Data {
     private User projectManager;
     private Team team = null; // no team by default as part of the acceptance criteria
 
-    public Project(String name, User projectManager, String description, LocalDate startDate, LocalDate endDate) {
+    public Project(String name, User projectManager, String description, LocalDate startDate, LocalDate endDate, float totalBudget) {
         this.name = name;
         this.description = description;
         this.createdDate = LocalDate.now();

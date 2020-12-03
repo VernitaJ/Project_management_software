@@ -107,7 +107,7 @@ public class ProjectLibrary extends DataLibrary{
     }
 
     public void updateStatus(Project currentProject, User currentUser){
-        if(currentProject.team.findTeamMember(currentUser).getRole().roleType().equals("Owner")){
+        if(currentProject.getTeam().findTeamMember(currentUser).getRole().roleType().equals("Owner")){
             Input input = Input.getInstance();
             String newStatus = input.getStr("Enter the status or enter 0 to abort: ");
             if(newStatus.equals("0")){
@@ -155,7 +155,7 @@ public class ProjectLibrary extends DataLibrary{
             System.out.println("Project does not exist!");
             return false;
         }
-        if(projectToDelete.team.findTeamMember(currentUser).getRole().roleType().equals("Owner")){
+        if(projectToDelete.getTeam().findTeamMember(currentUser).getRole().roleType().equals("Owner")){
             Input input = Input.getInstance();
             System.out.println("Warning!");
             System.out.println("You are about to delete the entire project!");

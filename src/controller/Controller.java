@@ -1,5 +1,8 @@
 package controller;
 
+import access_roles.CustomRoles;
+import access_roles.Developer;
+import access_roles.Maintainer;
 import components.Login;
 import entities.*;
 import tools.Input;
@@ -201,6 +204,7 @@ public class Controller {
                         "Remove Team Maintainer",
                         "Add Team Developer",
                         "Remove Team Developer",
+                        "Change Team Member Role",
                         "Remove Team",
                         "View Tasks",
                         "Add Task",
@@ -228,25 +232,26 @@ public class Controller {
                 case "9" -> teamLibrary.removeTeamMaintainer(currentProject.getTeam(), currentUser);
                 case "10" -> teamLibrary.addTeamDeveloper(currentProject.getTeam(), currentUser);
                 case "11" -> teamLibrary.removeTeamDeveloper(currentProject.getTeam(), currentUser);
-                case "12" -> teamLibrary.removeTeam(currentProject);
-                case "13" -> {
+                case "12" -> changeMemberRoleMenu();
+                case "13" -> teamLibrary.removeTeam(currentProject);
+                case "14" -> {
                     Task currentTask = taskLibrary.navigateBetweenTasks(currentProject);
                     if (currentTask != null) {
                         currentTaskMenu(currentProject, currentTask, currentUser);
                     }
                 } // taskMenu
-                case "14" -> taskLibrary.createTask(currentProject, currentUser);
-                case "15" -> taskLibrary.deleteTask(currentProject, currentUser);
-                case "16" -> projectLibrary.updateStatus(currentProject, currentUser);
-                case "17" -> {
+                case "15" -> taskLibrary.createTask(currentProject, currentUser);
+                case "16" -> taskLibrary.deleteTask(currentProject, currentUser);
+                case "17" -> projectLibrary.updateStatus(currentProject, currentUser);
+                case "18" -> {
                 //    Boolean isSuccessful = projectLibrary.deleteProject(currentProject, currentUser);
                 //    if(isSuccessful){
                 //        mainMenu();
                 //    }
                  }
-                case "18" -> mainMenu();
-                case "19" -> logout();
-                case "20" -> exit();
+                case "19" -> mainMenu();
+                case "20" -> logout();
+                case "21" -> exit();
             }
         } while (true);
     }
@@ -384,6 +389,32 @@ public class Controller {
             }
         } while (true);
     }
+    private void changeMemberRoleMenu() {
+        TeamMember userToChange = currentProject.getTeam().roleChange();
+        String[] options =
+                {
+                        "Maintainer",
+                        "Developer",
+                        "Custom Role",
+                       currentProject.getName() + " Menu",
+                        "Logout",
+                        "Exit"
+                };
+        menu = new Menu(currentProject.getTeam().getTeamName() + " Menu", options);
+        do
+        {
+            String choice = menu.printMenu();
+            switch (choice)
+            {
+                case "1" -> userToChange.setRole(new Maintainer());
+                case "2" -> userToChange.setRole(new Developer());
+                case "3" -> userToChange.setRole(currentProject.getTeam().addMemberWithCustomRole(currentUser));
+                case "4" -> currentProjectMenu();
+                case "5" -> logout();
+                case "6" -> exit();
+            }
+        } while (true);
+    }
 
     private void login() {
        currentUser = (userLibrary.login());
@@ -427,6 +458,7 @@ public class Controller {
     private void deleteMessage() {
         userLibrary.deleteMessage(currentUser);
     }
+
     
 }
 

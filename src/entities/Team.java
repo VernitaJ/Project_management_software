@@ -5,12 +5,13 @@ import access_roles.CustomRoles;
 import access_roles.RoleFactory;
 import tools.Input;
 
+import javax.management.relation.Role;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.WeakHashMap;
 public class Team extends Data {
 
-    private Input input;
+    private Input input = Input.getInstance();
     private RoleFactory roleFactory = new RoleFactory();
     private String teamName;
     private String ownerUserName;
@@ -168,12 +169,12 @@ public class Team extends Data {
     }
      */
 
-    public void addMemberWithCustomRole(User user)
+    public CustomRoles addMemberWithCustomRole(User user)
     {
         if (hasAdminAccess(user)){
             String roleType = input.getStr("Enter role name: ");
-            String canCreateTask = input.getStr("Can role create a task?: Y/N");
-            String adminAccess = input.getStr("Does the role have admin access?: Y/N");
+            String canCreateTask = input.getStr("Can role create a task? Y/N: ");
+            String adminAccess = input.getStr("Does the role have admin access? Y/N: ");
             boolean createTask = false;
             boolean hasAdminAccess = false;
             if (canCreateTask.equalsIgnoreCase("Y")){
@@ -182,9 +183,10 @@ public class Team extends Data {
             if (adminAccess.equalsIgnoreCase("Y")){
                 hasAdminAccess = true;
             }
-            memberList.put(user.getUserName(), new TeamMember(user, new CustomRoles(roleType,createTask,hasAdminAccess)));
+            return new CustomRoles(roleType,createTask,hasAdminAccess);
         }else{
             System.out.println("You do not have the required access level.");
+            return null;
         }
     }
     private boolean hasAdminAccess(User currentUser) {
@@ -194,6 +196,23 @@ public class Team extends Data {
             return true;
         }
         return false;
+    }
+
+    public TeamMember roleChange()
+    {
+        for (String member : memberList.keySet())
+        {
+            System.out.println(memberList.get(member).getUser().getUserName());
+        }
+        String memberToChange = input.getStr("Team Member whose role you would like to modify: ");
+        if (memberList.containsKey(memberToChange))
+        {
+            return memberList.get(memberToChange);
+        }
+        else
+        {
+            return null;
+        }
     }
 
     public WeakHashMap<String, TeamMember> getMemberList() {
