@@ -1,4 +1,6 @@
 package entities;
+import budget.Budget;
+
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
@@ -9,12 +11,13 @@ public class Project extends Data {
     private LocalDate createdDate;
     private LocalDate startDate;
     private LocalDate endDate;
+    private Budget budget;
     protected TaskLibrary taskList;
     protected TeamLibrary teamLibrary = TeamLibrary.getInstance();
     private User projectManager;
     private Team team = null; // no team by default as part of the acceptance criteria
 
-    public Project(String name, User projectManager, String description, LocalDate startDate, LocalDate endDate) {
+    public Project(String name, User projectManager, String description, LocalDate startDate, LocalDate endDate, float totalBudget) {
         this.name = name;
         this.description = description;
         this.createdDate = LocalDate.now();
@@ -23,6 +26,7 @@ public class Project extends Data {
         this.taskList = new TaskLibrary();
         this.status = "";
         this.projectManager = projectManager;
+        this.budget = new Budget(totalBudget);
     }
 
     public void setStatus(String status) {
@@ -72,6 +76,39 @@ public class Project extends Data {
         long daysBetween = ChronoUnit.DAYS.between(getStartDate(), getEndDate());
         return daysBetween;
     }
+    public String timeLeftBeforeExceedingBudget()
+    {
+        return "Total Time Before Exceeding budget\n" +
+                "Recommend Member to cut" // to be implemented
+                + timeLeftBeforeExceedingBudget();
+    }
+
+    //not mentioned in the user stories soooo idk
+    /*
+    public void updateName(){
+        if(team.findTeamMember(currentUser).getRole().adminAccess()){
+            Input input = Input.getInstance();
+            String newDesc = input.getStr("Enter the description: ");
+            setName(newDesc);
+        }
+        else{
+            System.out.println("You are not authorized to perform this action!!");
+        }
+
+    }
+
+    public void updateDescription(){
+         if(team.findTeamMember(currentUser).getRole().adminAccess()){
+            Input input = Input.getInstance();
+            String newName = input.getStr("Enter the name: ");
+            setDescription(newName);
+        }
+        else{
+            System.out.println("You are not authorized to perform this action!!");
+        }
+
+    }
+    */
 }
 
 

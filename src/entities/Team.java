@@ -4,13 +4,12 @@ package entities;
 import access_roles.CustomRoles;
 import access_roles.RoleFactory;
 import tools.Input;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.WeakHashMap;
 public class Team extends Data {
 
-    private Input input;
+    private Input input = Input.getInstance();
     private RoleFactory roleFactory = new RoleFactory();
     private String teamName;
     private String ownerUserName;
@@ -94,6 +93,26 @@ public class Team extends Data {
             System.out.println("You do not have the correct access level");
         }
     }
+    public CustomRoles addMemberWithCustomRole(User user)
+    {
+        if (hasAdminAccess(user)){
+            String roleType = input.getStr("Enter role name: ");
+            String canCreateTask = input.getStr("Can role create a task? Y/N: ");
+            String adminAccess = input.getStr("Does the role have admin access? Y/N: ");
+            boolean createTask = false;
+            boolean hasAdminAccess = false;
+            if (canCreateTask.equalsIgnoreCase("Y")){
+                createTask = true;
+            }
+            if (adminAccess.equalsIgnoreCase("Y")){
+                hasAdminAccess = true;
+            }
+            return new CustomRoles(roleType,createTask,hasAdminAccess);
+        }else{
+            System.out.println("You do not have the required access level.");
+            return null;
+        }
+    }
 
     public boolean isMember(User user) {
         return memberList.containsKey(user.getUserName());
@@ -154,7 +173,7 @@ public class Team extends Data {
         }
         return users;
     }
-    
+
     /*
         public void removeTeamMember(User newDeveloper, User currentUser) throws Exception {
             TeamMember currentMember = findTeamMember(currentUser);
@@ -167,26 +186,6 @@ public class Team extends Data {
             }
     }
      */
-
-    public void addMemberWithCustomRole(User user)
-    {
-        if (hasAdminAccess(user)){
-            String roleType = input.getStr("Enter role name: ");
-            String canCreateTask = input.getStr("Can role create a task?: Y/N");
-            String adminAccess = input.getStr("Does the role have admin access?: Y/N");
-            boolean createTask = false;
-            boolean hasAdminAccess = false;
-            if (canCreateTask.equalsIgnoreCase("Y")){
-                createTask = true;
-            }
-            if (adminAccess.equalsIgnoreCase("Y")){
-                hasAdminAccess = true;
-            }
-            memberList.put(user.getUserName(), new TeamMember(user, new CustomRoles(roleType,createTask,hasAdminAccess)));
-        }else{
-            System.out.println("You do not have the required access level.");
-        }
-    }
     private boolean hasAdminAccess(User currentUser) {
         TeamMember currentMember = findTeamMember(currentUser);
         if (currentMember != null && currentMember.getRole().adminAccess()) {
@@ -195,13 +194,30 @@ public class Team extends Data {
         }
         return false;
     }
-    
+
+    public TeamMember roleChange()
+    {
+        for (String member : memberList.keySet())
+        {
+            System.out.println(memberList.get(member).getUser().getUserName());
+        }
+        String memberToChange = input.getStr("Team Member whose role you would like to modify: ");
+        if (memberList.containsKey(memberToChange))
+        {
+            return memberList.get(memberToChange);
+        }
+        else
+        {
+            return null;
+        }
+    }
+
     public WeakHashMap<String, TeamMember> getMemberList() {
         return memberList;
     }
-    
+
     //to be changed when getTeamMember function is implemented
-    
+
     private String toString(Team team){
         return team.getOwner().getUser().getUserName();
     }

@@ -26,6 +26,8 @@ public class UserLibrary extends DataLibrary {
         String eMail = null;
         String occupation = null;
         String companyName = null;
+        float salary = 0.0f;
+        float workingHours = 0.0f;
         do {
             userName = this.input.getStr("Enter desired username: ");
             Data user = findUserInList(userName);
@@ -36,9 +38,11 @@ public class UserLibrary extends DataLibrary {
                 eMail = this.input.getStr("Enter your e-mail: ");
                 occupation = this.input.getStr("Enter your current occupation: ");
                 companyName = this.input.getStr("Enter your company name: ");
+                salary = this.input.getFloat("Enter your Salary: "); //needs to be cleaned up for taking a float
+                workingHours = this.input.getFloat("Enter your Daily Working Hours: "); // needs to be cleaned up for percentage
             } else System.out.println("This username is already in use, please try another.\n");
         } while (userName == null || eMail == null || occupation == null || companyName == null);
-        list.add(new User(userName, password, eMail, occupation, companyName));
+        list.add(new User(userName, password, eMail, occupation, companyName, salary, workingHours));
         System.out.println("Successfully created user.");
     }
 
@@ -69,7 +73,7 @@ public class UserLibrary extends DataLibrary {
         System.out.println("Welcome to Simple Direction. " + "\n" + "Please Log in to continue.");
         String userLogin = "";
         do {
-            String userName = input.getStr("UserName: ");
+            String userName = input.getStr("Username: ");
             String password = input.getStr("Password: ");
             Data loggingIn = findUserInList(userName);
             if (loggingIn !=null){
@@ -135,5 +139,16 @@ public class UserLibrary extends DataLibrary {
                 }
             }
         } else System.out.println("ID doesn't exist");
+    }
+
+    public void printAllUsers()
+    {
+        for (Data user : list)
+        {
+            if (user instanceof User)
+            {
+                System.out.println(((User) user).getUserName());
+            }
+        }
     }
 }

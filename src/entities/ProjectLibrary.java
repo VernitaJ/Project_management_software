@@ -21,7 +21,8 @@ public class ProjectLibrary extends DataLibrary{
         String description = input.getStr("Project description: ");
         LocalDate startDate = input.getDate("Project start date (YYYY-MM-DD): ");
         LocalDate endDate = input.getDate("Project end date (YYYY-MM-DD): ");
-        addToList(new Project(name, currentUser, description, startDate, endDate));
+        float totalBudget = input.getFloat("Total Budget of Project: ");
+        addToList(new Project(name, currentUser, description, startDate, endDate, totalBudget));
     }
 
     public void addProjectToList(Project project)
@@ -49,7 +50,7 @@ public class ProjectLibrary extends DataLibrary{
             System.out.println("You have no projects!");
         } else {
             for (int i=0; i<tempList.size(); i++){
-                System.out.println(i+1 + "- " + tempList.get(i).getName());
+                System.out.println(" " + (i + 1) + ") " + tempList.get(i).getName());
             }
         }
 
@@ -106,7 +107,7 @@ public class ProjectLibrary extends DataLibrary{
     }
 
     public void updateStatus(Project currentProject, User currentUser){
-        if(currentProject.team.findTeamMember(currentUser).getRole().roleType().equals("Owner")){
+        if(currentProject.getTeam().findTeamMember(currentUser).getRole().roleType().equals("Owner")){
             Input input = Input.getInstance();
             String newStatus = input.getStr("Enter the status or enter 0 to abort: ");
             if(newStatus.equals("0")){
@@ -154,7 +155,7 @@ public class ProjectLibrary extends DataLibrary{
             System.out.println("Project does not exist!");
             return false;
         }
-        if(projectToDelete.team.findTeamMember(currentUser).getRole().roleType().equals("Owner")){
+        if(projectToDelete.getTeam().findTeamMember(currentUser).getRole().roleType().equals("Owner")){
             Input input = Input.getInstance();
             System.out.println("Warning!");
             System.out.println("You are about to delete the entire project!");
@@ -181,9 +182,7 @@ public class ProjectLibrary extends DataLibrary{
         }
         System.out.println("You are not authorized to perform this action!");
         return false;
-
     }
-
 
 
 }
