@@ -197,18 +197,9 @@ public class Controller {
                         "Countdown",
                         "Completed Tasks",
                         "Gantt Chart",
-                        "Create Team",
-                        "View Team",
-                        "Edit Team Name",
-                        "Add Team Maintainer",
-                        "Remove Team Maintainer",
-                        "Add Team Developer",
-                        "Remove Team Developer",
-                        "Change Team Member Role",
-                        "Remove Team",
+                        "Team Menu",
                         "View Tasks",
                         "Add Task",
-                        "Remove Task",
                         "Update Status",
                         "Delete Project",
                         "Main Menu",
@@ -225,33 +216,117 @@ public class Controller {
                 case "2" -> taskLibrary.countdown(currentProject);
                 case "3" -> taskLibrary.completedTasks(currentProject);
                 case "4" -> notImplemented();
-                case "5" -> teamLibrary.createTeam(currentProject);
-                case "6" -> teamLibrary.viewTeam(currentProject.getTeam());
-                case "7" -> teamLibrary.editTeamName(currentProject.getTeam());
-                case "8" -> teamLibrary.addTeamMaintainer(currentProject.getTeam(), currentUser);
-                case "9" -> teamLibrary.removeTeamMaintainer(currentProject.getTeam(), currentUser);
-                case "10" -> teamLibrary.addTeamDeveloper(currentProject.getTeam(), currentUser);
-                case "11" -> teamLibrary.removeTeamDeveloper(currentProject.getTeam(), currentUser);
-                case "12" -> changeMemberRoleMenu();
-                case "13" -> teamLibrary.removeTeam(currentProject);
-                case "14" -> {
-                    Task currentTask = taskLibrary.navigateBetweenTasks(currentProject);
+                case "5" -> teamMenu();
+                case "6" -> {
+                    currentTask = taskLibrary.navigateBetweenTasks(currentProject);
                     if (currentTask != null) {
                         currentTaskMenu(currentProject, currentTask, currentUser);
                     }
                 } // taskMenu
-                case "15" -> taskLibrary.createTask(currentProject, currentUser);
-                case "16" -> taskLibrary.deleteTask(currentProject, currentUser);
-                case "17" -> projectLibrary.updateStatus(currentProject, currentUser);
-                case "18" -> {
+                case "7" -> taskLibrary.createTask(currentProject, currentUser);
+                case "8" -> projectLibrary.updateStatus(currentProject, currentUser);
+                case "9" -> {
                 //    Boolean isSuccessful = projectLibrary.deleteProject(currentProject, currentUser);
                 //    if(isSuccessful){
                 //        mainMenu();
                 //    }
                  }
-                case "19" -> mainMenu();
-                case "20" -> logout();
-                case "21" -> exit();
+                case "10" -> mainMenu();
+                case "11" -> logout();
+                case "12" -> exit();
+            }
+        } while (true);
+    }
+
+    private void teamMenu() {
+        String menuName;
+        if (currentProject.getTeam() == null)
+        {
+            menuName = "Team Menu";
+        }
+        else
+        {
+            menuName = currentProject.getTeam().getTeamName() + " Menu";
+        }
+        String[] options =
+                {
+                        "Create Team",
+                        "View Team",
+                        "Edit Team Name",
+                        "Add Team Member",
+                        "Remove Team Member",
+                        "Change Team Member Role",
+                        "Remove Team",
+                        currentProject.getName() + " Menu",
+                        "Logout",
+                        "Exit"
+                };
+        menu = new Menu(menuName, options);
+        do
+        {
+            String choice = menu.printMenu();
+            switch (choice)
+            {
+                case "1" -> teamLibrary.createTeam(currentProject);
+                case "2" -> teamLibrary.viewTeam(currentProject.getTeam());
+                case "3" -> teamLibrary.editTeamName(currentProject.getTeam());
+                case "4" -> addMember();
+                case "5" -> removeMember();
+                case "6" -> changeMemberRoleMenu();
+                case "7" -> teamLibrary.removeTeam(currentProject);
+                case "8" -> currentProjectMenu();
+                case "9" -> logout();
+                case "10" -> exit();
+            }
+        } while (true);
+    }
+    private void addMember() {
+        String[] options =
+                {
+                        "Maintainer",
+                        "Developer",
+                        "Custom Role",
+                        "Team Menu",
+                        "Logout",
+                        "Exit"
+                };
+        menu = new Menu("Add Member", options);
+        do
+        {
+            String choice = menu.printMenu();
+            switch (choice)
+            {
+                case "1" -> teamLibrary.addTeamMaintainer(currentProject.getTeam(), currentUser);
+                case "2" -> teamLibrary.addTeamDeveloper(currentProject.getTeam(), currentUser);
+                case "3" -> notImplemented();
+                case "4" -> teamMenu();
+                case "5" -> logout();
+                case "6" -> exit();
+            }
+        } while (true);
+    }
+    private void removeMember() {
+        String[] options =
+                {
+                        "Maintainer",
+                        "Developer",
+                        "Custom Role",
+                        "Team Menu",
+                        "Logout",
+                        "Exit"
+                };
+        menu = new Menu("Remove Member", options);
+        do
+        {
+            String choice = menu.printMenu();
+            switch (choice)
+            {
+                case "1" -> teamLibrary.removeTeamMaintainer(currentProject.getTeam(), currentUser);
+                case "2" -> teamLibrary.removeTeamDeveloper(currentProject.getTeam(), currentUser);
+                case "3" -> notImplemented();
+                case "4" -> teamMenu();
+                case "5" -> logout();
+                case "6" -> exit();
             }
         } while (true);
     }
@@ -265,6 +340,7 @@ public class Controller {
                         "Update Name",
                         "Update Description",
                         "Update Status",
+                        "Delete Task",
                         "Main Menu",
                         "Logout",
                         "Exit"
@@ -281,9 +357,10 @@ public class Controller {
                 case "4" -> notImplemented();
                 case "5" -> notImplemented();
                 case "6" -> taskLibrary.updateStatus(currentProject, currentTask, currentUser);
-                case "7" -> mainMenu();
-                case "8" -> logout();
-                case "9" -> exit();
+                case "7" -> taskLibrary.deleteTask(currentProject, currentUser);
+                case "8" -> mainMenu();
+                case "9" -> logout();
+                case "10" -> exit();
             }
         } while (true);
     }

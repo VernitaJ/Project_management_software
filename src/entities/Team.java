@@ -4,8 +4,6 @@ package entities;
 import access_roles.CustomRoles;
 import access_roles.RoleFactory;
 import tools.Input;
-
-import javax.management.relation.Role;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.WeakHashMap;
@@ -95,6 +93,26 @@ public class Team extends Data {
             System.out.println("You do not have the correct access level");
         }
     }
+    public CustomRoles addMemberWithCustomRole(User user)
+    {
+        if (hasAdminAccess(user)){
+            String roleType = input.getStr("Enter role name: ");
+            String canCreateTask = input.getStr("Can role create a task? Y/N: ");
+            String adminAccess = input.getStr("Does the role have admin access? Y/N: ");
+            boolean createTask = false;
+            boolean hasAdminAccess = false;
+            if (canCreateTask.equalsIgnoreCase("Y")){
+                createTask = true;
+            }
+            if (adminAccess.equalsIgnoreCase("Y")){
+                hasAdminAccess = true;
+            }
+            return new CustomRoles(roleType,createTask,hasAdminAccess);
+        }else{
+            System.out.println("You do not have the required access level.");
+            return null;
+        }
+    }
 
     public boolean isMember(User user) {
         return memberList.containsKey(user.getUserName());
@@ -168,27 +186,6 @@ public class Team extends Data {
             }
     }
      */
-
-    public CustomRoles addMemberWithCustomRole(User user)
-    {
-        if (hasAdminAccess(user)){
-            String roleType = input.getStr("Enter role name: ");
-            String canCreateTask = input.getStr("Can role create a task? Y/N: ");
-            String adminAccess = input.getStr("Does the role have admin access? Y/N: ");
-            boolean createTask = false;
-            boolean hasAdminAccess = false;
-            if (canCreateTask.equalsIgnoreCase("Y")){
-                createTask = true;
-            }
-            if (adminAccess.equalsIgnoreCase("Y")){
-                hasAdminAccess = true;
-            }
-            return new CustomRoles(roleType,createTask,hasAdminAccess);
-        }else{
-            System.out.println("You do not have the required access level.");
-            return null;
-        }
-    }
     private boolean hasAdminAccess(User currentUser) {
         TeamMember currentMember = findTeamMember(currentUser);
         if (currentMember != null && currentMember.getRole().adminAccess()) {
