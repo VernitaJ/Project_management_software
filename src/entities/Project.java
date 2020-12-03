@@ -3,7 +3,6 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
 public class Project extends Data {
-    protected Team team;
     private String name;
     private String description;
     private String status; // Active/Inactive
@@ -11,8 +10,11 @@ public class Project extends Data {
     private LocalDate startDate;
     private LocalDate endDate;
     protected TaskLibrary taskList;
+    protected TeamLibrary teamLibrary = TeamLibrary.getInstance();
+    private User projectManager;
+    private Team team = null; // no team by default as part of the acceptance criteria
 
-    public Project(String name, User owner, String description, LocalDate startDate, LocalDate endDate) {
+    public Project(String name, User projectManager, String description, LocalDate startDate, LocalDate endDate) {
         this.name = name;
         this.description = description;
         this.createdDate = LocalDate.now();
@@ -20,11 +22,7 @@ public class Project extends Data {
         this.endDate = endDate;
         this.taskList = new TaskLibrary();
         this.status = "";
-        try {
-            this.team = new Team(owner);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        this.projectManager = projectManager;
     }
 
     public void setStatus(String status) {
@@ -38,6 +36,8 @@ public class Project extends Data {
     public void setName(String name) {
         this.name = name;
     }
+
+    public void setTeam(Team team) { this.team = team; }
 
     public String getName() {
         return name;
@@ -62,6 +62,11 @@ public class Project extends Data {
     public LocalDate getEndDate() {
         return endDate;
     }
+
+    public User getProjectManager() {return projectManager; }
+
+    public Team getTeam() { return team; }
+
 
     public long duration() {
         long daysBetween = ChronoUnit.DAYS.between(getStartDate(), getEndDate());

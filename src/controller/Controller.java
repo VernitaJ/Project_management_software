@@ -151,7 +151,7 @@ public class Controller {
                 case "3" -> notImplemented();
                 case "4" -> mainMenu();
                 case "5" -> logout();
-                case "61" -> exit();
+                case "6" -> exit();
             }
         } while (true);
     }
@@ -192,10 +192,16 @@ public class Controller {
                 {
                         "View Project Details",
                         "Countdown",
+                        "Completed Tasks",
                         "Gantt Chart",
+                        "Create Team",
                         "View Team",
-                        "Add Team Member",
-                        "Remove Team Member",
+                        "Edit Team Name",
+                        "Add Team Maintainer",
+                        "Remove Team Maintainer",
+                        "Add Team Developer",
+                        "Remove Team Developer",
+                        "Remove Team",
                         "View Tasks",
                         "Add Task",
                         "Remove Task",
@@ -205,36 +211,42 @@ public class Controller {
                         "Logout",
                         "Exit"
                 };
-        menu = new Menu(currentProject.getName() + " Menu", options);
+        menu = new Menu("Project: '" + currentProject.getName() + "' Menu", options);
         do
-        {
+            {
             String choice = menu.printMenu();
             switch (choice)
             {
                 case "1" -> projectLibrary.viewProjectDetails(currentProject);
                 case "2" -> taskLibrary.countdown(currentProject);
-                case "3" -> notImplemented();
+                case "3" -> taskLibrary.completedTasks(currentProject);
                 case "4" -> notImplemented();
-                case "5" -> notImplemented();
-                case "6" -> notImplemented();
-                case "7" -> {
+                case "5" -> teamLibrary.createTeam(currentProject);
+                case "6" -> teamLibrary.viewTeam(currentProject.getTeam());
+                case "7" -> teamLibrary.editTeamName(currentProject.getTeam());
+                case "8" -> teamLibrary.addTeamMaintainer(currentProject.getTeam(), currentUser);
+                case "9" -> teamLibrary.removeTeamMaintainer(currentProject.getTeam(), currentUser);
+                case "10" -> teamLibrary.addTeamDeveloper(currentProject.getTeam(), currentUser);
+                case "11" -> teamLibrary.removeTeamDeveloper(currentProject.getTeam(), currentUser);
+                case "12" -> teamLibrary.removeTeam(currentProject);
+                case "13" -> {
                     Task currentTask = taskLibrary.navigateBetweenTasks(currentProject);
                     if (currentTask != null) {
                         currentTaskMenu(currentProject, currentTask, currentUser);
                     }
                 } // taskMenu
-                case "8" -> taskLibrary.createTask(currentProject, currentUser);
-                case "9" -> taskLibrary.deleteTask(currentProject, currentUser);
-                case "10" -> projectLibrary.updateStatus(currentProject, currentUser);
-                case "11" -> {
-                    Boolean isSuccessful = projectLibrary.deleteProject(currentProject, currentUser);
-                    if(isSuccessful){
-                        mainMenu();
-                    }
+                case "14" -> taskLibrary.createTask(currentProject, currentUser);
+                case "15" -> taskLibrary.deleteTask(currentProject, currentUser);
+                case "16" -> projectLibrary.updateStatus(currentProject, currentUser);
+                case "17" -> {
+                //    Boolean isSuccessful = projectLibrary.deleteProject(currentProject, currentUser);
+                //    if(isSuccessful){
+                //        mainMenu();
+                //    }
                  }
-                case "12" -> mainMenu();
-                case "13" -> logout();
-                case "14" -> exit();
+                case "18" -> mainMenu();
+                case "19" -> logout();
+                case "20" -> exit();
             }
         } while (true);
     }

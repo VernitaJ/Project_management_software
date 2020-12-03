@@ -19,7 +19,7 @@ abstract class Data {
             return false;
         }
     }
-
+    
     @Override
     public String toString() {
         return "ID: " + ID;
