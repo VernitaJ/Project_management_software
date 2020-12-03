@@ -30,11 +30,18 @@ public class ProjectLibrary extends DataLibrary{
         list.add(project);
     }
 
-   public ArrayList<Project> listUsersProjects(User currentUser){
+    public ArrayList<Project> listUsersProjects(User currentUser){
         ArrayList<Project> tempList = new ArrayList<>();
         for(Data project : list){
             Project currentProject = ((Project)project);
-            if((currentProject.team.findTeamMember(currentUser) != null)){
+
+
+            if ((currentProject.getTeam() == null &&
+                 currentProject.getProjectManager().getUserName().equals(currentUser.getUserName()))
+                ||
+                (currentProject.getTeam() != null &&
+                 currentProject.getTeam().findTeamMember(currentUser) != null)) {
+
                 tempList.add(currentProject);
             }
         }
@@ -73,7 +80,7 @@ public class ProjectLibrary extends DataLibrary{
         for(Data project : list) {
             currentProject = ((Project) project);
         }
-            if(currentProject.team.findTeamMember(currentUser).getRole().adminAccess()){
+            if(currentProject.getTeam().findTeamMember(currentUser).getRole().adminAccess()){
             Input input = Input.getInstance();
             String newDesc = input.getStr("Enter the description: ");
             currentProject.setName(newDesc);
@@ -87,6 +94,7 @@ public class ProjectLibrary extends DataLibrary{
     public void viewProjectDetails(Project currentProject){
         if(findItInList(currentProject.getID()) != null){
             System.out.println("Project Name: " + currentProject.getName());
+            System.out.println("Project Description: " + currentProject.getDescription());
             if(!currentProject.getStatus().isEmpty()){
                 System.out.println("Status: "+ currentProject.getStatus());
             }
@@ -99,15 +107,46 @@ public class ProjectLibrary extends DataLibrary{
     }
 
     public void updateStatus(Project currentProject, User currentUser){
-        if(currentProject.team.findTeamMember(currentUser).getRole().adminAccess()){
+        if(currentProject.team.findTeamMember(currentUser).getRole().roleType().equals("Owner")){
             Input input = Input.getInstance();
-            String newStatus = input.getStr("Enter the status: ");
-            currentProject.setStatus(newStatus);
+            String newStatus = input.getStr("Enter the status or enter 0 to abort: ");
+            if(newStatus.equals("0")){
+                System.out.println("Action aborted!");
+            }else{
+                currentProject.setStatus(newStatus);
+            }
         }
         else{
             System.out.println("You are not authorized to perform this action!");
         }
     }
+    /*public void updateName(Project currentProject, User currentUser){
+        if(currentProject.team.findTeamMember(currentUser).getRole().roleType().equals("Owner")){
+            Input input = Input.getInstance();
+            String newName = input.getStr("Enter the new name or enter 0 to abort: ");
+            if(newName.equals("0")){
+                System.out.println("Action aborted!");
+            }else{
+                currentProject.setName(newName);
+            }
+        }
+        else{
+            System.out.println("You are not authorized to perform this action!");
+        }
+    }    public void updateDescription(Project currentProject, User currentUser){
+        if(currentProject.team.findTeamMember(currentUser).getRole().roleType().equals("Owner")){
+            Input input = Input.getInstance();
+            String newName = input.getStr("Enter the new description or enter 0 to abort: ");
+            if(newName.equals("0")){
+                System.out.println("Action aborted!");
+            }else{
+                currentProject.setName(newName);
+            }
+        }
+        else{
+            System.out.println("You are not authorized to perform this action!");
+        }
+    }*/
 
 
     public boolean deleteProject(Project currentProject, User currentUser){
@@ -116,15 +155,14 @@ public class ProjectLibrary extends DataLibrary{
             System.out.println("Project does not exist!");
             return false;
         }
-        if(currentProject.team.findTeamMember(currentUser).getRole().equals("Owner")){
+        if(projectToDelete.team.findTeamMember(currentUser).getRole().roleType().equals("Owner")){
             Input input = Input.getInstance();
             System.out.println("Warning!");
             System.out.println("You are about to delete the entire project!");
             System.out.println("This action is irreversible!");
-            String email = input.getStr("Please enter email address to confirm the deletion: ");
-            String password = input.getStr("Please enter password: ");
-            if(currentUser.getEmail().equals(email) && currentUser.getPassword().equals(password)){
-                if(removeItFromList(currentProject.getID())){
+            String password = input.getStr("Please enter password to confirm the deletion (leave empty to abort): ");
+            if(currentUser.getPassword().equals(password)){
+                if(removeItFromList(projectToDelete.getID())){
                     System.out.println("Project successfully deleted!");
                     System.out.println("Returning to main menu...");
                     return true;
@@ -132,6 +170,10 @@ public class ProjectLibrary extends DataLibrary{
                     System.out.println("Something went wrong");
                     return false;
                 }
+            } else if(password.isEmpty()){
+                System.out.println("Action aborted!");
+                System.out.println("Returning to main menu...");
+                return false;
             } else {
                 System.out.println("Confirmation Failed!");
                 return false;

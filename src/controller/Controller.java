@@ -1,12 +1,10 @@
 package controller;
 
-import budget.Budget;
 import components.Login;
 import entities.*;
 import tools.Input;
 import tools.Menu;
 
-import java.awt.*;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -153,7 +151,7 @@ public class Controller {
                 case "3" -> notImplemented();
                 case "4" -> mainMenu();
                 case "5" -> logout();
-                case "61" -> exit();
+                case "6" -> exit();
             }
         } while (true);
     }
@@ -194,10 +192,16 @@ public class Controller {
                 {
                         "View Project Details",
                         "Countdown",
+                        "Completed Tasks",
                         "Gantt Chart",
+                        "Create Team",
                         "View Team",
-                        "Add Team Member",
-                        "Remove Team Member",
+                        "Edit Team Name",
+                        "Add Team Maintainer",
+                        "Remove Team Maintainer",
+                        "Add Team Developer",
+                        "Remove Team Developer",
+                        "Remove Team",
                         "View Tasks",
                         "Add Task",
                         "Remove Task",
@@ -207,35 +211,42 @@ public class Controller {
                         "Logout",
                         "Exit"
                 };
-        menu = new Menu(currentProject.getName() + " Menu", options);
+        menu = new Menu("Project: '" + currentProject.getName() + "' Menu", options);
         do
-        {
+            {
             String choice = menu.printMenu();
             switch (choice)
             {
                 case "1" -> projectLibrary.viewProjectDetails(currentProject);
                 case "2" -> taskLibrary.countdown(currentProject);
                 case "3" -> taskLibrary.completedTasks(currentProject);
-                case "4" -> showTeam(currentProject);
-                case "5" -> addMember();
-                case "6" -> notImplemented();
-                case "7" -> notImplemented();
-                case "8" -> {
+                case "4" -> notImplemented();
+                case "5" -> teamLibrary.createTeam(currentProject);
+                case "6" -> teamLibrary.viewTeam(currentProject.getTeam());
+                case "7" -> teamLibrary.editTeamName(currentProject.getTeam());
+                case "8" -> teamLibrary.addTeamMaintainer(currentProject.getTeam(), currentUser);
+                case "9" -> teamLibrary.removeTeamMaintainer(currentProject.getTeam(), currentUser);
+                case "10" -> teamLibrary.addTeamDeveloper(currentProject.getTeam(), currentUser);
+                case "11" -> teamLibrary.removeTeamDeveloper(currentProject.getTeam(), currentUser);
+                case "12" -> teamLibrary.removeTeam(currentProject);
+                case "13" -> {
                     Task currentTask = taskLibrary.navigateBetweenTasks(currentProject);
                     if (currentTask != null) {
                         currentTaskMenu(currentProject, currentTask, currentUser);
                     }
                 } // taskMenu
-                case "9" -> taskLibrary.createTask(currentProject, currentUser);
-                case "10" -> taskLibrary.deleteTask(currentProject, currentUser);
-                case "11" -> projectLibrary.updateStatus(currentProject, currentUser);
-                case "12" ->
-                        {
-                            currentProject = null;
-                            mainMenu();
-                        }
-                case "13" -> logout();
-                case "14" -> exit();
+                case "14" -> taskLibrary.createTask(currentProject, currentUser);
+                case "15" -> taskLibrary.deleteTask(currentProject, currentUser);
+                case "16" -> projectLibrary.updateStatus(currentProject, currentUser);
+                case "17" -> {
+                //    Boolean isSuccessful = projectLibrary.deleteProject(currentProject, currentUser);
+                //    if(isSuccessful){
+                //        mainMenu();
+                //    }
+                 }
+                case "18" -> mainMenu();
+                case "19" -> logout();
+                case "20" -> exit();
             }
         } while (true);
     }
@@ -260,8 +271,8 @@ public class Controller {
             switch (choice)
             {
                 case "1" -> taskLibrary.viewTaskDetails(currentTask);
-                case "2" -> taskLibrary.addAssignee(currentProject, currentTask);
-                case "3" -> taskLibrary.removeAssignee(currentProject, currentTask);
+                case "2" -> taskLibrary.addAssignee(currentProject, currentTask, currentUser);
+                case "3" -> taskLibrary.removeAssignee(currentProject.getTeam(), currentTask.getAssignees(), currentUser);
                 case "4" -> notImplemented();
                 case "5" -> notImplemented();
                 case "6" -> taskLibrary.updateStatus(currentProject, currentTask, currentUser);
@@ -374,32 +385,6 @@ public class Controller {
         } while (true);
     }
 
-    private void addMember() {
-        String[] options =
-                {
-                        "Maintainer",
-                        "Developer",
-                        "Custom Role",
-                        currentProject.getName() + " Menu",
-                        "Logout",
-                        "Exit"
-                };
-        menu = new Menu("Add Member", options);
-        do
-        {
-            String choice = menu.printMenu();
-            switch (choice)
-            {
-                case "1" -> addMaintainerToTeam();
-                case "2" -> addDeveloperToTeam();
-                case "3" -> addCustomRoleToTeam();
-                case "4" -> currentProjectMenu();
-                case "5" -> logout();
-                case "6" -> exit();
-            }
-        } while (true);
-    }
-
     private void login() {
        currentUser = (userLibrary.login());
        if (currentUser !=null)
@@ -422,11 +407,6 @@ public class Controller {
         return null;
     }
 
-    private void showTeam(Project currentProject)
-    {
-        currentProject.printTeam();
-    }
-
     private void createUser() {
         userLibrary.createUser();
     }
@@ -447,21 +427,6 @@ public class Controller {
     private void deleteMessage() {
         userLibrary.deleteMessage(currentUser);
     }
-
-    private void addMaintainerToTeam()
-    {
-        currentProject.addMaintainer(currentUser);
-    }
-    private void addDeveloperToTeam()
-    {
-        currentProject.addDeveloper(currentUser);
-    }
-    private void addCustomRoleToTeam()
-    {
-        currentProject.addMemberWithCustomRole(currentUser);
-    }
-
-
-
+    
 }
 

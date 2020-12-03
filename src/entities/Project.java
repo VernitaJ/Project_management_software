@@ -1,14 +1,8 @@
 package entities;
-import budget.Budget;
-import tools.Input;
-import tools.Menu;
-
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.WeakHashMap;
 
 public class Project extends Data {
-    protected Team team;
     private String name;
     private String description;
     private String status; // Active/Inactive
@@ -17,9 +11,11 @@ public class Project extends Data {
     private LocalDate endDate;
     private Budget budget;
     protected TaskLibrary taskList;
-    private Input input = Input.getInstance();
+    protected TeamLibrary teamLibrary = TeamLibrary.getInstance();
+    private User projectManager;
+    private Team team = null; // no team by default as part of the acceptance criteria
 
-    public Project(String name, User owner, String description, LocalDate startDate, LocalDate endDate, float totalBudget) {
+    public Project(String name, User projectManager, String description, LocalDate startDate, LocalDate endDate) {
         this.name = name;
         this.description = description;
         this.createdDate = LocalDate.now();
@@ -27,12 +23,8 @@ public class Project extends Data {
         this.endDate = endDate;
         this.taskList = new TaskLibrary();
         this.status = "";
+        this.projectManager = projectManager;
         this.budget = new Budget(totalBudget);
-        try {
-            this.team = new Team(owner);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     public void setStatus(String status) {
@@ -46,6 +38,8 @@ public class Project extends Data {
     public void setName(String name) {
         this.name = name;
     }
+
+    public void setTeam(Team team) { this.team = team; }
 
     public String getName() {
         return name;
@@ -71,54 +65,21 @@ public class Project extends Data {
         return endDate;
     }
 
+    public User getProjectManager() {return projectManager; }
+
+    public Team getTeam() { return team; }
+
+
     public long duration() {
         long daysBetween = ChronoUnit.DAYS.between(getStartDate(), getEndDate());
         return daysBetween;
     }
-
     public String timeLeftBeforeExceedingBudget()
     {
         return "Total Time Before Exceeding budget\n" +
                 "Recommend Member to cut" // to be implemented
                 + timeLeftBeforeExceedingBudget();
     }
-
-    public Team getTeam()
-    {
-        return team;
-    }
-
-    public void printTeam()
-    {
-        for (String member : team.getMemberList().keySet())
-        {
-            System.out.println(team.getMemberList().get(member).getRole().roleType() + ": " + member);
-        }
-    }
-
-    // move to projectlibrary
-    public void addMaintainer(User currentUser)
-    {
-        UserLibrary.getInstance().printAllUsers();
-        String toAdd = input.getStr("Member to Add: ");
-        Data newTeamMember = UserLibrary.getInstance().findUserInList(toAdd);
-        team.addTeamMaintainer((User) newTeamMember, currentUser);
-    }
-
-    public void addDeveloper(User currentUser)
-    {
-        UserLibrary.getInstance().printAllUsers();
-        String toAdd = input.getStr("Member to Add: ");
-        team.addTeamDeveloper((User) UserLibrary.getInstance().findUserInList(toAdd), currentUser);
-    }
-
-    public void addMemberWithCustomRole(User currentUser)
-    {
-        UserLibrary.getInstance().printAllUsers();
-        String toAdd = input.getStr("Member to Add: ");
-        team.addTeamMemberWithCustomRole(((User) UserLibrary.getInstance().findUserInList(toAdd)), currentUser);
-    }
-
 
     //not mentioned in the user stories soooo idk
     /*

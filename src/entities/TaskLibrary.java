@@ -6,14 +6,13 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
+import java.util.List;
 
-import static entities.Message.sortByName;
 import static entities.Task.sortByDate;
 
 public class TaskLibrary extends DataLibrary {
     private static final TaskLibrary instance = null;
-
+    
     public static TaskLibrary getInstance() {
         if (instance == null) {
             return new TaskLibrary();
@@ -21,22 +20,22 @@ public class TaskLibrary extends DataLibrary {
             return instance;
         }
     }
-
-    public boolean confirmAccess(Project currentProject, User currentUser) {
-        if (currentProject.team.findTeamMember(currentUser).getRole().adminAccess()) {
+    
+    public boolean confirmAccess(Team projectTeam, User currentUser) {
+        if (projectTeam.findTeamMember(currentUser).getRole().adminAccess()) {
             return true;
         } else {
+            System.out.println("You are not authorized to perform this action!");
             return false;
         }
         // Below can be used in other methods for testing access.
         /*
         if (!confirmAccess(currentProject, currentUser)) {
-            System.out.println("You are not authorized to perform this action!!");
             return;
         }
         */
     }
-
+    
     public void createTask(Project currentProject, User currentUser) {
         System.out.println("Enter 0 at any step to return to the previous menu: ");
         Input input = Input.getInstance();
@@ -45,13 +44,13 @@ public class TaskLibrary extends DataLibrary {
             System.out.println("Returning to project menu...");
             return;
         }
-
+        
         String description = input.getStr("Task Description: ");
         if (input.abort(description)) {
             System.out.println("Returning to project menu...");
             return;
         }
-
+        
         LocalDate deadline = input.getDate("Task Deadline (YYYY-MM-DD): ");
         if (input.abort(description)) {
             System.out.println("Returning to project menu...");
@@ -59,7 +58,7 @@ public class TaskLibrary extends DataLibrary {
         }
         currentProject.taskList.addToList(new Task(currentUser, name, description, deadline));
     }
-
+    
     public void deleteTask(Project currentProject, User currentUser) {
         Task currentTask = navigateBetweenTasks(currentProject);
         if (currentTask == null) {
@@ -88,7 +87,7 @@ public class TaskLibrary extends DataLibrary {
             return;
         }
     }
-
+    
     public ArrayList<Task> listProjectsTasks(Project currentProject) {
         ArrayList<Task> tempList = new ArrayList<>();
         for (Data task : currentProject.taskList.list) {
@@ -99,12 +98,12 @@ public class TaskLibrary extends DataLibrary {
             System.out.println("This task does not exist!");
         } else {
             for (int i = 0; i < tempList.size(); i++) {
-                System.out.println(i + 1 + "- " + tempList.get(i).getName());
+                System.out.println(i + 1 + ". " + tempList.get(i).getName());
             }
         }
         return tempList;
     }
-
+    
     public Task navigateBetweenTasks(Project currentProject) {
         Input input = Input.getInstance();
         ArrayList<Task> taskList = listProjectsTasks(currentProject);
@@ -115,7 +114,7 @@ public class TaskLibrary extends DataLibrary {
             do {
                 choice = input.getInt("Enter task number or 0 to return to the previous menu: ");
             } while (choice < 0 || choice > taskList.size());
-
+            
             if (choice == 0) {
                 return null;
             } else
@@ -124,38 +123,88 @@ public class TaskLibrary extends DataLibrary {
     }
     
     public void viewTaskDetails(Task currentTask){
-            System.out.println("Task Name: " + currentTask.getName());
-            if (!currentTask.getStatus().isEmpty()) {
-                System.out.println("Status: " + currentTask.getStatus());
-            }
-            System.out.println("Description: " + currentTask.getDescription());
-            System.out.println("Assignees: " + currentTask.getAssignees().toString());
+        System.out.println("Task Name: " + currentTask.getName());
+        if (!currentTask.getStatus().isEmpty()) {
+            System.out.println("Status: " + currentTask.getStatus());
         }
+        System.out.println("Description: " + currentTask.getDescription());
+        System.out.println("Assignees: " + currentTask.getAssignees().toString());
+    }
     
     public void updateStatus(Project currentProject, Task currentTask, User currentUser){
-        if(confirmAccess(currentProject, currentUser)){
-            Input input = Input.getInstance();
-            String newStatus = input.getStr("Enter the status: ");
-            currentTask.setStatus(newStatus);
-        } else {
-            System.out.println("You are not authorized to perform this action!");
+        if(!confirmAccess(currentProject.getTeam(), currentUser)) {
+            return;
         }
+        Input input = Input.getInstance();
+        String newStatus = input.getStr("Enter the status: ");
+        if(newStatus.equalsIgnoreCase("completed")) {
+            for (int i = 0; i < currentTask.getAssignees().size(); i++) {
+                String message = "The task " + currentTask.getName() +
+                        " in the project: " +
+                        currentProject.getName() +
+                        " has been completed.";
+                sendNotification(currentTask.getAssignees().get(i),message);
+            }
+        }
+        currentTask.setStatus(newStatus);
     }
-
-    public void addAssignee(Project currentProject, Task currentTask) {
-        // Check user rights to add assignee
-        // IF TRUE
-        // Retrieve list of projects team members.
-        // Print list of team members
-        // Input to select member to assign OR exit
-        // ELSE
-        // Print "not authorized"
-        // RETURN
+    
+    public void addAssignee(Project currentProject, Task currentTask, User currentUser) {
+        Team projectTeam = currentProject.getTeam();
+        ArrayList<User> taskTeam = currentTask.getAssignees();
+        if (!confirmAccess(projectTeam, currentUser)) {
+            return;
+        }
+        Input input = Input.getInstance();
+        List<User> tempList = projectTeam.getAllTeamMembers();
+        for (int i = 0; i < tempList.size(); i++) {
+            if(!taskTeam.contains(tempList.get(i))) {
+                System.out.println(i+1 + ". " + tempList.get(i).getUserName());
+            }
+        }
+        int choice;
+        do{
+            choice = input.getInt("Enter user number or 0 to return to the previous menu: ");
+        } while(choice < 0 || choice > tempList.size());
+        
+        if (choice == 0){
+            return;
+        }
+        User userToAdd = tempList.get(choice-1);
+        taskTeam.add(userToAdd);
+        System.out.println("Successfully assigned " + userToAdd.getUserName() + " to the task");
+        String message =
+                "You have been assigned a new task: " +
+                        currentTask.getName() +
+                        " in the project: " +
+                        currentProject.getName();
+        sendNotification(userToAdd, message);
     }
-
-    public void removeAssignee(Project currentProject, Task currentTask) {
+    
+    public void removeAssignee(Team projectTeam, ArrayList<User> taskTeam, User currentUser) {
+        if (!confirmAccess(projectTeam, currentUser)) {
+            return;
+        }
+        Input input = Input.getInstance();
+        if(taskTeam.size() == 0 || taskTeam == null) {
+            return;
+        }
+        for (int i = 0; i < taskTeam.size(); i++) {
+            System.out.println(i+1 + ". " + taskTeam.get(i).getUserName());
+        }
+        int choice;
+        do{
+            choice = input.getInt("Enter user number or 0 to return to the previous menu: ");
+        } while(choice < 0 || choice > taskTeam.size());
+        
+        if (choice == 0){
+            return;
+        }
+        User userToRemove = taskTeam.get(choice-1);
+        taskTeam.remove(userToRemove);
+        System.out.println("Successfully deallocated " + userToRemove.getUserName() + " from the task");
     }
-
+    
     public void countdown(Project currentProject) {
         ArrayList<Data> countdown = currentProject.taskList.list;
         Collections.sort(countdown, sortByDate);
@@ -169,22 +218,26 @@ public class TaskLibrary extends DataLibrary {
                 } else {
                     displayedDays = Input.BLUE + daysToDeadline + Input.RESET;
                 }
-                Team members = projectTask.getAssignees();
-                System.out.println("Days to Deadline: " + displayedDays + "\n" + "Task: " + projectTask.getName() + "\n" + "Description: " + projectTask.getDescription() + "" + "\n" + "Team Members: " + members.toString() + "\n");
+                ArrayList<User> assignees = projectTask.getAssignees();
+                System.out.println("Days to Deadline: " + displayedDays + "\n" + "Task: " + projectTask.getName() + "\n" + "Description: " + projectTask.getDescription() + "" + "\n" + "Team Members: " + assignees.toString() + "\n");
             }
         }
     }
-
+    
     public void completedTasks(Project currentProject) {
         ArrayList<Data> tasks = currentProject.taskList.list;
         Collections.sort(tasks, sortByDate);
         for (Data task : tasks) {
             Task projectTask = (Task) task;
             if (projectTask.getStatus().equalsIgnoreCase("completed")) {
-                Team members = projectTask.getAssignees();
-                System.out.println("Task Deadline" + projectTask.getDeadline() + "\n" + " Task: " + projectTask.getName() + "\n" + "Description" + projectTask.getDescription() + "" + "\n" + "Team Members: " + members.toString() + "\n");
+                ArrayList<User> assignees = projectTask.getAssignees();
+                System.out.println("Task Deadline" + projectTask.getDeadline() + "\n" + " Task: " + projectTask.getName() + "\n" + "Description" + projectTask.getDescription() + "" + "\n" + "Team Members: " + assignees.toString() + "\n");
             }
         }
+    }
+    
+    public void sendNotification(User userToNotify, String message) {
+        userToNotify.getInbox().add(new Message("System", userToNotify.getUserName(), message));
     }
 }
 
