@@ -161,7 +161,7 @@ public class ProjectLibrary extends DataLibrary{
             System.out.println("This action is irreversible!");
             String password = input.getStr("Please enter password to confirm the deletion (leave empty to abort): ");
             if(currentUser.getPassword().equals(password)){
-                if(removeItFromList(currentProject.getID())){
+                if(removeItFromList(projectToDelete.getID())){
                     System.out.println("Project successfully deleted!");
                     System.out.println("Returning to main menu...");
                     return true;
