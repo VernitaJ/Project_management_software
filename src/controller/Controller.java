@@ -271,8 +271,8 @@ public class Controller {
             switch (choice)
             {
                 case "1" -> taskLibrary.viewTaskDetails(currentTask);
-                case "2" -> taskLibrary.addAssignee(currentProject, currentTask);
-                case "3" -> taskLibrary.removeAssignee(currentProject, currentTask);
+                case "2" -> taskLibrary.addAssignee(currentProject.getTeam(), currentTask.getAssignees(), currentUser);
+                case "3" -> taskLibrary.removeAssignee(currentProject.getTeam(), currentTask.getAssignees(), currentUser);
                 case "4" -> notImplemented();
                 case "5" -> notImplemented();
                 case "6" -> taskLibrary.updateStatus(currentProject, currentTask, currentUser);

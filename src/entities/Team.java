@@ -154,7 +154,7 @@ public class Team extends Data {
         }
         return users;
     }
-
+    
     /*
         public void removeTeamMember(User newDeveloper, User currentUser) throws Exception {
             TeamMember currentMember = findTeamMember(currentUser);
@@ -195,8 +195,13 @@ public class Team extends Data {
         }
         return false;
     }
-
-//to be changed when getTeamMember function is implemented
+    
+    public WeakHashMap<String, TeamMember> getMemberList() {
+        return memberList;
+    }
+    
+    //to be changed when getTeamMember function is implemented
+    
     private String toString(Team team){
         return team.getOwner().getUser().getUserName();
     }
