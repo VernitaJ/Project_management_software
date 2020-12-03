@@ -67,7 +67,6 @@ public class Project extends Data {
         long daysBetween = ChronoUnit.DAYS.between(getStartDate(), getEndDate());
         return daysBetween;
     }
-
 }
 
 

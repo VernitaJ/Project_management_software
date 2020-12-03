@@ -29,7 +29,7 @@ public class ProjectLibrary extends DataLibrary{
         list.add(project);
     }
 
-   public ArrayList<Project> listUsersProjects(User currentUser){
+    public ArrayList<Project> listUsersProjects(User currentUser){
         ArrayList<Project> tempList = new ArrayList<>();
         for(Data project : list){
             Project currentProject = ((Project)project);
@@ -83,15 +83,47 @@ public class ProjectLibrary extends DataLibrary{
     }
 
     public void updateStatus(Project currentProject, User currentUser){
-        if(currentProject   .team.findTeamMember(currentUser).getRole().roleType().equals("Owner")){
+        if(currentProject.team.findTeamMember(currentUser).getRole().roleType().equals("Owner")){
             Input input = Input.getInstance();
-            String newStatus = input.getStr("Enter the status: ");
-            currentProject.setStatus(newStatus);
+            String newStatus = input.getStr("Enter the status or enter 0 to abort: ");
+            if(newStatus.equals("0")){
+                System.out.println("Action aborted!");
+            }else{
+                currentProject.setStatus(newStatus);
+            }
         }
         else{
             System.out.println("You are not authorized to perform this action!");
         }
     }
+    /*public void updateName(Project currentProject, User currentUser){
+        if(currentProject.team.findTeamMember(currentUser).getRole().roleType().equals("Owner")){
+            Input input = Input.getInstance();
+            String newName = input.getStr("Enter the new name or enter 0 to abort: ");
+            if(newName.equals("0")){
+                System.out.println("Action aborted!");
+            }else{
+                currentProject.setName(newName);
+            }
+        }
+        else{
+            System.out.println("You are not authorized to perform this action!");
+        }
+    }    public void updateDescription(Project currentProject, User currentUser){
+        if(currentProject.team.findTeamMember(currentUser).getRole().roleType().equals("Owner")){
+            Input input = Input.getInstance();
+            String newName = input.getStr("Enter the new description or enter 0 to abort: ");
+            if(newName.equals("0")){
+                System.out.println("Action aborted!");
+            }else{
+                currentProject.setName(newName);
+            }
+        }
+        else{
+            System.out.println("You are not authorized to perform this action!");
+        }
+    }*/
+
 
     public boolean deleteProject(Project currentProject, User currentUser){
         Project projectToDelete = (Project)findItInList(currentProject.getID());
@@ -128,18 +160,6 @@ public class ProjectLibrary extends DataLibrary{
         return false;
 
     }
-
-        /*public void updateName(Project currentProject, User currentUser){
-        if(currentProject.team.findTeamMember(currentUser).getRole().adminAccess()){
-            Input input = Input.getInstance();
-            String newDesc = input.getStr("Enter the description: ");
-            currentProject.setName(newDesc);
-        }
-        else{
-            System.out.println("You are not authorized to perform this action!!");
-        }
-
-    }*/
 
 
 
