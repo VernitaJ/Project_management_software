@@ -164,7 +164,7 @@ public class TaskLibrary extends DataLibrary {
             User userToAdd = tempList.get(choice-1);
                 taskTeam.add(userToAdd);
             System.out.println("Successfully assigned " + userToAdd.getUserName() + " to the task");
-        // Notify User with Message.
+            sendNotification(userToAdd, "You have been assigned a new task");
     }
     
     public void removeAssignee(Team projectTeam, ArrayList<User> taskTeam, User currentUser) {
@@ -190,7 +190,6 @@ public class TaskLibrary extends DataLibrary {
         User userToRemove = taskTeam.get(choice-1);
         taskTeam.remove(userToRemove);
         System.out.println("Successfully deallocated " + userToRemove.getUserName() + " from the task");
-        // Notify User with Message.
     }
     
     public void countdown(Project currentProject) {
@@ -219,9 +218,13 @@ public class TaskLibrary extends DataLibrary {
             Task projectTask = (Task) task;
             if (projectTask.getStatus().equalsIgnoreCase("completed")) {
                 ArrayList<User> assignees = projectTask.getAssignees();
-                System.out.println("Task Deadline" + projectTask.getDeadline() + "\n" + " Task: " + projectTask.getName() + "\n" + "Description" + projectTask.getDescription() + "" + "\n" + "Team Members: " + assignees.listIterator() + "\n");
+                System.out.println("Task Deadline" + projectTask.getDeadline() + "\n" + " Task: " + projectTask.getName() + "\n" + "Description" + projectTask.getDescription() + "" + "\n" + "Team Members: " + assignees.toString() + "\n");
             }
         }
+    }
+    
+    public void sendNotification(User userToNotify, String message) {
+    userToNotify.getInbox().add(new Message("System", userToNotify.getUserName(), message));
     }
 }
 
