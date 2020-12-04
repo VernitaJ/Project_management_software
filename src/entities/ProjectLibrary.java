@@ -22,7 +22,9 @@ public class ProjectLibrary extends DataLibrary{
         LocalDate startDate = input.getDate("Project start date (YYYY-MM-DD): ");
         LocalDate endDate = input.getDate("Project end date (YYYY-MM-DD): ");
         float totalBudget = input.getFloat("Total Budget of Project: ");
-        addToList(new Project(name, currentUser, description, startDate, endDate, totalBudget));
+        if(confirmAction("Are you sure you want to create this project?")){
+            addToList(new Project(name, currentUser, description, startDate, endDate, totalBudget));
+        }
     }
 
     public void addProjectToList(Project project)
@@ -109,10 +111,8 @@ public class ProjectLibrary extends DataLibrary{
     public void updateStatus(Project currentProject, User currentUser){
         if(currentProject.getProjectManager().checkID(currentUser.getID())){
             Input input = Input.getInstance();
-            String newStatus = input.getStr("Enter the status or enter 0 to abort: ");
-            if(newStatus.equals("0")){
-                System.out.println("Action aborted!");
-            }else{
+            String newStatus = input.getStr("Enter the status: ");
+            if(confirmAction("Are you sure you want to update the status?")){
                 currentProject.setStatus(newStatus);
             }
         }
@@ -182,6 +182,24 @@ public class ProjectLibrary extends DataLibrary{
         }
         System.out.println("You are not authorized to perform this action!");
         return false;
+    }
+
+    private boolean confirmAction(String text){
+        Input input = Input.getInstance();
+        System.out.println(text);
+        boolean confirmCheck = false;
+        while(!confirmCheck){
+            String confirmation = input.getStr("Please enter yes or no: ");
+            if(confirmation.equalsIgnoreCase("yes") || confirmation.equalsIgnoreCase("y")){
+                return true;
+            } else if (confirmation.equalsIgnoreCase("no") || confirmation.equalsIgnoreCase("n")) {
+                System.out.println("Action aborted!");
+                return false;
+            } else {
+                System.out.println("Invalid input!");
+            }
+        } return false;
+
     }
 
 
