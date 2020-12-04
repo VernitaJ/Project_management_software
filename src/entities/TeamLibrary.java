@@ -104,7 +104,7 @@ public class TeamLibrary extends DataLibrary{
         }
     }
 
-    public void removeTeam(Project currentProject) {
+    public void removeTeam(Project currentProject, User currentUser){
         if (currentProject.getTeam() == null) {
             System.out.println("Project '" + currentProject.getName() + "' does not have a team.");
         } else {
@@ -122,6 +122,7 @@ public class TeamLibrary extends DataLibrary{
             } else {
                 System.out.println("Team was not removed.");
             }
+
         }
     }
 
@@ -152,7 +153,7 @@ public class TeamLibrary extends DataLibrary{
             }
         }
     }
-    
+
     public void removeTeamMember(Team team, User currentUser) {
         if (team == null) {
             System.out.println("Team does not exist");
@@ -183,63 +184,6 @@ public class TeamLibrary extends DataLibrary{
         }
     }
 
-
-    public void removeTeamMaintainer(Team team, User currentUser) {
-        if (team == null) {
-            System.out.println("Team does not exist");
-        } else {
-            List<User> maintainers = team.getMaintainers();
-            if (maintainers.size() == 0) {
-                System.out.println("Team '" + team.getTeamName() + "' has no maintainer team members.");
-            } else {
-                maintainers.sort(Comparator.comparing(User::getUserName));
-                int count = 1;
-                for (User maintainer: maintainers) {
-                    System.out.println(count + ". " + maintainer.getUserName());
-                    count ++;
-                }
-                Input input = Input.getInstance();
-                int choice = input.getInt("Select the maintainer you want to remove: ");
-                if (choice >= 1 || choice < count) {
-                    try {
-                        team.removeTeamMember(maintainers.get(choice - 1), currentUser);
-                    } catch (Exception e) {
-                        System.out.println(e.getMessage());
-                    }
-                }
-            }
-        }
-    }
-
-
-    public void removeTeamDeveloper(Team team, User currentUser) {
-        if (team == null) {
-            System.out.println("Team does not exist");
-        } else {
-            List<User> developers = team.getDevelopers();
-            if (developers.size() == 0) {
-                System.out.println("Team '" + team.getTeamName() + "' has no developer team members.");
-            } else {
-                developers.sort(Comparator.comparing(User::getUserName));
-                int count = 1;
-                for (User developer: developers) {
-                    System.out.println(count + ". " + developer.getUserName());
-                    count ++;
-                }
-                Input input = Input.getInstance();
-                int choice = input.getInt("Select the developer you want to remove: ");
-                if (choice >= 1 || choice < count) {
-                    try {
-                        team.removeTeamMember(developers.get(choice - 1), currentUser);
-                    } catch (Exception e) {
-                        System.out.println(e.getMessage());
-                    }
-                }
-            }
-        }
-    }
-
-
     // For sysadmin maybe?
     /*
     public List<Team> getAllTeams() {
@@ -249,11 +193,4 @@ public class TeamLibrary extends DataLibrary{
         return teams;
     }
      */
-
-    // Delete Team? Or should just team members be removed?
-    // Access level and ownership check is missing
-    public boolean deleteTeam(String idToDelete){
-        return removeItFromList(idToDelete);
-    }
-
 }

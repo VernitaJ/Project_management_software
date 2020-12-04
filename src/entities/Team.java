@@ -190,18 +190,7 @@ public class Team extends Data {
         return users;
     }
 
-    /*
-        public void removeTeamMember(User newDeveloper, User currentUser) throws Exception {
-            TeamMember currentMember = findTeamMember(currentUser);
-            if (currentMember != null && currentMember.getRole().adminAccess()){
-                if (this.memberList.containsValue(userName)){
-                    this.memberList.remove(memberList.get(userName.getUserName()));
-                } else {
-                    throw new Exception("User does not exist or you do not have the correct access level");
-                }
-            }
-    }
-     */
+
     private boolean hasAdminAccess(User currentUser) {
         TeamMember currentMember = findTeamMember(currentUser);
         if (currentMember != null && currentMember.getRole().adminAccess()) {
@@ -211,8 +200,7 @@ public class Team extends Data {
         return false;
     }
 
-    public TeamMember roleChange()
-    {
+    public TeamMember roleChange() {
         for (String member : memberList.keySet())
         {
             System.out.println(memberList.get(member).getUser().getUserName());
@@ -228,12 +216,14 @@ public class Team extends Data {
         }
     }
 
+
+    /*
     public WeakHashMap<String, TeamMember> getMemberList() {
         return memberList;
     }
 
     //to be changed when getTeamMember function is implemented
-    /*
+
     private String toString(Team team){
         return team.getOwner().getUser().getUserName();
     }

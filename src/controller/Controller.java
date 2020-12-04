@@ -273,7 +273,7 @@ public class Controller {
                 case "4" -> addMember();
                 case "5" -> teamLibrary.removeTeamMember(currentProject.getTeam(), currentUser);
                 case "6" -> changeMemberRoleMenu();
-                case "7" -> teamLibrary.removeTeam(currentProject);
+                case "7" -> teamLibrary.removeTeam(currentProject, currentUser);
                 case "8" -> currentProjectMenu();
                 case "9" -> logout();
                 case "10" -> exit();
