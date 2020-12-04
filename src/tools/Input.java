@@ -98,6 +98,7 @@ public class Input
             try {
                 System.out.print(str);
                 userInput = scanner.nextDouble();
+                scanner.nextLine();
                 complianceCheck = true;
             } catch (InputMismatchException e) {
                 e.printStackTrace();

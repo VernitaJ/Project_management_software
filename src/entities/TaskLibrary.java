@@ -241,10 +241,10 @@ public class TaskLibrary extends DataLibrary {
     }
 
     public boolean isUserAssignee(Project currentProject, Task currentTask, User currentUser){
-        ArrayList<User> assignees = currentTask.getAssignees();
         if(currentProject.getProjectManager().checkID(currentUser.getID())){
             return true;
         }
+        ArrayList<User> assignees = currentTask.getAssignees();
         for(User user: assignees){
             if(user.checkID(currentUser.getID())){
                 return true;
@@ -255,12 +255,12 @@ public class TaskLibrary extends DataLibrary {
     public void addWorkedHours(Project currentProject, Task currentTask, User currentUser){
         if(isUserAssignee(currentProject, currentTask,currentUser)){
             Input input = Input.getInstance();
-            double workedHours = input.getDouble("Please enter the amount of worked minutes: ");
+            double workedHours = input.getDouble("Please enter the amount of worked hours: ");
             WorkedHours newLog = new WorkedHours(currentUser,workedHours);
             currentTask.addWorkedHours(newLog);
             System.out.println(getAllWorkedHours(currentTask) + " hours spent on this task.");
         }else {
-            System.out.println("You are not authorized to perform this task!");
+            System.out.println("You are not authorized to perform this action!");
         }
     }
 
