@@ -346,7 +346,7 @@ public class Controller {
         String[] options =
                 {
                         "Add Worked Hours",
-                        "Main Menu",
+                        "Task Menu",
                         "Logout",
                         "Exit"
                 };
@@ -358,7 +358,7 @@ public class Controller {
             {
 
                 case "1" -> taskLibrary.addWorkedHours(currentProject, currentTask, currentUser);
-                case "2" -> mainMenu();
+                case "2" -> currentTaskMenu(currentProject, currentTask, currentUser);
                 case "3" -> logout();
                 case "¤" -> exit();
             }
