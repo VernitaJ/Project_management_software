@@ -204,8 +204,8 @@ public class ProjectLibrary extends DataLibrary{
 
     public void viewCost(Project currentProject)
     {
-        Project projectToDelete = (Project)findItInList(currentProject.getID());
-        if(projectToDelete==null){
+        Project project = (Project)findItInList(currentProject.getID());
+        if(project==null){
             System.out.println("Project does not exist!");
         } else {
             TaskLibrary tempLibrary = currentProject.taskList;
