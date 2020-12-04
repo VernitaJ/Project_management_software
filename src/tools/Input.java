@@ -64,11 +64,10 @@ public class Input
             try {
                 System.out.print(str);
                 userInput = scanner.nextInt();
-
+                scanner.nextLine();
                 complianceCheck = true;
             } catch (InputMismatchException e){
-                System.out.println("Invalid input, please enter an integer.");
-                scanner.nextLine();
+                e.printStackTrace();
             }
         }
         return userInput;
@@ -85,8 +84,7 @@ public class Input
                 scanner.nextLine();
                 complianceCheck = true;
             } catch (InputMismatchException e){
-                System.out.println("Invalid input, please enter a decimal number.");
-                scanner.nextLine();
+                e.printStackTrace();
             }
         }
         return userInput;
@@ -102,13 +100,12 @@ public class Input
                 userInput = scanner.nextDouble();
                 complianceCheck = true;
             } catch (InputMismatchException e) {
-                System.out.println("Invalid input, please enter a decimal number.");
-                scanner.nextLine();
+                e.printStackTrace();
             }
         }
         return userInput;
     }
-    
+
     public LocalDate getDate(String str)
     {
         String userInput = "";
@@ -134,7 +131,7 @@ public class Input
         }
         return false;
     }
-    
+
     public void checkToContinue() {
         String check = ">> Press" + RED + " 'Enter' " + RESET + "to continue: ";
         System.out.print(check);
