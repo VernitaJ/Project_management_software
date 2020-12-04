@@ -202,5 +202,28 @@ public class ProjectLibrary extends DataLibrary{
 
     }
 
+    public void viewCost(Project currentProject)
+    {
+        Project projectToDelete = (Project)findItInList(currentProject.getID());
+        if(projectToDelete==null){
+            System.out.println("Project does not exist!");
+        } else {
+            TaskLibrary tempLibrary = currentProject.taskList;
+            double totalCost = 0;
+            for (Data task : currentProject.taskList.list)
+            {
+                Task currentTask = (Task) task;
+                double totalCostPerTask = 0;
 
+                for (WorkedHours log : currentTask.getWorkedHours())
+                {
+                    totalCostPerTask += log.getUser().getSalary() * log.getWorkedHours();
+
+                }
+                System.out.println("The total cost for the Task  " + currentTask.getName() + " " + totalCostPerTask + "kr.");
+                totalCost += totalCostPerTask;
+            }
+            System.out.println("Total cost for the project are " + totalCost + "kr.");
+        }
+    }
 }
