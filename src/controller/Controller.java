@@ -200,6 +200,7 @@ public class Controller {
                         "Team Menu",
                         "View Tasks",
                         "Add Task",
+                        "View Cost",
                         "Update Status",
                         "Delete Project",
                         "Main Menu",
@@ -224,16 +225,17 @@ public class Controller {
                     }
                 } // taskMenu
                 case "7" -> taskLibrary.createTask(currentProject, currentUser);
-                case "8" -> projectLibrary.updateStatus(currentProject, currentUser);
-                case "9" -> {
+                case "8" -> projectLibrary.viewCost(currentProject);
+                case "9" -> projectLibrary.updateStatus(currentProject, currentUser);
+                case "10" -> {
                     Boolean isSuccessful = projectLibrary.deleteProject(currentProject, currentUser);
                     if(isSuccessful){
                         mainMenu();
                     }
                  }
-                case "10" -> mainMenu();
-                case "11" -> logout();
-                case "12" -> exit();
+                case "11" -> mainMenu();
+                case "12" -> logout();
+                case "13" -> exit();
             }
         } while (true);
     }

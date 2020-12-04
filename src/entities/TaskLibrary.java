@@ -271,6 +271,5 @@ public class TaskLibrary extends DataLibrary {
             totalHours += log.getWorkedHours();
         } return totalHours;
     }
-
 }
 

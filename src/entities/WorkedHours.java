@@ -10,6 +10,7 @@ public class WorkedHours {
     public WorkedHours(User user, double workedHours){
         LocalDate logTime=LocalDate.now();
         this.workedHours=workedHours;
+        this.user = user;
     }
 
     public User getUser() {
