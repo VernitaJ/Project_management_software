@@ -64,10 +64,11 @@ public class Input
             try {
                 System.out.print(str);
                 userInput = scanner.nextInt();
-                scanner.nextLine();
+
                 complianceCheck = true;
             } catch (InputMismatchException e){
-                e.printStackTrace();
+                System.out.println("Invalid input, please enter an integer.");
+                scanner.nextLine();
             }
         }
         return userInput;
@@ -84,7 +85,8 @@ public class Input
                 scanner.nextLine();
                 complianceCheck = true;
             } catch (InputMismatchException e){
-                e.printStackTrace();
+                System.out.println("Invalid input, please enter a decimal number.");
+                scanner.nextLine();
             }
         }
         return userInput;
@@ -100,7 +102,8 @@ public class Input
                 userInput = scanner.nextDouble();
                 complianceCheck = true;
             } catch (InputMismatchException e) {
-                e.printStackTrace();
+                System.out.println("Invalid input, please enter a decimal number.");
+                scanner.nextLine();
             }
         }
         return userInput;
