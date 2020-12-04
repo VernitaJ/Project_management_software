@@ -316,6 +316,7 @@ public class Controller {
                         "Update Description",
                         "Update Status",
                         "Delete Task",
+                        "Time Management Menu",
                         "Main Menu",
                         "Logout",
                         "Exit"
@@ -333,9 +334,33 @@ public class Controller {
                 case "5" -> notImplemented();
                 case "6" -> taskLibrary.updateStatus(currentProject, currentTask, currentUser);
                 case "7" -> taskLibrary.deleteTask(currentProject, currentUser);
-                case "8" -> mainMenu();
-                case "9" -> logout();
-                case "10" -> exit();
+                case "8" -> taskTimeManagementMenu(currentProject, currentTask, currentUser);
+                case "9" -> mainMenu();
+                case "10" -> logout();
+                case "11" -> exit();
+            }
+        } while (true);
+    }
+
+    private void taskTimeManagementMenu(Project currentProject, Task currentTask, User currentUser) {
+        String[] options =
+                {
+                        "Add Worked Hours",
+                        "Main Menu",
+                        "Logout",
+                        "Exit"
+                };
+        menu = new Menu(currentTask.getName() + " Task", options);
+        do
+        {
+            String choice = menu.printMenu();
+            switch (choice)
+            {
+
+                case "1" -> taskLibrary.addWorkedHours(currentProject, currentTask, currentUser);
+                case "2" -> mainMenu();
+                case "3" -> logout();
+                case "¤" -> exit();
             }
         } while (true);
     }
