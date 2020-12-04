@@ -40,59 +40,21 @@ public class Team extends Data {
     }
 
     public TeamMember getOwner() {
-        /*
-            Without a direct reference (i.e. ownerNameList), the WeakHashMap is instead used as a list with an O(n)
-            search time, instead of O(1). The 'owner = null' and searching through the Map as a list adds complexity and
-            ambiguity given that Team must always have an 'Owner' user. The Team is always initialized with an owner
-            user in the constructor.
-        */
         return memberList.get(ownerUserName);
-
-        /*User owner = null;
-        for (TeamMember user : memberList.values()){
-            if (user.getRole().roleType().equalsIgnoreCase("Owner")){
-                owner = user.getUser();
-                return owner;
-            }
-        }
-        return owner;*/
     }
+
+    // If owner needs to be set (owner wants to remove self?)
     /* public void setOwner(User owner) {
         this.memberList.remove(ownerID);
         this.memberList.put(getOwner().getUserName(), owner);
         this.ownerID = owner.getID();
     }
      */
+
     public TeamMember findTeamMember(User toFind){
         return this.memberList.get(toFind.getUserName());
     }
 
-    public void addTeamDeveloper(User newDeveloper, User currentUser) {
-        TeamMember currentMember = findTeamMember(currentUser);
-        if (currentMember != null && currentMember.getRole().adminAccess()){
-            if (UserLibrary.getInstance().doesItExist(newDeveloper.getID())) {
-                this.memberList.put(newDeveloper.getUserName(), new TeamMember(newDeveloper, roleFactory.createDeveloper()));
-                System.out.println("'" + newDeveloper.getUserName() + "' successfully added as a developer.");
-            } else {
-                System.out.println("Invalid user provided for the team.");
-            }
-        } else {
-            System.out.println("You do not have the correct access level");
-        }
-    }
-    public void addTeamMaintainer(User newMaintainer, User currentUser) {
-        TeamMember currentMember = findTeamMember(currentUser);
-        if (currentMember != null && currentMember.getRole().adminAccess()){
-            if (UserLibrary.getInstance().doesItExist(newMaintainer.getID())) {
-                this.memberList.put(newMaintainer.getUserName(), new TeamMember(newMaintainer, roleFactory.createMaintainer()));
-                System.out.println("'" + newMaintainer.getUserName() + "' successfully added as a maintainer.");
-            } else {
-                System.out.println("Invalid user provided for the team.");
-            }
-        } else {
-            System.out.println("You do not have the correct access level");
-        }
-    }
     public CustomRoles addMemberWithCustomRole(User user)
     {
         if (hasAdminAccess(user)){
@@ -118,12 +80,55 @@ public class Team extends Data {
         return memberList.containsKey(user.getUserName());
     }
 
-    public List<User> getAllTeamMembers(){
-        List<User> users = new ArrayList<>();
-        for (TeamMember member: memberList.values()) {
-            users.add(member.getUser());
+    public void addMember(User newMember, User currentUser, String role) {
+        TeamMember currentMember = findTeamMember(currentUser);
+        if (currentMember != null && currentMember.getRole().adminAccess()){
+            if (UserLibrary.getInstance().doesItExist(newMember.getID())) {
+                if (role.equals("Developer")) {
+                    this.memberList.put(newMember.getUserName(), new TeamMember(newMember, roleFactory.createDeveloper()));
+                    System.out.println("'" + newMember.getUserName() + "' successfully added as a " + role + ".");
+                } else if (role.equals("Maintainer")) {
+                    this.memberList.put(newMember.getUserName(), new TeamMember(newMember, roleFactory.createMaintainer()));
+                    System.out.println("'" + newMember.getUserName() + "' successfully added as a " + role + ".");
+                } else if (role.equals("Custom")) {
+                    Input input = Input.getInstance();
+                    String roleType = input.getStr("Enter role name: ");
+                    String canCreateTask = input.getStr("Can the role create a task?: Y/N ");
+                    String adminAccess = input.getStr("Does the role have admin access?: Y/N ");
+                    boolean createTask = false;
+                    boolean hasAdminAccess = false;
+                    if (canCreateTask.equalsIgnoreCase("Y")){
+                        createTask = true;
+                    }
+                    if (adminAccess.equalsIgnoreCase("Y")){
+                        hasAdminAccess = true;
+                    }
+                    memberList.put(newMember.getUserName(), new TeamMember(newMember, new CustomRoles(roleType,createTask,hasAdminAccess)));
+                } else {
+                    System.out.println("Invalid role provided.");
+                }
+            } else {
+                System.out.println("Invalid user provided for the team.");
+            }
+        } else {
+            System.out.println("You do not have the correct access level");
         }
-        return users;
+    }
+
+    public List<TeamMember> getAllTeamMembers(){
+        List<TeamMember> teamMembers = new ArrayList<>();
+        memberList.values().forEach( teamMember -> {
+            teamMembers.add(teamMember);
+        });
+        return teamMembers;
+    }
+
+    public List<User> getAllTeamUsers(){
+        List<User> teamUsers = new ArrayList<>();
+        memberList.values().forEach( teamMember -> {
+            teamUsers.add(teamMember.getUser());
+        });
+        return teamUsers;
     }
 
     public User getTeamMember(User user) throws Exception {
@@ -174,6 +179,17 @@ public class Team extends Data {
         return users;
     }
 
+    public List<TeamMember> getCustomMembers() {
+        List<TeamMember> users = new ArrayList<>();
+        for (TeamMember member: memberList.values()) {
+            if (!member.getRole().roleType().equals("Owner") &&
+                    !member.getRole().roleType().equals("Developer") &&
+                    !member.getRole().roleType().equals("Maintainer"))
+                users.add(member);
+        }
+        return users;
+    }
+
     /*
         public void removeTeamMember(User newDeveloper, User currentUser) throws Exception {
             TeamMember currentMember = findTeamMember(currentUser);
@@ -217,9 +233,11 @@ public class Team extends Data {
     }
 
     //to be changed when getTeamMember function is implemented
-
+    /*
     private String toString(Team team){
         return team.getOwner().getUser().getUserName();
     }
+     */
+
 }
 

@@ -271,7 +271,7 @@ public class Controller {
                 case "2" -> teamLibrary.viewTeam(currentProject.getTeam());
                 case "3" -> teamLibrary.editTeamName(currentProject.getTeam());
                 case "4" -> addMember();
-                case "5" -> removeMember();
+                case "5" -> teamLibrary.removeTeamMember(currentProject.getTeam(), currentUser);
                 case "6" -> changeMemberRoleMenu();
                 case "7" -> teamLibrary.removeTeam(currentProject);
                 case "8" -> currentProjectMenu();
@@ -296,34 +296,9 @@ public class Controller {
             String choice = menu.printMenu();
             switch (choice)
             {
-                case "1" -> teamLibrary.addTeamMaintainer(currentProject.getTeam(), currentUser);
-                case "2" -> teamLibrary.addTeamDeveloper(currentProject.getTeam(), currentUser);
-                case "3" -> notImplemented();
-                case "4" -> teamMenu();
-                case "5" -> logout();
-                case "6" -> exit();
-            }
-        } while (true);
-    }
-    private void removeMember() {
-        String[] options =
-                {
-                        "Maintainer",
-                        "Developer",
-                        "Custom Role",
-                        "Team Menu",
-                        "Logout",
-                        "Exit"
-                };
-        menu = new Menu("Remove Member", options);
-        do
-        {
-            String choice = menu.printMenu();
-            switch (choice)
-            {
-                case "1" -> teamLibrary.removeTeamMaintainer(currentProject.getTeam(), currentUser);
-                case "2" -> teamLibrary.removeTeamDeveloper(currentProject.getTeam(), currentUser);
-                case "3" -> notImplemented();
+                case "1" -> teamLibrary.addTeamMember(currentProject.getTeam(), currentUser, "Maintainer");
+                case "2" -> teamLibrary.addTeamMember(currentProject.getTeam(), currentUser, "Developer");
+                case "3" -> teamLibrary.addTeamMember(currentProject.getTeam(), currentUser, "Custom");
                 case "4" -> teamMenu();
                 case "5" -> logout();
                 case "6" -> exit();

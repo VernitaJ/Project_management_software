@@ -28,19 +28,24 @@ public class TeamLibrary extends DataLibrary{
             System.out.println("Project '" + project.getName() + "' already has a team.");
         } else {
             Input input = Input.getInstance();
-            String teamName = input.getStr("Enter new team name: ");
-            try {
-                if (teamName.isBlank() || teamName.isEmpty() || teamName == null)
-                    throw new Exception("Invalid team name!");
-                if (project.getProjectManager() == null)
-                    throw new Exception("Invalid team owner user specified for team '" + teamName + "'.");
+            String option = input.getStr("Are you sure you want to create a team for project '"
+                    + project.getName() + "'?: Y/N ");
+            option = option.toLowerCase();
+            if (option.equals("y") || option.equals("yes")) {
+                String teamName = input.getStr("Enter new team name: ");
+                try {
+                    if (teamName.isBlank() || teamName.isEmpty() || teamName == null)
+                        throw new Exception("Invalid team name!");
+                    if (project.getProjectManager() == null)
+                        throw new Exception("Invalid team owner user specified for team '" + teamName + "'.");
 
-                Team newTeam = new Team(project.getProjectManager(), teamName);
-                addToList(newTeam);
-                project.setTeam(newTeam);
-                System.out.println("Successfully created team '" + newTeam + "'.");
-            } catch (Exception e) {
-                System.out.println((e.getMessage()));
+                    Team newTeam = new Team(project.getProjectManager(), teamName);
+                    addToList(newTeam);
+                    project.setTeam(newTeam);
+                    System.out.println("Successfully created team '" + teamName + "'.");
+                        } catch (Exception e) {
+                        System.out.println((e.getMessage()));
+                }
             }
         }
     }
@@ -56,6 +61,7 @@ public class TeamLibrary extends DataLibrary{
                 System.out.println("Invalid team name provided. Please retry again.");
             } else {
                 team.setTeamName(newTeamName);
+                System.out.println("Successfully renamed team to '" + newTeamName + "'!");
             }
         }
     }
@@ -64,24 +70,35 @@ public class TeamLibrary extends DataLibrary{
         if (team == null) {
             System.out.println("Team does not exist.");
         } else {
-            System.out.println("============");
-            System.out.println("Team name: " + team.getTeamName());
-            System.out.println("Owner: " + team.getOwner().getUser().getUserName());
-            System.out.println("Maintainer(s): ");
-            int count = 1;
             List<User> maintainers = team.getMaintainers();
             maintainers.sort(Comparator.comparing(User::getUserName));
             List<User> developers = team.getDevelopers();
             developers.sort(Comparator.comparing(User::getUserName));
+            List<TeamMember> customMembers = team.getCustomMembers();
+            customMembers.sort(Comparator.comparing(m->m.getRole().roleType()));
 
+            System.out.println("============");
+            System.out.println("Team name: " + team.getTeamName());
+            System.out.println("Owner: " + team.getOwner().getUser().getUserName());
+            System.out.println("Maintainer(s): ");
+
+            int count = 1;;
             for (User maintainer: maintainers) {
                 System.out.println(count + ". " + maintainer.getUserName());
                 count ++;
             }
+
             count = 1;
             System.out.println("Developer(s): ");
             for (User developer: developers) {
                 System.out.println(count + ". " + developer.getUserName());
+                count ++;
+            }
+
+            count = 1;
+            System.out.println("Custom Member(s): ");
+            for (TeamMember customMember: customMembers) {
+                System.out.println(count + ". ("+ customMember.getRole().roleType() +") " + customMember.getUser().getUserName());
                 count ++;
             }
         }
@@ -96,7 +113,7 @@ public class TeamLibrary extends DataLibrary{
                     "Are you sure you want to remove team '" +
                     currentProject.getTeam().getTeamName() +
                     "' from project '" +
-                    currentProject.getName() + "'? (Y/n)");
+                    currentProject.getName() + "'?: Y/N ");
             option = option.toLowerCase();
             if (option.equals("y") || option.equals("yes") || option.equals("ye") || option.equals("yeah") || option.equals("yup")) {
                 removeItFromList(currentProject.getTeam().getID());
@@ -108,7 +125,7 @@ public class TeamLibrary extends DataLibrary{
         }
     }
 
-    public void addTeamMaintainer(Team team, User currentUser) {
+    public void addTeamMember(Team team, User currentUser, String role) {
         if (team == null) {
             System.out.println("Team does not exist.");
         } else {
@@ -125,16 +142,47 @@ public class TeamLibrary extends DataLibrary{
                     count++;
                 }
             }
-            int choice = Input.getInstance().getInt("Select a new team maintainer: ");
+            int choice = Input.getInstance().getInt("Select a new team member with role (" + role + "): ");
             if (choice >= 1 || choice < count) {
                 try {
-                    team.addTeamMaintainer(nonMemberUsers.get(choice - 1), currentUser);
+                    team.addMember(nonMemberUsers.get(choice - 1), currentUser, role);
                 } catch (Exception e) {
                     System.out.println(e.getMessage());
                 }
             }
         }
     }
+    
+    public void removeTeamMember(Team team, User currentUser) {
+        if (team == null) {
+            System.out.println("Team does not exist");
+        } else {
+            List<TeamMember> members = team.getAllTeamMembers();
+            if (members.size() == 0) {
+                System.out.println("Team '" + team.getTeamName() + "' has no removable team members.");
+            } else {
+                members.sort(Comparator.comparing(member -> member.getUser().getUserName()));
+                int count = 1;
+
+
+                for (int i = 0; i < members.size(); i++) {
+                    System.out.println(count + ". (" + members.get(i).getRole().roleType() + ")\t\t" + members.get(i).getUser().getUserName());
+                    count ++;
+                }
+
+                Input input = Input.getInstance();
+                int choice = input.getInt("Select a team member you want to remove: ");
+                if (choice >= 1 || choice < count) {
+                    try {
+                        team.removeTeamMember(members.get(choice - 1).getUser(), currentUser);
+                    } catch (Exception e) {
+                        System.out.println(e.getMessage());
+                    }
+                }
+            }
+        }
+    }
+
 
     public void removeTeamMaintainer(Team team, User currentUser) {
         if (team == null) {
@@ -163,33 +211,6 @@ public class TeamLibrary extends DataLibrary{
         }
     }
 
-    public void addTeamDeveloper(Team team, User currentUser) {
-        if (team == null) {
-            System.out.println("Team does not exist.");
-        } else {
-            List<User> nonMemberUsers = new ArrayList<>();
-            int count = 1;
-            System.out.println("Available users: ");
-            List<User> allUsers = UserLibrary.getInstance().getAllUsers();
-            allUsers.sort(Comparator.comparing(User::getUserName));
-
-            for (User user: allUsers) {
-                if (!team.isMember(user)) {
-                    nonMemberUsers.add(user);
-                    System.out.println(count + ". " + user.getUserName());
-                    count++;
-                }
-            }
-            int choice = Input.getInstance().getInt("Select a new team developer: ");
-            if (choice >= 1 || choice < count) {
-                try {
-                    team.addTeamDeveloper(nonMemberUsers.get(choice - 1), currentUser);
-                } catch (Exception e) {
-                    System.out.println(e.getMessage());
-                }
-            }
-        }
-    }
 
     public void removeTeamDeveloper(Team team, User currentUser) {
         if (team == null) {
@@ -218,27 +239,16 @@ public class TeamLibrary extends DataLibrary{
         }
     }
 
-    // WIP WIP WIP WIP
-    private List<User> selectUsers(User owner) {
-        List<User> teamMembers = new ArrayList<User>();
-        // TODO List all people minus the owner and allow the user to pick several team members
-        List<User> users = UserLibrary.getInstance().getAllUsers();
-        for (int i = 0; i < users.size(); i++) {
-            if (!users.get(i).getID().equals(owner.getID())) {
-                System.out.println(i + "\t" + users.get(i).getUserName());
 
-            }
-        }
-        return teamMembers;
-    }
-
-
+    // For sysadmin maybe?
+    /*
     public List<Team> getAllTeams() {
         List<Data> dataList = getDataList();
         List<Team> teams = new ArrayList<>();
         for(Data data: dataList) { teams.add((Team) data); }
         return teams;
     }
+     */
 
     // Delete Team? Or should just team members be removed?
     // Access level and ownership check is missing

@@ -156,7 +156,7 @@ public class TaskLibrary extends DataLibrary {
             return;
         }
         Input input = Input.getInstance();
-        List<User> tempList = projectTeam.getAllTeamMembers();
+        List<User> tempList = projectTeam.getAllTeamUsers();
         for (int i = 0; i < tempList.size(); i++) {
             if(!taskTeam.contains(tempList.get(i))) {
                 System.out.println(i+1 + ". " + tempList.get(i).getUserName());
