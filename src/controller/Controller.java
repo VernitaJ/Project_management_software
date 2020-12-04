@@ -442,7 +442,7 @@ public class Controller {
         } while (true);
     }
     private void changeMemberRoleMenu() {
-        TeamMember userToChange = currentProject.getTeam().roleChange();
+        TeamMember userToChange = currentProject.getTeam().roleChange(currentUser);
         String[] options =
                 {
                         "Maintainer",

@@ -104,25 +104,28 @@ public class TeamLibrary extends DataLibrary{
         }
     }
 
-    public void removeTeam(Project currentProject, User currentUser){
-        if (currentProject.getTeam() == null) {
-            System.out.println("Project '" + currentProject.getName() + "' does not have a team.");
-        } else {
-            Input input = Input.getInstance();
-            String option = input.getStr(
-                    "Are you sure you want to remove team '" +
-                    currentProject.getTeam().getTeamName() +
-                    "' from project '" +
-                    currentProject.getName() + "'?: Y/N ");
-            option = option.toLowerCase();
-            if (option.equals("y") || option.equals("yes") || option.equals("ye") || option.equals("yeah") || option.equals("yup")) {
-                removeItFromList(currentProject.getTeam().getID());
-                currentProject.setTeam(null);
-                System.out.println("Team successfully removed from the project.");
+    public void removeTeam(Project currentProject, User currentUser) {
+        if (currentProject.getProjectManager().checkID(currentUser.getID())) {
+            if (currentProject.getTeam() == null) {
+                System.out.println("Project '" + currentProject.getName() + "' does not have a team.");
             } else {
-                System.out.println("Team was not removed.");
+                Input input = Input.getInstance();
+                String option = input.getStr(
+                        "Are you sure you want to remove team '" +
+                                currentProject.getTeam().getTeamName() +
+                                "' from project '" +
+                                currentProject.getName() + "'?: Y/N ");
+                option = option.toLowerCase();
+                if (option.equals("y") || option.equals("yes") || option.equals("ye") || option.equals("yeah") || option.equals("yup")) {
+                    removeItFromList(currentProject.getTeam().getID());
+                    currentProject.setTeam(null);
+                    System.out.println("Team successfully removed from the project.");
+                } else {
+                    System.out.println("Team was not removed.");
+                }
             }
-
+        } else {
+            System.out.println("Only the team owner can remove the team.");
         }
     }
 

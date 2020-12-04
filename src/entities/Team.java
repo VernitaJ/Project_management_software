@@ -200,23 +200,24 @@ public class Team extends Data {
         return false;
     }
 
-    public TeamMember roleChange() {
-        for (String member : memberList.keySet())
-        {
+    public TeamMember roleChange(User currentUser) {
+        TeamMember currentMember = findTeamMember(currentUser);
+        if (currentMember != null && currentMember.getRole().adminAccess()) ;
+        for (String member : memberList.keySet()) {
             System.out.println(memberList.get(member).getUser().getUserName());
         }
         String memberToChange = input.getStr("Team Member whose role you would like to modify: ");
-        if (memberList.containsKey(memberToChange))
-        {
-            return memberList.get(memberToChange);
+        try {
+            if (memberList.containsKey(memberToChange) && memberToChange.contentEquals(getOwner().getRoleType())) {
+                return memberList.get(memberToChange);
+            } else {
+                    System.out.println("User selected is has an access level that denies modification.");
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
-        else
-        {
-            return null;
-        }
+        return currentMember;
     }
-
-
     /*
     public WeakHashMap<String, TeamMember> getMemberList() {
         return memberList;
