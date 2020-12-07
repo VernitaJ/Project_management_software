@@ -101,7 +101,16 @@ public class Controller {
             {
                 case "1" -> createUser();
                 case "2" -> login();
-                case "3" -> notImplemented();
+                case "3" -> {
+                    if (systemAdminLogin())
+                    {
+                        sysAdminMenu();
+                    }
+                    else
+                    {
+                        loginMenu();
+                    }
+                }
                 case "4" -> exit();
             }
         } while (true);
@@ -138,8 +147,8 @@ public class Controller {
                 {
                         "Import (test) Data",
                         "Export (test) Data",
-                        "Remove User",
-                        "Main Menu",
+                        "View all Projects",
+                        "View all Users",
                         "Logout",
                         "Exit"
                 };
@@ -151,9 +160,9 @@ public class Controller {
             {
                 case "1" -> notImplemented();
                 case "2" -> notImplemented();
-                case "3" -> notImplemented();
-                case "4" -> mainMenu();
-                case "5" -> logout();
+                case "3" -> viewAllProjects();
+                case "4" -> viewAllUsers();
+                case "5" -> loginMenu();
                 case "6" -> exit();
             }
         } while (true);
@@ -492,6 +501,26 @@ public class Controller {
             }
         }
         return null;
+    }
+
+    private boolean systemAdminLogin(){
+        if (Login.getInstance().authorizeAdmin())
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    private void viewAllProjects()
+    {
+        projectLibrary.printAllProjects();
+    }
+    private void viewAllUsers()
+    {
+        UserLibrary.getInstance().printAllUsers();
     }
 
     private void createUser() {
