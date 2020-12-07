@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class ProjectLibrary extends DataLibrary{
     private static final ProjectLibrary instance = null;
     Input input = Input.getInstance();
-
+    
     public static ProjectLibrary getInstance() {
         if (instance == null) {
             return new ProjectLibrary();
@@ -16,6 +16,24 @@ public class ProjectLibrary extends DataLibrary{
             return instance;
         }
     }
+    
+    public boolean confirmAccess(Team projectTeam, User currentUser) {
+        if (projectTeam.findTeamMember(currentUser).getRole().adminAccess()) {
+            return true;
+        } else {
+            System.out.println("You are not authorized to perform this action!");
+            return false;
+        }
+    }
+    
+    public boolean noTeam(Project currentProject) {
+        if(currentProject.getTeam() == null) { //THIS SHOULD BE REMOVED AS TEAMS SHOULD BE CREATED AUTOMATICALLY.
+            System.out.println("No team created in current project.");
+            return true;
+        }
+        return false;
+    }
+    
     public void createProject(User currentUser) {
         Input input = Input.getInstance();
         String name = input.getStr("Project name: ");
@@ -24,25 +42,25 @@ public class ProjectLibrary extends DataLibrary{
         LocalDate endDate = input.getDate("Project end date (YYYY-MM-DD): ");
         addToList(new Project(name, currentUser, description, startDate, endDate));
     }
-
+    
     public void addProjectToList(Project project)
     {
         list.add(project);
     }
-   public ArrayList<Project> listUsersProjects(User currentUser){
+    public ArrayList<Project> listUsersProjects(User currentUser){
         ArrayList<Project> tempList = new ArrayList<>();
         for(Data project : list){
             Project currentProject = ((Project)project);
             if ((currentProject.getTeam() == null &&
-                 currentProject.getProjectManager().getUserName().equals(currentUser.getUserName()))
-                ||
-                (currentProject.getTeam() != null &&
-                 currentProject.getTeam().findTeamMember(currentUser) != null)) {
-
+                    currentProject.getProjectManager().getUserName().equals(currentUser.getUserName()))
+                    ||
+                    (currentProject.getTeam() != null &&
+                            currentProject.getTeam().findTeamMember(currentUser) != null)) {
+                
                 tempList.add(currentProject);
             }
         }
-
+        
         if (tempList.size() == 0){
             System.out.println("You have no projects!");
         } else {
@@ -50,10 +68,10 @@ public class ProjectLibrary extends DataLibrary{
                 System.out.println(" " + (i + 1) + ") " + tempList.get(i).getName());
             }
         }
-
+        
         return tempList;
     }
-
+    
     public Project navigateBetweenProjects(User currentUser){
         ArrayList<Project> projectList = listUsersProjects(currentUser);
         if(projectList.size()==0){
@@ -63,7 +81,7 @@ public class ProjectLibrary extends DataLibrary{
             do{
                 choice = input.getInt("Enter project number or 0 to return to the previous menu: ");
             } while(choice < 0 || choice > projectList.size());
-
+            
             if (choice == 0){
                 return null;
             } else
@@ -85,7 +103,7 @@ public class ProjectLibrary extends DataLibrary{
         }
         
     }
-
+    
     public void viewProjectDetails(Project currentProject){
         if(findItInList(currentProject.getID()) != null){
             System.out.println("Project Name: " + currentProject.getName());
@@ -98,9 +116,9 @@ public class ProjectLibrary extends DataLibrary{
         } else {
             System.out.println("Project does not exist!");
         }
-
+        
     }
-
+    
     public void updateStatus(Project currentProject, User currentUser){
         if(currentProject.getProjectManager().checkID(currentUser.getID())){
             String newStatus = input.getStr("Enter the status: ");
@@ -112,8 +130,8 @@ public class ProjectLibrary extends DataLibrary{
             System.out.println("You are not authorized to perform this action!");
         }
     }
-
-
+    
+    
     public boolean deleteProject(Project currentProject, User currentUser){
         Project projectToDelete = (Project)findItInList(currentProject.getID());
         if(projectToDelete==null){
@@ -146,7 +164,7 @@ public class ProjectLibrary extends DataLibrary{
         System.out.println("You are not authorized to perform this action!");
         return false;
     }
-
+    
     private boolean confirmAction(String text){
         Input input = Input.getInstance();
         System.out.println(text);
@@ -162,9 +180,9 @@ public class ProjectLibrary extends DataLibrary{
                 System.out.println("Invalid input!");
             }
         } return false;
-
+        
     }
-
+    
     public void viewCost(Project currentProject)
     {
         Project project = (Project)findItInList(currentProject.getID());
@@ -177,11 +195,11 @@ public class ProjectLibrary extends DataLibrary{
             {
                 Task currentTask = (Task) task;
                 double totalCostPerTask = 0;
-
+                
                 for (WorkedHours log : currentTask.getWorkedHours())
                 {
                     totalCostPerTask += log.getUser().getSalary() * log.getWorkedHours();
-
+                    
                 }
                 System.out.println("The total cost for the Task  " + currentTask.getName() + " " + totalCostPerTask + "kr.");
                 totalCost += totalCostPerTask;
@@ -189,33 +207,93 @@ public class ProjectLibrary extends DataLibrary{
             System.out.println("Total cost for the project are " + totalCost + "kr.");
         }
     }
-    public void addBudget(Project currentProject, User currentUser) {
-        if(currentProject.getTeam() == null) { //THIS SHOULD BE REMOVED AS TEAMS SHOULD BE CREATED AUTOMATICALLY.
-            System.out.println("No team created in current project.");
+    
+    public void viewBudget(Project currentProject, User currentUser) {
+        if(noTeam(currentProject)) {
             return;
         }
-        if (currentProject.getTeam().findTeamMember(currentUser).getRole().adminAccess()) {
-        } else {
-            System.out.println("You are not authorized to perform this action!");
+        if(!confirmAccess(currentProject.getTeam(),currentUser)) {
             return;
         }
-        int choice = -1;
-        double value = 0.0;
-        String message = "Which budget do you want to add? \n" +
-                "1. Budget in SEK \n" +
-                "2. Budget in Hours \n" +
-                "0. Return to previous menu";
-        do {
-            choice = input.getInt(message);
-            value = input.getDouble("What is the total budget value?");
-        } while(choice < 0 || choice > 2);
-        if(choice == 0) {
-            return;
-        } else if(choice == 1) {
-            currentProject.getBudget().setMoney(value);
-        } else if(choice == 2) {
-            currentProject.getBudget().setHours(value);
-        }
-        System.out.println("Budget has been set");
+        double sek = currentProject.getBudget().getMoney();
+        double hours = currentProject.getBudget().getHours();
+        System.out.println("Budget Statistics: \n" +
+                "SEK: " + sek +
+                "Hours: " + hours +
+                "Days left on budget: " +
+                "Hours left on budget: " +
+                "");
+        
+        System.out.println();
+        
     }
+    
+    public void addBudgetMoney(Project currentProject, User currentUser) {
+        if(noTeam(currentProject)) {
+            return;
+        }
+        if(currentProject.getBudget().budgetExistMoney()) {
+            updateBudgetMoney(currentProject, currentUser);
+            return;
+        }
+        if (!confirmAccess(currentProject.getTeam(), currentUser)) {
+            return;
+        }
+        double value = -1;
+        do {
+            value = input.getDouble("What is the total budget value in SEK?");
+        } while(value < 0);
+        currentProject.getBudget().setMoney(value);
+        System.out.println("Budget in SEK has been added");
+    }
+    
+    public void addBudgetHours(Project currentProject, User currentUser) {
+        if(noTeam(currentProject)) {
+            return;
+        }
+        if(currentProject.getBudget().budgetExistHours()) {
+            updateBudgetHours(currentProject, currentUser);
+            return;
+        }
+        if (!confirmAccess(currentProject.getTeam(), currentUser)) {
+            return;
+        }
+        double value = -1;
+        do {
+            value = input.getDouble("What is the total budget in hours?");
+        } while(value < 0);
+        currentProject.getBudget().setMoney(value);
+        System.out.println("Budget in hours has been added");
+    }
+    
+    public void updateBudgetMoney(Project currentProject, User currentUser) {
+        if(noTeam(currentProject)) {
+            return;
+        }
+        if(!confirmAccess(currentProject.getTeam(), currentUser)) {
+            return;
+        }
+        double value = -1;
+        do {
+            value = input.getDouble("What is the total budget value in SEK?");
+        } while(value < 0);
+        currentProject.getBudget().setMoney(value);
+        System.out.println("Budget in SEK has been updated");
+    }
+    
+    public void updateBudgetHours(Project currentProject, User currentUser) {
+        if(noTeam(currentProject)) {
+            return;
+        }
+        if(!confirmAccess(currentProject.getTeam(), currentUser)) {
+            return;
+        }
+        double value = -1;
+        do {
+            value = input.getDouble("What is the total budget in hours?");
+        } while(value < 0);
+        currentProject.getBudget().setMoney(value);
+        System.out.println("Budget in hours has been updated");
+    }
+    
 }
