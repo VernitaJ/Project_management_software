@@ -1,100 +1,48 @@
 package budget;
 
-import entities.User;
-
-import java.time.LocalDate;
-import java.util.HashMap;
+import entities.Project;
+import tools.Input;
 
 public class Budget
 {
-    private LocalDate start;
-    private LocalDate finish;
-    private HashMap<String, Integer> log;
-    private int workingHours;
+    private double money;
+    private double hours;
+    public final String CURRENCY = "SEK";
+    Input input = Input.getInstance();
 
-    public Budget(LocalDate start, LocalDate finish, int workingHours)
-    {
-        this.start = start;
-        this.finish = finish;
-        this.workingHours = workingHours;
-        this.log = new HashMap<>();
+    public Budget(){
+        this.money = 0.0;
+        this.hours = 0.0;
     }
 
-    public int daysRemaining()
-    {
-        return Math.abs(LocalDate.now().compareTo(finish));
+    public Budget(double money, double hours){
+        this.money = money;
+        this.hours = hours;
     }
 
-    public int workHoursRemaining()
-    {
-        return daysRemaining() * workingHours;
+    public void calculation(Project currentProject){
+        if (currentProject.getBudget().getMoney() != 0) {
+        } else System.out.println("soz, no budget has been added. chat to PM");
     }
 
-    public int hoursWorked()
+    public float timeLeftBeforeExceedingBudget()
     {
-        int total = 0;
-        for (String record : log.keySet())
-        {
-            total = total + log.get(record);
-        }
-        return total;
+        return 0.0f;
     }
 
-    public double totalHours()
-    {
-        return Math.abs(start.compareTo(finish)) * workingHours;
+    public double getMoney() {
+        return money;
     }
 
-    public int totalDays()
-    {
-        return Math.abs(start.compareTo(finish));
+    public void setMoney(double money) {
+        this.money = money;
     }
 
-    public void setStartDate(LocalDate newStart)
-    {
-        start = newStart;
+    public double getHours() {
+        return hours;
     }
 
-    public void setFinishDate(LocalDate newFinish)
-    {
-        start = newFinish;
-    }
-
-    public void logHoursWorked(User currentUser, int hours)
-    {
-        if (!log.containsKey(currentUser.getUserName()))
-        {
-            log.put(currentUser.getUserName(), hours);
-        }
-        else if (log.containsKey(currentUser.getUserName()))
-        {
-            int totalHours = log.get(currentUser.getUserName()) + hours;
-            log.replace(currentUser.getUserName(), totalHours);
-        }
-        else
-        {
-            throw new NullPointerException("Does not exist in log");
-        }
-    }
-
-    public String currentCost(double costPerHour)
-    {
-        return "Current Cost $" + costPerHour * hoursWorked();
-    }
-
-    public String totalCost(double costPerHour)
-    {
-        return "Total Cost $" + costPerHour * totalHours();
-    }
-
-    public String toString()
-    {
-        return "\nStart Date: " + start.toString() +
-                "\nFinish Date: " + finish.toString() +
-                "\nTotal Days: " + totalDays() +
-                "\nTotal Hours: " + totalDays() +
-                "\nWorked Hours: " + hoursWorked() +
-                "\nDays Remaining: " + daysRemaining() +
-                "\nHours Remaining: " + workHoursRemaining();
+    public void setHours(double hours) {
+        this.hours = hours;
     }
 }
