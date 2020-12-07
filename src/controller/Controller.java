@@ -234,7 +234,7 @@ public class Controller {
                         "View Project Budget",
                         "Add Budget",
                         "Change Budget",
-                        "Main Menu",
+                        currentProject.getName() + " Menu",
                         "Logout",
                         "Exit"
                 };
@@ -244,11 +244,57 @@ public class Controller {
             switch (choice)
             {
             //    case "1" -> projectLibrary.viewBudget(currentProject, currentUser);
-            //    case "2" -> projectLibrary.addBudget(currentProject, currentUser);
-            //    case "3" -> projectLibrary.updateBudget(currentProject, currentUser);
-                case "4" -> mainMenu();
+                case "2" -> addBudgetMenu(currentProject, currentUser);
+                case "3" -> updateBudgetMenu(currentProject, currentUser);
+                case "4" -> { return; }
                 case "5" -> logout();
                 case "6" -> exit();
+            }
+        } while (true);
+    }
+    
+    private void addBudgetMenu(Project currentProject, User currentUser) {
+        String[] options =
+                {
+                        "Add Budget SEK",
+                        "Add Budget Hours",
+                        "Budget Menu",
+                        "Logout",
+                        "Exit"
+                };
+        menu = new Menu("Project: '" + currentProject.getName() + "' Budget Menu", options);
+        do {
+            String choice = menu.printMenu();
+            switch (choice)
+            {
+                case "1" -> projectLibrary.addBudgetMoney(currentProject, currentUser);
+                case "2" -> projectLibrary.addBudgetHours(currentProject, currentUser);
+                case "3" -> { return; }
+                case "4" -> logout();
+                case "5" -> exit();
+            }
+        } while (true);
+    }
+    
+    private void updateBudgetMenu(Project currentProject, User currentUser) {
+        String[] options =
+                {
+                        "Update Budget SEK",
+                        "Update Budget Hours",
+                        "Budget Menu",
+                        "Logout",
+                        "Exit"
+                };
+        menu = new Menu("Project: '" + currentProject.getName() + "' Budget Menu", options);
+        do {
+            String choice = menu.printMenu();
+            switch (choice)
+            {
+                case "1" -> projectLibrary.updateBudgetMoney(currentProject, currentUser);
+                case "2" -> projectLibrary.updateBudgetHours(currentProject, currentUser);
+                case "3" -> mainMenu();
+                case "4" -> logout();
+                case "5" -> exit();
             }
         } while (true);
     }
