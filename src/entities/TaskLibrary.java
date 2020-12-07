@@ -264,7 +264,7 @@ public class TaskLibrary extends DataLibrary {
         }
     }
 
-    public double getAllWorkedHours(Task currentTask){
+    protected double getAllWorkedHours(Task currentTask){
         ArrayList<WorkedHours> workedHours = currentTask.getWorkedHours();
         double totalHours=0;
         for(WorkedHours log : workedHours){
@@ -274,6 +274,19 @@ public class TaskLibrary extends DataLibrary {
 
     public void printAllWorkedHours(Task currentTask) {
         System.out.println(getAllWorkedHours(currentTask));
+    }
+
+    public void printDetailedWorkedHours(Project currentProject) {
+        ArrayList<Data> tasks = currentProject.taskList.list;
+        if(tasks.size() == 0) {
+            System.out.println("There are no created tasks.");
+            return;
+        } else {
+            for(Data task: tasks) {
+                task.toString();
+                getAllWorkedHours((Task) task);
+            }
+        }
     }
 }
 
