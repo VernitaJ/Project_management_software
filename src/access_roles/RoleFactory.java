@@ -3,9 +3,6 @@ package access_roles;
 import entities.User;
 
 public class RoleFactory {
-    public RoleFactory(){
-    }
-
     public Roles createOwner()
     {
         return new Owner();

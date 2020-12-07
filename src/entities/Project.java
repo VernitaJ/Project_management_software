@@ -11,8 +11,6 @@ public class Project extends Data {
     private LocalDate createdDate;
     private LocalDate startDate;
     private LocalDate endDate;
-
-
     protected Budget budget;
     protected TaskLibrary taskList;
     protected TeamLibrary teamLibrary = TeamLibrary.getInstance();
@@ -81,12 +79,7 @@ public class Project extends Data {
         long daysBetween = ChronoUnit.DAYS.between(getStartDate(), getEndDate());
         return daysBetween;
     }
-    public String timeLeftBeforeExceedingBudget()
-    {
-        return "Total Time Before Exceeding budget\n" +
-                "Recommend Member to cut" // to be implemented
-                + timeLeftBeforeExceedingBudget();
-    }
+
 
     //not mentioned in the user stories soooo idk
     /*

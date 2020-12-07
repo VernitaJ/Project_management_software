@@ -73,6 +73,23 @@ public class Input
         return userInput;
     }
 
+    public float getFloat(String str)
+    {
+        float userInput = 0;
+        boolean complianceCheck = false;
+        while (!complianceCheck) {
+            try {
+                System.out.print(str);
+                userInput = scanner.nextFloat();
+                scanner.nextLine();
+                complianceCheck = true;
+            } catch (InputMismatchException e){
+                e.printStackTrace();
+            }
+        }
+        return userInput;
+    }
+
     public double getDouble(String str)
     {
         double userInput = 0.0;
@@ -81,6 +98,7 @@ public class Input
             try {
                 System.out.print(str);
                 userInput = scanner.nextDouble();
+                scanner.nextLine();
                 complianceCheck = true;
             } catch (InputMismatchException e) {
                 e.printStackTrace();
@@ -88,7 +106,7 @@ public class Input
         }
         return userInput;
     }
-    
+
     public LocalDate getDate(String str)
     {
         String userInput = "";
@@ -114,7 +132,7 @@ public class Input
         }
         return false;
     }
-    
+
     public void checkToContinue() {
         String check = ">> Press" + RED + " 'Enter' " + RESET + "to continue: ";
         System.out.print(check);

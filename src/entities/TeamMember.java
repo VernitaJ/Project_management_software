@@ -2,8 +2,6 @@ package entities;
 
 import access_roles.Roles;
 
-import javax.management.relation.Role;
-
 public class TeamMember {
 
    private User user;
@@ -20,5 +18,14 @@ public class TeamMember {
 
     public Roles getRole() {
         return role;
+    }
+
+    public String getRoleType(){
+       return role.roleType();
+    }
+
+    public void setRole(Roles role)
+    {
+        this.role = role;
     }
 }

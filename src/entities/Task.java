@@ -1,6 +1,7 @@
 package entities;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Comparator;
 
 public class Task extends Data{
@@ -9,7 +10,8 @@ public class Task extends Data{
     private String description;
     private String status; //NotStarted/Ongoing/Completed?
     private LocalDate deadline;
-    private Team assignees;
+    private ArrayList<User> assignees;
+    private ArrayList<WorkedHours> workedHours;
     
     public Task(User createdBy, String name, String description, LocalDate deadline){
         this.createdBy = createdBy;
@@ -17,7 +19,8 @@ public class Task extends Data{
         this.description = description;
         this.status = "Default";
         this.deadline = deadline;
-        this.assignees = new Team();
+        this.assignees = new ArrayList<User>();
+        this.workedHours = new ArrayList<>();
     }
     
     public String getName() {
@@ -32,10 +35,14 @@ public class Task extends Data{
         return status;
     }
     
-    public Team getAssignees() {
+    public ArrayList<User> getAssignees() {
         return assignees;
     }
-    
+
+    public ArrayList<WorkedHours> getWorkedHours() {
+        return workedHours;
+    }
+
     public User getCreatedBy() {
         return createdBy;
     }
@@ -69,6 +76,10 @@ public class Task extends Data{
             return object1.getDeadline().compareTo(object2.getDeadline());
         }
     };
+
+    public void addWorkedHours(WorkedHours log){
+        this.workedHours.add(log);
+    }
 
     public String toString(Task task) {
         return "Task: " + task.getName() + "\n" + task.getDescription() + "" + "\n" + "Team Members: " + task.getAssignees().toString() + "\n";

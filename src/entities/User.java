@@ -11,14 +11,18 @@ public class User extends Data {
     private String eMail;
     private String occupation;
     private String companyName;
+    private float salary;
+    private float workingHours;
     private ArrayList<Message> inbox;
 
-    public User(String userName, String password, String eMail, String occupation, String companyName) {
+    public User(String userName, String password, String eMail, String occupation, String companyName, float salary, float workingHours) {
         this.userName = userName;
         this.password = password;
         this.eMail = eMail;
         this.occupation = occupation;
         this.companyName = companyName;
+        this.salary = salary;
+        this.workingHours = workingHours;
         this.inbox = new ArrayList<>();
     }
 
@@ -46,6 +50,18 @@ public class User extends Data {
         return this.companyName;
     }
 
+    public String geteMail() {
+        return eMail;
+    }
+
+    public float getSalary() {
+        return salary;
+    }
+
+    public float getWorkingHours() {
+        return workingHours;
+    }
+
     public void setPassword(String password) {
         this.password = password;
     }
@@ -62,7 +78,23 @@ public class User extends Data {
         this.companyName = companyName;
     }
 
-   /* public Roles getRole() {
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public void seteMail(String eMail) {
+        this.eMail = eMail;
+    }
+
+    public void setSalary(float salary) {
+        this.salary = salary;
+    }
+
+    public void setWorkingHours(float workingHours) {
+        this.workingHours = workingHours;
+    }
+
+    /* public Roles getRole() {
         return role;
     }
 
