@@ -189,7 +189,16 @@ public class ProjectLibrary extends DataLibrary{
             System.out.println("Total cost for the project are " + totalCost + "kr.");
         }
     }
-    public void addBudget(Project currentProject) {
+    public void addBudget(Project currentProject, User currentUser) {
+        if(currentProject.getTeam() == null) { //THIS SHOULD BE REMOVED AS TEAMS SHOULD BE CREATED AUTOMATICALLY.
+            System.out.println("No team created in current project.");
+            return;
+        }
+        if (currentProject.getTeam().findTeamMember(currentUser).getRole().adminAccess()) {
+        } else {
+            System.out.println("You are not authorized to perform this action!");
+            return;
+        }
         int choice = -1;
         double value = 0.0;
         String message = "Which budget do you want to add? \n" +

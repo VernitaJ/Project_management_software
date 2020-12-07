@@ -195,7 +195,7 @@ public class Controller {
                         "View Project Details",
                         "Countdown",
                         "Completed Tasks",
-                        "Gantt Chart",
+                        "Testing Budget",
                         "Team Menu",
                         "View Tasks",
                         "Add Task",
@@ -215,7 +215,7 @@ public class Controller {
                 case "1" -> projectLibrary.viewProjectDetails(currentProject);
                 case "2" -> taskLibrary.countdown(currentProject);
                 case "3" -> taskLibrary.completedTasks(currentProject);
-                case "4" -> notImplemented();
+                case "4" -> projectLibrary.addBudget(currentProject, currentUser);
                 case "5" -> teamMenu();
                 case "6" -> {
                     currentTask = taskLibrary.navigateBetweenTasks(currentProject);
