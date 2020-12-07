@@ -20,11 +20,10 @@ public class Budget
 
     public void calculation(Project currentProject){
         if (currentProject.getBudget().getMoney() != 0) {
-        } else System.out.println("soz, no budget has been added. chat to PM");
+        } else System.out.println("Sorry, no budget has been added. chat to PM");
     }
 
-    public float timeLeftBeforeExceedingBudget()
-    {
+    public float timeLeftBeforeExceedingBudget() {
         return 0.0f;
     }
 

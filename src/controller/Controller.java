@@ -193,12 +193,9 @@ public class Controller {
         String[] options =
                 {
                         "View Project Details",
-                        "Countdown",
-                        "Completed Tasks",
-                        "Testing Budget",
+                        "Tasks Menu",
+                        "Add Budget",
                         "Team Menu",
-                        "View Tasks",
-                        "Add Task",
                         "View Cost",
                         "Update Status",
                         "Delete Project",
@@ -213,28 +210,53 @@ public class Controller {
             switch (choice)
             {
                 case "1" -> projectLibrary.viewProjectDetails(currentProject);
-                case "2" -> taskLibrary.countdown(currentProject);
-                case "3" -> taskLibrary.completedTasks(currentProject);
-                case "4" -> projectLibrary.addBudget(currentProject, currentUser);
-                case "5" -> teamMenu();
-                case "6" -> {
+                case "2" -> tasksMenu();
+                case "3" -> projectLibrary.addBudget(currentProject, currentUser);
+                case "4" -> teamMenu();
+                case "5" -> projectLibrary.viewCost(currentProject);
+                case "6" -> projectLibrary.updateStatus(currentProject, currentUser);
+                case "7" -> {
+                    Boolean isSuccessful = projectLibrary.deleteProject(currentProject, currentUser);
+                    if(isSuccessful){
+                        mainMenu();
+                    }
+                }
+                case "8" -> mainMenu();
+                case "9" -> logout();
+                case "10" -> exit();
+            }
+        } while (true);
+    }
+
+    private void tasksMenu() {
+        String[] options =
+                {
+                        "Add Task",
+                        "View Tasks",
+                        "Completed Tasks",
+                        "Countdown",
+                        "Main Menu",
+                        "Logout",
+                        "Exit"
+                };
+        menu = new Menu(currentProject.getName() + "Tasks: " +  " Menu", options);
+        do
+        {
+            String choice = menu.printMenu();
+            switch (choice)
+            {
+                case "1" -> taskLibrary.createTask(currentProject, currentUser);
+                case "2" -> {
                     currentTask = taskLibrary.navigateBetweenTasks(currentProject);
                     if (currentTask != null) {
                         currentTaskMenu(currentProject, currentTask, currentUser);
                     }
                 } // taskMenu
-                case "7" -> taskLibrary.createTask(currentProject, currentUser);
-                case "8" -> projectLibrary.viewCost(currentProject);
-                case "9" -> projectLibrary.updateStatus(currentProject, currentUser);
-                case "10" -> {
-                    Boolean isSuccessful = projectLibrary.deleteProject(currentProject, currentUser);
-                    if(isSuccessful){
-                        mainMenu();
-                    }
-                 }
-                case "11" -> mainMenu();
-                case "12" -> logout();
-                case "13" -> exit();
+                case "3" -> taskLibrary.completedTasks(currentProject);
+                case "4" -> taskLibrary.countdown(currentProject);
+                case "5" -> mainMenu();
+                case "6" -> logout();
+                case "7" -> exit();
             }
         } while (true);
     }
