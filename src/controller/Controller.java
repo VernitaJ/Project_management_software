@@ -243,9 +243,9 @@ public class Controller {
             String choice = menu.printMenu();
             switch (choice)
             {
-                case "1" -> projectLibrary.viewBudget(currentProject, currentUser);
-                case "2" -> projectLibrary.addBudget(currentProject, currentUser);
-                case "3" -> projectLibrary.updateBudget(currentProject, currentUser);
+            //    case "1" -> projectLibrary.viewBudget(currentProject, currentUser);
+            //    case "2" -> projectLibrary.addBudget(currentProject, currentUser);
+            //    case "3" -> projectLibrary.updateBudget(currentProject, currentUser);
                 case "4" -> mainMenu();
                 case "5" -> logout();
                 case "6" -> exit();
