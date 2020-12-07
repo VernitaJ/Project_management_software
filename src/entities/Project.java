@@ -93,6 +93,10 @@ public class Project extends Data {
                 "\n projectManager: " + projectManager;
     }
 
+    public TaskLibrary getTaskList() {
+        return taskList;
+    }
+
     //not mentioned in the user stories soooo idk
     /*
     public void updateName(){

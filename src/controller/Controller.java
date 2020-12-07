@@ -209,6 +209,7 @@ public class Controller {
                         "Team Menu",
                         "View Tasks",
                         "Add Task",
+                        "View total hours by task",
                         "View Cost",
                         "Update Status",
                         "Delete Project",
@@ -234,17 +235,18 @@ public class Controller {
                     }
                 } // taskMenu
                 case "7" -> taskLibrary.createTask(currentProject, currentUser);
-                case "8" -> projectLibrary.viewCost(currentProject);
-                case "9" -> projectLibrary.updateStatus(currentProject, currentUser);
-                case "10" -> {
+                case "8" -> taskLibrary.printDetailedWorkedHours(currentProject);
+                case "9" -> projectLibrary.viewCost(currentProject);
+                case "10" -> projectLibrary.updateStatus(currentProject, currentUser);
+                case "11" -> {
                     Boolean isSuccessful = projectLibrary.deleteProject(currentProject, currentUser);
                     if(isSuccessful){
                         mainMenu();
                     }
                  }
-                case "11" -> mainMenu();
-                case "12" -> logout();
-                case "13" -> exit();
+                case "12" -> mainMenu();
+                case "13" -> logout();
+                case "14" -> exit();
             }
         } while (true);
     }
@@ -328,6 +330,7 @@ public class Controller {
                         "Update Status",
                         "Delete Task",
                         "Add Worked Hours",
+                        "Total Worked Hours",
                         "Main Menu",
                         "Logout",
                         "Exit"
@@ -346,9 +349,10 @@ public class Controller {
                 case "6" -> taskLibrary.updateStatus(currentProject, currentTask, currentUser);
                 case "7" -> taskLibrary.deleteTask(currentProject, currentUser);
                 case "8" -> taskLibrary.addWorkedHours(currentProject, currentTask, currentUser);
-                case "9" -> mainMenu();
-                case "10" -> logout();
-                case "11" -> exit();
+                case "9" -> taskLibrary.printAllWorkedHours(currentTask);
+                case "10" -> mainMenu();
+                case "11" -> logout();
+                case "12" -> exit();
             }
         } while (true);
     }
