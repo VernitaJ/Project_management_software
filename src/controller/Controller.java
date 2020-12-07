@@ -194,7 +194,7 @@ public class Controller {
                 {
                         "View Project Details",
                         "Tasks Menu",
-                        "Add Budget",
+                        "Budget Menu",
                         "Team Menu",
                         "View Cost",
                         "Update Status",
@@ -211,7 +211,7 @@ public class Controller {
             {
                 case "1" -> projectLibrary.viewProjectDetails(currentProject);
                 case "2" -> tasksMenu();
-                case "3" -> projectLibrary.addBudget(currentProject, currentUser);
+                case "3" -> budgetMenu(currentProject, currentUser);
                 case "4" -> teamMenu();
                 case "5" -> projectLibrary.viewCost(currentProject);
                 case "6" -> projectLibrary.updateStatus(currentProject, currentUser);
@@ -228,6 +228,31 @@ public class Controller {
         } while (true);
     }
 
+    private void budgetMenu(Project currentProject, User currentUser) {
+        String[] options =
+                {
+                        "View Project Budget",
+                        "Add Budget",
+                        "Change Budget",
+                        "Main Menu",
+                        "Logout",
+                        "Exit"
+                };
+        menu = new Menu("Project: '" + currentProject.getName() + "' Budget Menu", options);
+        do {
+            String choice = menu.printMenu();
+            switch (choice)
+            {
+                case "1" -> projectLibrary.viewBudget(currentProject, currentUser);
+                case "2" -> projectLibrary.addBudget(currentProject, currentUser);
+                case "3" -> projectLibrary.updateBudget(currentProject, currentUser);
+                case "4" -> mainMenu();
+                case "5" -> logout();
+                case "6" -> exit();
+            }
+        } while (true);
+    }
+    
     private void tasksMenu() {
         String[] options =
                 {
