@@ -264,12 +264,16 @@ public class TaskLibrary extends DataLibrary {
         }
     }
 
-    protected double getAllWorkedHours(Task currentTask){
+    public double getAllWorkedHours(Task currentTask){
         ArrayList<WorkedHours> workedHours = currentTask.getWorkedHours();
         double totalHours=0;
         for(WorkedHours log : workedHours){
             totalHours += log.getWorkedHours();
         } return totalHours;
+    }
+
+    public void printAllWorkedHours(Task currentTask) {
+        System.out.println(getAllWorkedHours(currentTask));
     }
 }
 

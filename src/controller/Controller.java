@@ -328,6 +328,7 @@ public class Controller {
                         "Update Status",
                         "Delete Task",
                         "Add Worked Hours",
+                        "Total Worked Hours",
                         "Main Menu",
                         "Logout",
                         "Exit"
@@ -346,9 +347,10 @@ public class Controller {
                 case "6" -> taskLibrary.updateStatus(currentProject, currentTask, currentUser);
                 case "7" -> taskLibrary.deleteTask(currentProject, currentUser);
                 case "8" -> taskLibrary.addWorkedHours(currentProject, currentTask, currentUser);
-                case "9" -> mainMenu();
-                case "10" -> logout();
-                case "11" -> exit();
+                case "9" -> taskLibrary.printAllWorkedHours(currentTask);
+                case "10" -> mainMenu();
+                case "11" -> logout();
+                case "12" -> exit();
             }
         } while (true);
     }
