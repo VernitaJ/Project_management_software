@@ -58,7 +58,7 @@ public class DataLibrary {
         }
     }
 
-    ArrayList<Data> getDataList() {
+    public ArrayList<Data> getDataList() {
         return list;
     }
 

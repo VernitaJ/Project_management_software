@@ -226,4 +226,15 @@ public class ProjectLibrary extends DataLibrary{
             System.out.println("Total cost for the project are " + totalCost + "kr.");
         }
     }
+
+    public void printAllProjects()
+    {
+        for (Data project : list)
+        {
+          if (project instanceof Project)
+          {
+              System.out.println(project.toString());
+          }
+        }
+    }
 }
