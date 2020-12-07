@@ -283,8 +283,9 @@ public class TaskLibrary extends DataLibrary {
             return;
         } else {
             for(Data task: tasks) {
-                task.toString();
-                getAllWorkedHours((Task) task);
+                System.out.println(task.printTaskInfo((Task) task));
+                System.out.println("Amount of hours spent on this task:");
+                printAllWorkedHours((Task) task);
             }
         }
     }
