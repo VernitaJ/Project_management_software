@@ -224,8 +224,6 @@ public class ProjectLibrary extends DataLibrary{
                 "Hours left on budget: " +
                 "");
         
-        System.out.println();
-        
     }
     
     public void addBudgetMoney(Project currentProject, User currentUser) {
