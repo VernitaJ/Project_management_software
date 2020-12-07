@@ -19,7 +19,7 @@ public class Project extends Data {
     private User projectManager;
     private Team team = null; // no team by default as part of the acceptance criteria
 
-    public Project(String name, User projectManager, String description, LocalDate startDate, LocalDate endDate, float totalBudget) {
+    public Project(String name, User projectManager, String description, LocalDate startDate, LocalDate endDate) {
         this.name = name;
         this.description = description;
         this.createdDate = LocalDate.now();

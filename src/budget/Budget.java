@@ -1,14 +1,12 @@
 package budget;
 
 import entities.Project;
-import tools.Input;
 
 public class Budget
 {
     private double money;
     private double hours;
     public final String CURRENCY = "SEK";
-    Input input = Input.getInstance();
 
     public Budget(){
         this.money = 0.0;
