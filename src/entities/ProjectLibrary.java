@@ -360,12 +360,17 @@ public class ProjectLibrary extends DataLibrary{
             System.out.print(currentTask.getName());
             for (int i = characters; i < 20; i++) System.out.print(" ");
             long daysFromStart = DAYS.between(startDate, currentTask.getStartDate());
-            for (int i = 0; i < daysFromStart; i++) System.out.print(" ");
+            for (int i = -5; i < daysFromStart; i++) System.out.print(" ");
             long durationOfTask = DAYS.between(currentTask.getStartDate(), currentTask.getDeadline());
             for (int i = 0; i < durationOfTask; i++){
-                System.out.print(input.BLUE + "¤");
+                if ((daysFromStart+i)%20 == 0){
+                    System.out.print(input.GREEN + "¤");
+                } else System.out.print(input.BLUE + "¤" + input.RESET);
             }
-            System.out.println(input.RESET + "\n");
+            for (User teamMember : currentTask.getAssignees()){
+                System.out.print(" " +teamMember.getUserName() + " ");
+            }
+            System.out.println("\n");
         }
     }
 
