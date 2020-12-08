@@ -191,28 +191,41 @@ public class ProjectLibrary extends DataLibrary{
     
     public void viewCost(Project currentProject)
     {
-        Project project = (Project)findItInList(currentProject.getID());
-        if(project==null){
+        // Project project = (Project)findItInList(currentProject.getID());
+        if(currentProject==null){
             System.out.println("Project does not exist!");
-        } else {
-            TaskLibrary tempLibrary = currentProject.taskList;
-            double totalCost = 0;
-            for (Data task : currentProject.taskList.list)
-            {
-                Task currentTask = (Task) task;
-                double totalCostPerTask = 0;
-                
-                for (WorkedHours log : currentTask.getWorkedHours())
-                {
-                    totalCostPerTask += log.getUser().getSalary() * log.getWorkedHours();
-                    
-                }
-                System.out.println("The total cost for the Task  " + currentTask.getName() + " " + totalCostPerTask + "kr.");
-                totalCost += totalCostPerTask;
-            }
-            System.out.println("Total cost for the project are " + totalCost + "kr.");
+            return;
         }
+        
+        TaskLibrary taskLibrary = currentProject.taskList;
+        getTotalCostProject(taskLibrary, true);
     }
+    
+    public double getTotalCostProject(TaskLibrary taskLibrary, boolean print) {
+        double totalCostProject = 0;
+        for (Data task : taskLibrary.list)
+        {
+            Task currentTask = (Task) task;
+            totalCostProject += getTotalCostTask(currentTask, print);
+        }
+        if(print) {
+            System.out.println("Total cost for the project is " + totalCostProject + "kr.");
+        }
+        return totalCostProject;
+    }
+    
+    public double getTotalCostTask(Task currentTask, boolean print) {
+        double totalCostPerTask = 0;
+        for (WorkedHours log : currentTask.getWorkedHours())
+        {
+            totalCostPerTask += log.getUser().getSalary() * log.getWorkedHours();
+        }
+        if(print) {
+            System.out.println("The total cost for the Task  " + currentTask.getName() + " " + totalCostPerTask + "kr.");
+        }
+        return totalCostPerTask;
+    }
+    
     
     public void viewBudget(Project currentProject, User currentUser) {
         if(noTeam(currentProject)) {
@@ -221,29 +234,35 @@ public class ProjectLibrary extends DataLibrary{
         if(!confirmAccess(currentProject.getTeam(),currentUser)) {
             return;
         }
-        double sek = currentProject.getBudget().getMoney();
-        double hours = currentProject.getBudget().getHours();
-        double hoursRemaining = getHoursRemainingBudget(currentProject);
+        double budgetSEK = currentProject.getBudget().getMoney();
+        double budgetHours = currentProject.getBudget().getHours();
+        double hoursRemaining = budgetHours - getHoursWorkedProject(currentProject);
         double daysRemaining = hoursRemaining / 24;
+        double remainingSEK = budgetSEK - getTotalCostProject(currentProject.taskList, false);
         System.out.println("Budget Statistics: " +
-                "\nTotal SEK: " + sek +
-                "\nTotal Hours: " + hours +
-                "\nDays left on budget: " + daysRemaining +
-                "\nHours left on budget: " + hoursRemaining +
-                "");
+                "\nTotal SEK: " + budgetSEK +
+                "\nTotal Hours: " + budgetHours +
+                "\nDays remaining on budget: " + daysRemaining +
+                "\nHours remaining on budget: " + hoursRemaining +
+                "\nSEK remaining on budget: " + remainingSEK);
         
     }
     
-    public double getHoursRemainingBudget(Project currentProject) {
-        double totalHoursPerTask = 0.0;
+    public double getHoursWorkedProject(Project currentProject) {
+        double totalHoursProject = 0.0;
         for (Data task : currentProject.taskList.list) {
             Task currentTask = (Task) task;
-            
-            for (WorkedHours log : currentTask.getWorkedHours()) {
-                totalHoursPerTask += log.getWorkedHours();
-            }
+            totalHoursProject += getHoursWorkedTask(currentTask);
         }
-        return totalHoursPerTask;
+        return totalHoursProject;
+    }
+    
+    public double getHoursWorkedTask(Task currentTask) {
+        double totalHoursTask = 0;
+        for (WorkedHours log : currentTask.getWorkedHours()) {
+            totalHoursTask += log.getWorkedHours();
+        }
+        return totalHoursTask;
     }
     
     public void addBudgetMoney(Project currentProject, User currentUser) {
