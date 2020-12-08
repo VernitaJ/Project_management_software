@@ -195,7 +195,6 @@ public class ProjectLibrary extends DataLibrary{
             System.out.println("Project does not exist!");
             return;
         }
-        
         TaskLibrary taskLibrary = currentProject.taskList;
         getTotalCostProject(taskLibrary, true);
     }
@@ -220,7 +219,7 @@ public class ProjectLibrary extends DataLibrary{
             totalCostPerTask += log.getUser().getSalary() * log.getWorkedHours();
         }
         if(print) {
-            System.out.println("The total cost for the Task  " + currentTask.getName() + " " + totalCostPerTask + "kr.");
+            System.out.println("The total cost for the Task: " + currentTask.getName() + " " + totalCostPerTask + "kr.");
         }
         return totalCostPerTask;
     }
