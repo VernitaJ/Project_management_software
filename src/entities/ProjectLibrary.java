@@ -246,6 +246,15 @@ public class ProjectLibrary extends DataLibrary{
             double iteratedRemainingMoney = budgetMoney - (totalCost + iteratedCostRemainingDays);
             double iteratedMoneyToUsePerDay = iteratedRemainingMoney / daysRemaining;
             double iteratedMoneyToUsePerHour = iteratedMoneyToUsePerDay / 8;
+            System.out.println("budgetMoney: " + budgetMoney +
+                    "\ntotalCost: " + totalCost +
+                    "\nprojectDuration: " + projectDuration +
+                    "\ncostPerDay: " + costPerDay +
+                    "\ndaysRemaining: " + daysRemaining +
+                    "\niteratedCostRemainingDays: " + iteratedCostRemainingDays +
+                    "\niteratedRemainingMoney: " + iteratedRemainingMoney +
+                    "\niteratedMoneyToUsePerDay: " + iteratedMoneyToUsePerDay +
+                    "\niteratedMoneyToUsePerHour: " + iteratedMoneyToUsePerHour);
             System.out.println("You have room to add additional developers with a combined hourly rate of: " + iteratedMoneyToUsePerHour +
                     "You have this many days: " + daysRemaining);
             
