@@ -213,9 +213,9 @@ public class Controller {
                 {
                         "View Project Details",
                         "Tasks Menu",
-                        "Budget Menu",
+                        "Finance Menu",
                         "Team Menu",
-                        "View Cost",
+                        "Gantt Chart",
                         "Update Status",
                         "Delete Project",
                         "Main Menu",
@@ -230,9 +230,9 @@ public class Controller {
             {
                 case "1" -> projectLibrary.viewProjectDetails(currentProject);
                 case "2" -> tasksMenu();
-                case "3" -> budgetMenu(currentProject, currentUser);
+                case "3" -> financeMenu(currentProject, currentUser);
                 case "4" -> teamMenu();
-                case "5" -> projectLibrary.viewCost(currentProject);
+                case "5" -> projectLibrary.ganttChart(currentProject);
                 case "6" -> projectLibrary.updateStatus(currentProject, currentUser);
                 case "7" -> {
                     Boolean isSuccessful = projectLibrary.deleteProject(currentProject, currentUser);
@@ -247,12 +247,13 @@ public class Controller {
         } while (true);
     }
 
-    private void budgetMenu(Project currentProject, User currentUser) {
+    private void financeMenu(Project currentProject, User currentUser) {
         String[] options =
                 {
                         "View Project Budget",
                         "Add Budget",
                         "Change Budget",
+                        "View Cost",
                         currentProject.getName() + " Menu",
                         "Logout",
                         "Exit"
@@ -265,9 +266,10 @@ public class Controller {
                 case "1" -> projectLibrary.viewBudget(currentProject, currentUser);
                 case "2" -> addBudgetMenu(currentProject, currentUser);
                 case "3" -> updateBudgetMenu(currentProject, currentUser);
-                case "4" -> currentProjectMenu();
-                case "5" -> logout();
-                case "6" -> exit();
+                case "4" -> projectLibrary.viewCost(currentProject);
+                case "5" -> currentProjectMenu();
+                case "6" -> logout();
+                case "7" -> exit();
             }
         } while (true);
     }
@@ -275,9 +277,9 @@ public class Controller {
     private void addBudgetMenu(Project currentProject, User currentUser) {
         String[] options =
                 {
-                        "Add Budget SEK",
-                        "Add Budget Hours",
-                        "Budget Menu",
+                        "Add Budget (SEK)",
+                        "Add Budgeted Hours",
+                        "Finance Menu",
                         "Logout",
                         "Exit"
                 };
@@ -288,7 +290,7 @@ public class Controller {
             {
                 case "1" -> projectLibrary.addBudgetMoney(currentProject, currentUser);
                 case "2" -> projectLibrary.addBudgetHours(currentProject, currentUser);
-                case "3" -> budgetMenu(currentProject, currentUser);
+                case "3" -> financeMenu(currentProject, currentUser);
                 case "4" -> logout();
                 case "5" -> exit();
             }
@@ -298,9 +300,9 @@ public class Controller {
     private void updateBudgetMenu(Project currentProject, User currentUser) {
         String[] options =
                 {
-                        "Update Budget SEK",
-                        "Update Budget Hours",
-                        "Budget Menu",
+                        "Update Budget (SEK)",
+                        "Update Budgeted Hours",
+                        "Finance Menu",
                         "Logout",
                         "Exit"
                 };
@@ -311,7 +313,7 @@ public class Controller {
             {
                 case "1" -> projectLibrary.updateBudgetMoney(currentProject, currentUser);
                 case "2" -> projectLibrary.updateBudgetHours(currentProject, currentUser);
-                case "3" -> budgetMenu(currentProject, currentUser);
+                case "3" -> financeMenu(currentProject, currentUser);
                 case "4" -> logout();
                 case "5" -> exit();
             }
