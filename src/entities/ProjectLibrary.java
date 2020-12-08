@@ -217,13 +217,27 @@ public class ProjectLibrary extends DataLibrary{
         }
         double sek = currentProject.getBudget().getMoney();
         double hours = currentProject.getBudget().getHours();
+        double hoursRemaining = getHoursRemainingBudget(currentProject);
+        double daysRemaining = hoursRemaining / 24;
         System.out.println("Budget Statistics: \n" +
-                "SEK: " + sek +
-                "Hours: " + hours +
-                "Days left on budget: " +
-                "Hours left on budget: " +
+                "\nSEK: " + sek +
+                "\nHours: " + hours +
+                "\nDays left on budget: " + daysRemaining +
+                "\nHours left on budget: " + hoursRemaining +
                 "");
         
+    }
+    
+    public double getHoursRemainingBudget(Project currentProject) {
+        double totalHoursPerTask = 0.0;
+        for (Data task : currentProject.taskList.list) {
+            Task currentTask = (Task) task;
+            
+            for (WorkedHours log : currentTask.getWorkedHours()) {
+                totalHoursPerTask += log.getUser().getWorkingHours();
+            }
+        }
+        return totalHoursPerTask;
     }
     
     public void addBudgetMoney(Project currentProject, User currentUser) {

@@ -243,7 +243,7 @@ public class Controller {
             String choice = menu.printMenu();
             switch (choice)
             {
-            //    case "1" -> projectLibrary.viewBudget(currentProject, currentUser);
+                case "1" -> projectLibrary.viewBudget(currentProject, currentUser);
                 case "2" -> addBudgetMenu(currentProject, currentUser);
                 case "3" -> updateBudgetMenu(currentProject, currentUser);
                 case "4" -> { return; }
