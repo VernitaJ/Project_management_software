@@ -13,7 +13,7 @@ import static entities.Task.sortByDeadline;
 
 public class TaskLibrary extends DataLibrary {
     private static final TaskLibrary instance = null;
-    
+
     public static TaskLibrary getInstance() {
         if (instance == null) {
             return new TaskLibrary();
@@ -21,7 +21,7 @@ public class TaskLibrary extends DataLibrary {
             return instance;
         }
     }
-    
+
     public boolean confirmAccess(Team projectTeam, User currentUser) {
         if (projectTeam.findTeamMember(currentUser).getRole().adminAccess()) {
             return true;
@@ -43,7 +43,7 @@ public class TaskLibrary extends DataLibrary {
         WorkedHours newLog = new WorkedHours(currentUser, workedHours);
         currentTask.getWorkedHours().add(newLog);
     }
-    
+
     public void createTask(Project currentProject, User currentUser) {
         System.out.println("Enter 0 at any step to return to the previous menu: ");
         Input input = Input.getInstance();
@@ -52,7 +52,7 @@ public class TaskLibrary extends DataLibrary {
             System.out.println("Returning to project menu...");
             return;
         }
-        
+
         String description = input.getStr("Task Description: ");
         if (input.abort(description)) {
             System.out.println("Returning to project menu...");
@@ -64,15 +64,20 @@ public class TaskLibrary extends DataLibrary {
             System.out.println("Returning to project menu...");
             return;
         }
-        
-        LocalDate deadline = input.getDate("Task Deadline (YYYY-MM-DD): ");
-        if (input.abort(description)) {
-            System.out.println("Returning to project menu...");
-            return;
-        }
+        LocalDate deadline;
+        do {
+            deadline = input.getDate("Task Deadline (YYYY-MM-DD): ");
+            if (input.abort(description)) {
+                System.out.println("Returning to project menu...");
+                return;
+            }
+            if (deadline.isAfter(currentProject.getEndDate())){
+                System.out.println("Sorry, that date falls after the Project deadline, which is" + currentProject.getEndDate());
+            }
+        } while (deadline.isAfter(currentProject.getEndDate()));
         currentProject.taskList.addToList(new Task(currentUser, name, description, startDate, deadline));
     }
-    
+
     public void deleteTask(Project currentProject, User currentUser) {
         Task currentTask = navigateBetweenTasks(currentProject);
         if (currentTask == null) {
@@ -101,7 +106,7 @@ public class TaskLibrary extends DataLibrary {
             return;
         }
     }
-    
+
     public ArrayList<Task> listProjectsTasks(Project currentProject) {
         ArrayList<Task> tempList = new ArrayList<>();
         for (Data task : currentProject.taskList.list) {
@@ -117,7 +122,7 @@ public class TaskLibrary extends DataLibrary {
         }
         return tempList;
     }
-    
+
     public Task navigateBetweenTasks(Project currentProject) {
         Input input = Input.getInstance();
         ArrayList<Task> taskList = listProjectsTasks(currentProject);
@@ -128,14 +133,14 @@ public class TaskLibrary extends DataLibrary {
             do {
                 choice = input.getInt("Enter task number or 0 to return to the previous menu: ");
             } while (choice < 0 || choice > taskList.size());
-            
+
             if (choice == 0) {
                 return null;
             } else
                 return taskList.get(choice - 1);
         }
     }
-    
+
     public void viewTaskDetails(Task currentTask){
         System.out.println("Task Name: " + currentTask.getName());
         if (!currentTask.getStatus().isEmpty()) {
@@ -144,7 +149,7 @@ public class TaskLibrary extends DataLibrary {
         System.out.println("Description: " + currentTask.getDescription());
         System.out.println("Assignees: " + currentTask.getAssignees().toString());
     }
-    
+
     public void updateStatus(Project currentProject, Task currentTask, User currentUser){
         if(!confirmAccess(currentProject.getTeam(), currentUser)) {
             return;
@@ -162,7 +167,7 @@ public class TaskLibrary extends DataLibrary {
         }
         currentTask.setStatus(newStatus);
     }
-    
+
     public void addAssignee(Project currentProject, Task currentTask, User currentUser) {
         Team projectTeam = currentProject.getTeam();
         ArrayList<User> taskTeam = currentTask.getAssignees();
@@ -180,7 +185,7 @@ public class TaskLibrary extends DataLibrary {
         do{
             choice = input.getInt("Enter user number or 0 to return to the previous menu: ");
         } while(choice < 0 || choice > tempList.size());
-        
+
         if (choice == 0){
             return;
         }
@@ -194,7 +199,7 @@ public class TaskLibrary extends DataLibrary {
                         currentProject.getName();
         sendNotification(userToAdd, message);
     }
-    
+
     public void removeAssignee(Team projectTeam, ArrayList<User> taskTeam, User currentUser) {
         if (!confirmAccess(projectTeam, currentUser)) {
             return;
@@ -210,7 +215,7 @@ public class TaskLibrary extends DataLibrary {
         do{
             choice = input.getInt("Enter user number or 0 to return to the previous menu: ");
         } while(choice < 0 || choice > taskTeam.size());
-        
+
         if (choice == 0){
             return;
         }
@@ -218,7 +223,7 @@ public class TaskLibrary extends DataLibrary {
         taskTeam.remove(userToRemove);
         System.out.println("Successfully deallocated " + userToRemove.getUserName() + " from the task");
     }
-    
+
     public void countdown(Project currentProject) {
         ArrayList<Data> countdown = currentProject.taskList.list;
         Collections.sort(countdown, sortByDeadline);
@@ -241,7 +246,7 @@ public class TaskLibrary extends DataLibrary {
             }
         }
     }
-    
+
     public void completedTasks(Project currentProject) {
         ArrayList<Data> tasks = currentProject.taskList.list;
         Collections.sort(tasks, sortByDeadline);
@@ -257,7 +262,7 @@ public class TaskLibrary extends DataLibrary {
             }
         }
     }
-    
+
     public void sendNotification(User userToNotify, String message) {
         userToNotify.getInbox().add(new Message("System", userToNotify.getUserName(), message));
     }
