@@ -329,6 +329,7 @@ public class ProjectLibrary extends DataLibrary{
         long daysOfProject = DAYS.between(startDate, endDate);
         long amountOfDates = daysOfProject/20 + 1;
         LocalDate printedDate = startDate;
+        System.out.println("\n" + input.PURPLE + "GANTT CHART" + input.RESET);
         System.out.print("                    ");
         for (int i = 1; i < amountOfDates ; i++){
             if (DAYS.between(printedDate, endDate) > 19){
@@ -348,7 +349,7 @@ public class ProjectLibrary extends DataLibrary{
             for (int i = 0; i < durationOfTask; i++){
                 System.out.print(input.BLUE + "¤");
             }
-            System.out.println(input.RESET);
+            System.out.println(input.RESET + "\n");
         }
     }
 
