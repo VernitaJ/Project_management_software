@@ -14,4 +14,5 @@ Project,testproject,jens,descriptionhere,2020,8,20,2020,12,20
 Task,testproject,jens,first task,fix this,2020-12-14
 Task,testproject,jens,second task,fix that,2020-12-16
 Budget,jens,1000.0,48.0
-Workedhours,jens,24.0
+Workedhours,jens,12.0
+Workedhours,jens,4
