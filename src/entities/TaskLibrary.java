@@ -8,7 +8,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static entities.Task.sortByDate;
+import static entities.Task.sortByStartDate;
+import static entities.Task.sortByDeadline;
 
 public class TaskLibrary extends DataLibrary {
     private static final TaskLibrary instance = null;
@@ -35,8 +36,8 @@ public class TaskLibrary extends DataLibrary {
         }
         */
     }
-    public void addTaskToList(Project currentProject, User currentUser, String name, String description, LocalDate deadline) {
-        currentProject.taskList.addToList(new Task(currentUser, name, description, deadline));
+    public void addTaskToList(Project currentProject, User currentUser, String name, String description, LocalDate startDate, LocalDate deadline) {
+        currentProject.taskList.addToList(new Task(currentUser, name, description, startDate, deadline));
     }
     public void addWorkedHoursToList(Task currentTask, User currentUser, double workedHours) {
         WorkedHours newLog = new WorkedHours(currentUser, workedHours);
@@ -57,13 +58,19 @@ public class TaskLibrary extends DataLibrary {
             System.out.println("Returning to project menu...");
             return;
         }
+
+        LocalDate startDate = input.getDate("Task Start Date (YYYY-MM-DD): ");
+        if (input.abort(description)) {
+            System.out.println("Returning to project menu...");
+            return;
+        }
         
         LocalDate deadline = input.getDate("Task Deadline (YYYY-MM-DD): ");
         if (input.abort(description)) {
             System.out.println("Returning to project menu...");
             return;
         }
-        currentProject.taskList.addToList(new Task(currentUser, name, description, deadline));
+        currentProject.taskList.addToList(new Task(currentUser, name, description, startDate, deadline));
     }
     
     public void deleteTask(Project currentProject, User currentUser) {
@@ -214,7 +221,7 @@ public class TaskLibrary extends DataLibrary {
     
     public void countdown(Project currentProject) {
         ArrayList<Data> countdown = currentProject.taskList.list;
-        Collections.sort(countdown, sortByDate);
+        Collections.sort(countdown, sortByDeadline);
         String displayedDays = "";
         for (Data task : countdown) {
             Task projectTask = (Task) task;
@@ -233,7 +240,7 @@ public class TaskLibrary extends DataLibrary {
     
     public void completedTasks(Project currentProject) {
         ArrayList<Data> tasks = currentProject.taskList.list;
-        Collections.sort(tasks, sortByDate);
+        Collections.sort(tasks, sortByDeadline);
         for (Data task : tasks) {
             Task projectTask = (Task) task;
             if (projectTask.getStatus().equalsIgnoreCase("completed")) {

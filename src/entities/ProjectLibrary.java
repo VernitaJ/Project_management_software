@@ -2,8 +2,14 @@ package entities;
 import tools.*;
 
 
+import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
+
+import static entities.Task.sortByDeadline;
+import static entities.Task.sortByStartDate;
+import static java.time.temporal.ChronoUnit.DAYS;
 
 public class ProjectLibrary extends DataLibrary{
     private static final ProjectLibrary instance = null;
@@ -312,6 +318,20 @@ public class ProjectLibrary extends DataLibrary{
         } while(value < 0);
         currentProject.getBudget().setMoney(value);
         System.out.println("Budget in hours has been updated");
+    }
+
+    public void taskVisualisation(Project currentProject) {
+        ArrayList<Data> taskList = currentProject.taskList.list;
+        Collections.sort(taskList, sortByStartDate);
+        LocalDate startDate = currentProject.getStartDate();
+        LocalDate endDate = currentProject.getEndDate();
+        long daysOfProject = DAYS.between(startDate, endDate);
+        long amountOfDates = daysOfProject/3;
+        LocalDate printedDate = startDate;
+        for (int i = 1; i < amountOfDates; i++){
+            System.out.println(printedDate);
+    //        printedDate;
+        }
     }
     
 }

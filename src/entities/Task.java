@@ -9,15 +9,17 @@ public class Task extends Data{
     private String name;
     private String description;
     private String status; //NotStarted/Ongoing/Completed?
+    private LocalDate startDate;
     private LocalDate deadline;
     private ArrayList<User> assignees;
     private ArrayList<WorkedHours> workedHours;
     
-    public Task(User createdBy, String name, String description, LocalDate deadline){
+    public Task(User createdBy, String name, String description, LocalDate startDate, LocalDate deadline){
         this.createdBy = createdBy;
         this.name = name;
         this.description = description;
         this.status = "Default";
+        this.startDate = startDate;
         this.deadline = deadline;
         this.assignees = new ArrayList<User>();
         this.workedHours = new ArrayList<>();
@@ -67,13 +69,29 @@ public class Task extends Data{
         this.deadline = deadline;
     }
 
-    public static Comparator<Data> sortByDate = new Comparator<Data>() {
+    public LocalDate getStartDate() {
+        return startDate;
+    }
 
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+
+    public static Comparator<Data> sortByDeadline = new Comparator<Data>() {
         @Override
         public int compare(Data o1, Data o2) {
             Task object2 = (Task) o2;
             Task object1 = (Task) o1;
             return object1.getDeadline().compareTo(object2.getDeadline());
+        }
+    };
+
+    public static Comparator<Data> sortByStartDate = new Comparator<Data>() {
+        @Override
+        public int compare(Data o1, Data o2) {
+            Task object2 = (Task) o2;
+            Task object1 = (Task) o1;
+            return object1.getStartDate().compareTo(object2.getStartDate());
         }
     };
 

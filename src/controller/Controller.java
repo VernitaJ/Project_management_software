@@ -76,7 +76,7 @@ public class Controller {
                         currentUser = (User) userLibrary.findUserInList(token[2]);
                         currentProject = projectLibrary.listUsersProjects(currentUser).get(0);
                         TaskLibrary currentTaskLibrary = currentProject.getTaskList();
-                        currentTaskLibrary.addTaskToList(currentProject, currentUser, token[3], token[4], LocalDate.parse(token[5]));
+                        currentTaskLibrary.addTaskToList(currentProject, currentUser, token[3], token[4], LocalDate.parse(token[5]), LocalDate.parse(token[6]));
                     }
                     case "workedhours" -> {
                         currentUser = (User) userLibrary.findUserInList(token[1]);
