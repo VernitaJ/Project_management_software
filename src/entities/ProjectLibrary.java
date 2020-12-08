@@ -329,6 +329,7 @@ public class ProjectLibrary extends DataLibrary{
         long daysOfProject = DAYS.between(startDate, endDate);
         long amountOfDates = daysOfProject/20 + 1;
         LocalDate printedDate = startDate;
+        System.out.print("                    ");
         for (int i = 1; i < amountOfDates ; i++){
             if (DAYS.between(printedDate, endDate) > 19){
                 System.out.print(printedDate + "          ");
@@ -338,10 +339,11 @@ public class ProjectLibrary extends DataLibrary{
         System.out.println(endDate);
         for (Data task : taskList){
             Task currentTask = (Task) task;
+            int characters = charactersInName(currentTask);
+            System.out.print(currentTask.getName());
+            for (int i = characters; i < 20; i++) System.out.print(" ");
             long daysFromStart = DAYS.between(startDate, currentTask.getStartDate());
-            for (int i = 0; i < daysFromStart; i++){
-                System.out.print(" ");
-            }
+            for (int i = 0; i < daysFromStart; i++) System.out.print(" ");
             long durationOfTask = DAYS.between(currentTask.getStartDate(), currentTask.getDeadline());
             for (int i = 0; i < durationOfTask; i++){
                 System.out.print("X");
@@ -349,4 +351,11 @@ public class ProjectLibrary extends DataLibrary{
             System.out.println();
         }
     }
+
+    public int charactersInName(Task task){
+        String name = task.getName();
+        int count = name.length();
+        return count;
+    }
+
 }
