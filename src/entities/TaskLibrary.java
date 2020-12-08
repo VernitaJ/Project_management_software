@@ -35,6 +35,9 @@ public class TaskLibrary extends DataLibrary {
         }
         */
     }
+    public void addTaskToList(Project currentProject, User currentUser, String name, String description, LocalDate deadline) {
+        currentProject.taskList.addToList(new Task(currentUser, name, description, deadline));
+    }
     
     public void createTask(Project currentProject, User currentUser) {
         System.out.println("Enter 0 at any step to return to the previous menu: ");

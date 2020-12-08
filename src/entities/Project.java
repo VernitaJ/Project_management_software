@@ -76,7 +76,11 @@ public class Project extends Data {
     public Budget getBudget() {
         return budget;
     }
-
+    
+    public TaskLibrary getTaskList() {
+        return taskList;
+    }
+    
     public long duration() {
         long daysBetween = ChronoUnit.DAYS.between(getStartDate(), getEndDate());
         return daysBetween;

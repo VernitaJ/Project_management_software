@@ -70,7 +70,12 @@ public class Controller {
                         projectLibrary.addProjectToList(new Project(token[1], currentUser, token[3], LocalDate.of(Integer.parseInt(token[4]), Integer.parseInt(token[5]), Integer.parseInt(token[6])), LocalDate.of(Integer.parseInt(token[7]), Integer.parseInt(token[8]), Integer.parseInt(token[9]))));
                         this.currentUser = null;
                     }
-                    case "task" -> notImplemented();
+                    case "task" -> {
+                        currentUser = (User) userLibrary.findUserInList(token[2]);
+                        currentProject = projectLibrary.listUsersProjects(currentUser).get(0);
+                        TaskLibrary currentTaskLibrary = currentProject.getTaskList();
+                        currentTaskLibrary.addTaskToList(currentProject, currentUser, token[3], token[4], LocalDate.parse(token[5]));
+                    }
                 }
             }
             br.close();
@@ -246,7 +251,7 @@ public class Controller {
                 case "1" -> projectLibrary.viewBudget(currentProject, currentUser);
                 case "2" -> addBudgetMenu(currentProject, currentUser);
                 case "3" -> updateBudgetMenu(currentProject, currentUser);
-                case "4" -> { return; }
+                case "4" -> currentProjectMenu();
                 case "5" -> logout();
                 case "6" -> exit();
             }
@@ -269,7 +274,7 @@ public class Controller {
             {
                 case "1" -> projectLibrary.addBudgetMoney(currentProject, currentUser);
                 case "2" -> projectLibrary.addBudgetHours(currentProject, currentUser);
-                case "3" -> { return; }
+                case "3" -> budgetMenu(currentProject, currentUser);
                 case "4" -> logout();
                 case "5" -> exit();
             }
@@ -292,7 +297,7 @@ public class Controller {
             {
                 case "1" -> projectLibrary.updateBudgetMoney(currentProject, currentUser);
                 case "2" -> projectLibrary.updateBudgetHours(currentProject, currentUser);
-                case "3" -> mainMenu();
+                case "3" -> budgetMenu(currentProject, currentUser);
                 case "4" -> logout();
                 case "5" -> exit();
             }
