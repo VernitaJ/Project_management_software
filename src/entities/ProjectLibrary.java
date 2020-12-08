@@ -346,9 +346,9 @@ public class ProjectLibrary extends DataLibrary{
             for (int i = 0; i < daysFromStart; i++) System.out.print(" ");
             long durationOfTask = DAYS.between(currentTask.getStartDate(), currentTask.getDeadline());
             for (int i = 0; i < durationOfTask; i++){
-                System.out.print("X");
+                System.out.print(input.BLUE + "¤");
             }
-            System.out.println();
+            System.out.println(input.RESET);
         }
     }
 
