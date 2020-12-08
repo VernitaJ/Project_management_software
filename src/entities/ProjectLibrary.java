@@ -47,6 +47,12 @@ public class ProjectLibrary extends DataLibrary{
     {
         list.add(project);
     }
+    
+    public void addBudgetToList(Project currentProject, double money, double hours) {
+        currentProject.getBudget().setMoney(money);
+        currentProject.getBudget().setHours(hours);
+    }
+    
     public ArrayList<Project> listUsersProjects(User currentUser){
         ArrayList<Project> tempList = new ArrayList<>();
         for(Data project : list){

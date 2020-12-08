@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+import static java.lang.Double.parseDouble;
+
 public class Controller {
     private Input input = Input.getInstance();
     private Menu menu;
@@ -75,6 +77,18 @@ public class Controller {
                         currentProject = projectLibrary.listUsersProjects(currentUser).get(0);
                         TaskLibrary currentTaskLibrary = currentProject.getTaskList();
                         currentTaskLibrary.addTaskToList(currentProject, currentUser, token[3], token[4], LocalDate.parse(token[5]));
+                    }
+                    case "workedhours" -> {
+                        currentUser = (User) userLibrary.findUserInList(token[1]);
+                        currentProject = projectLibrary.listUsersProjects(currentUser).get(0);
+                        TaskLibrary currentTaskLibrary = currentProject.getTaskList();
+                        Task currentTask = currentTaskLibrary.listProjectsTasks(currentProject).get(0);
+                        currentTaskLibrary.addWorkedHoursToList(currentTask, currentUser, parseDouble(token[2]));
+                    }
+                    case "budget" -> {
+                        currentUser = (User) userLibrary.findUserInList(token[1]);
+                        currentProject = projectLibrary.listUsersProjects(currentUser).get(0);
+                        projectLibrary.addBudgetToList(currentProject,parseDouble(token[2]),parseDouble(token[3]));
                     }
                 }
             }
