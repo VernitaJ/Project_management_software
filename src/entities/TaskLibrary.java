@@ -13,6 +13,7 @@ import static entities.Task.sortByDeadline;
 
 public class TaskLibrary extends DataLibrary {
     private static final TaskLibrary instance = null;
+    Input input = Input.getInstance();
 
     public static TaskLibrary getInstance() {
         if (instance == null) {
@@ -46,7 +47,6 @@ public class TaskLibrary extends DataLibrary {
 
     public void createTask(Project currentProject, User currentUser) {
         System.out.println("Enter 0 at any step to return to the previous menu: ");
-        Input input = Input.getInstance();
         String name = input.getStr("Task Name: ");
         if (input.abort(name)) {
             System.out.println("Returning to project menu...");
@@ -88,7 +88,6 @@ public class TaskLibrary extends DataLibrary {
             System.out.println("Task does not exist!");
             return;
         }
-        Input input = Input.getInstance();
         String choice = "";
         System.out.println("You are about to delete this task!");
         do {
@@ -124,7 +123,6 @@ public class TaskLibrary extends DataLibrary {
     }
 
     public Task navigateBetweenTasks(Project currentProject) {
-        Input input = Input.getInstance();
         ArrayList<Task> taskList = listProjectsTasks(currentProject);
         if (taskList.size() == 0) {
             return null;
@@ -154,7 +152,6 @@ public class TaskLibrary extends DataLibrary {
         if(!confirmAccess(currentProject.getTeam(), currentUser)) {
             return;
         }
-        Input input = Input.getInstance();
         String newStatus = input.getStr("Enter the status: ");
         if(newStatus.equalsIgnoreCase("completed")) {
             for (int i = 0; i < currentTask.getAssignees().size(); i++) {
@@ -174,7 +171,6 @@ public class TaskLibrary extends DataLibrary {
         if (!confirmAccess(projectTeam, currentUser)) {
             return;
         }
-        Input input = Input.getInstance();
         List<User> tempList = projectTeam.getAllTeamUsers();
         for (int i = 0; i < tempList.size(); i++) {
             if(!taskTeam.contains(tempList.get(i))) {
@@ -204,7 +200,6 @@ public class TaskLibrary extends DataLibrary {
         if (!confirmAccess(projectTeam, currentUser)) {
             return;
         }
-        Input input = Input.getInstance();
         if(taskTeam.size() == 0 || taskTeam == null) {
             return;
         }
@@ -281,7 +276,6 @@ public class TaskLibrary extends DataLibrary {
 
     public void addWorkedHours(Project currentProject, Task currentTask, User currentUser){
         if(isUserAssignee(currentProject, currentTask,currentUser)){
-            Input input = Input.getInstance();
             double workedHours = input.getDouble("Please enter the amount of worked hours: ");
             WorkedHours newLog = new WorkedHours(currentUser,workedHours);
             currentTask.addWorkedHours(newLog);

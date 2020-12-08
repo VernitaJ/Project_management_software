@@ -125,7 +125,7 @@ public class ProjectLibrary extends DataLibrary{
             }
             System.out.println("Start Date: " + currentProject.getStartDate());
             System.out.println("End Date: " + currentProject.getEndDate());
-            taskVisualisation(currentProject);
+            ganttChart(currentProject);
         } else {
             System.out.println("Project does not exist!");
         }
@@ -337,9 +337,15 @@ public class ProjectLibrary extends DataLibrary{
         System.out.println("Budget in hours has been updated");
     }
 
-    public void taskVisualisation(Project currentProject) {
+
+    public void ganttChart(Project currentProject){
         ArrayList<Data> taskList = currentProject.taskList.list;
         Collections.sort(taskList, sortByStartDate);
+        dateVisualisation(currentProject);
+        printTasks(currentProject, taskList);
+    }
+
+    public void dateVisualisation(Project currentProject) {
         LocalDate startDate = currentProject.getStartDate();
         LocalDate endDate = currentProject.getEndDate();
         long daysOfProject = DAYS.between(startDate, endDate);
@@ -354,12 +360,16 @@ public class ProjectLibrary extends DataLibrary{
             }
         }
         System.out.println(endDate);
+    }
+
+
+    public void printTasks(Project currentProject, ArrayList<Data> taskList){
         for (Data task : taskList){
             Task currentTask = (Task) task;
             int characters = charactersInName(currentTask);
             System.out.print(currentTask.getName());
             for (int i = characters; i < 20; i++) System.out.print(" ");
-            long daysFromStart = DAYS.between(startDate, currentTask.getStartDate());
+            long daysFromStart = DAYS.between(currentProject.getStartDate(), currentTask.getStartDate());
             for (int i = -5; i < daysFromStart; i++) System.out.print(" ");
             long durationOfTask = DAYS.between(currentTask.getStartDate(), currentTask.getDeadline());
             for (int i = 0; i < durationOfTask; i++){
@@ -379,5 +389,4 @@ public class ProjectLibrary extends DataLibrary{
         int count = name.length();
         return count;
     }
-
 }
