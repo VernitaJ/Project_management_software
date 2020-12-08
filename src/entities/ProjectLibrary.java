@@ -125,6 +125,7 @@ public class ProjectLibrary extends DataLibrary{
             }
             System.out.println("Start Date: " + currentProject.getStartDate());
             System.out.println("End Date: " + currentProject.getEndDate());
+            taskVisualisation(currentProject);
         } else {
             System.out.println("Project does not exist!");
         }
@@ -326,12 +327,26 @@ public class ProjectLibrary extends DataLibrary{
         LocalDate startDate = currentProject.getStartDate();
         LocalDate endDate = currentProject.getEndDate();
         long daysOfProject = DAYS.between(startDate, endDate);
-        long amountOfDates = daysOfProject/3;
+        long amountOfDates = daysOfProject/20 + 1;
         LocalDate printedDate = startDate;
-        for (int i = 1; i < amountOfDates; i++){
-            System.out.println(printedDate);
-    //        printedDate;
+        for (int i = 1; i < amountOfDates ; i++){
+            if (DAYS.between(printedDate, endDate) > 19){
+                System.out.print(printedDate + "          ");
+                printedDate = printedDate.plusDays(20);
+            }
+        }
+        System.out.println(endDate);
+        for (Data task : taskList){
+            Task currentTask = (Task) task;
+            long daysFromStart = DAYS.between(startDate, currentTask.getStartDate());
+            for (int i = 0; i < daysFromStart; i++){
+                System.out.print(" ");
+            }
+            long durationOfTask = DAYS.between(currentTask.getStartDate(), currentTask.getDeadline());
+            for (int i = 0; i < durationOfTask; i++){
+                System.out.print("X");
+            }
+            System.out.println();
         }
     }
-    
 }
