@@ -233,7 +233,11 @@ public class TaskLibrary extends DataLibrary {
                     displayedDays = Input.BLUE + daysToDeadline + Input.RESET;
                 }
                 ArrayList<User> assignees = projectTask.getAssignees();
-                System.out.println("Days to Deadline: " + displayedDays + "\n" + "Task: " + projectTask.getName() + "\n" + "Description: " + projectTask.getDescription() + "" + "\n" + "Team Members: " + assignees.toString() + "\n");
+                System.out.println("Days to Deadline: " + displayedDays + "\n" + "Task: " + projectTask.getName() + "\n" +
+                        "Description: " + projectTask.getDescription() + "" + "\n" + "Team Members:");
+                for (User teamMember : assignees){
+                    System.out.println("UserName: " + teamMember.getUserName() + "\nOccupation: " + teamMember.getOccupation() + "\n");
+                }
             }
         }
     }
@@ -245,7 +249,11 @@ public class TaskLibrary extends DataLibrary {
             Task projectTask = (Task) task;
             if (projectTask.getStatus().equalsIgnoreCase("completed")) {
                 ArrayList<User> assignees = projectTask.getAssignees();
-                System.out.println("Task Deadline" + projectTask.getDeadline() + "\n" + " Task: " + projectTask.getName() + "\n" + "Description" + projectTask.getDescription() + "" + "\n" + "Team Members: " + assignees.toString() + "\n");
+                System.out.println("Task Deadline" + projectTask.getDeadline() + "\n" + " Task: " + projectTask.getName() + "\n" +
+                        "Description" + projectTask.getDescription() + "" + "\n" + "Team Members:");
+                for (User teamMember : assignees){
+                    System.out.println("UserName: " + teamMember.getUserName() + "\nOccupation: " + teamMember.getOccupation() + "\n");
+                }
             }
         }
     }
