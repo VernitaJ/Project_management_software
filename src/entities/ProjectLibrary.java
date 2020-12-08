@@ -191,7 +191,6 @@ public class ProjectLibrary extends DataLibrary{
     
     public void viewCost(Project currentProject)
     {
-        // Project project = (Project)findItInList(currentProject.getID());
         if(currentProject==null){
             System.out.println("Project does not exist!");
             return;
@@ -245,7 +244,6 @@ public class ProjectLibrary extends DataLibrary{
                 "\nDays remaining on budget: " + daysRemaining +
                 "\nHours remaining on budget: " + hoursRemaining +
                 "\nSEK remaining on budget: " + remainingSEK);
-        
     }
     
     public double getHoursWorkedProject(Project currentProject) {
