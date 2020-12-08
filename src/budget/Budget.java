@@ -1,7 +1,5 @@
 package budget;
 
-import entities.Project;
-
 public class Budget
 {
     private double money;
@@ -16,15 +14,6 @@ public class Budget
     public Budget(double money, double hours){
         this.money = money;
         this.hours = hours;
-    }
-    
-    public void calculation(Project currentProject){
-        if (currentProject.getBudget().getMoney() != 0) {
-        } else System.out.println("Sorry, no budget has been added. chat to PM");
-    }
-    
-    public float timeLeftBeforeExceedingBudget() {
-        return 0.0f;
     }
     
     public double getMoney() {
