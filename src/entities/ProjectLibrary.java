@@ -246,9 +246,8 @@ public class ProjectLibrary extends DataLibrary{
             double iteratedRemainingMoney = budgetMoney - (totalCost + iteratedCostRemainingDays);
             double iteratedMoneyToUsePerDay = iteratedRemainingMoney / daysRemaining;
             double iteratedMoneyToUsePerHour = iteratedMoneyToUsePerDay / 8;
-            
-            double developerRate = 100.0;
-            
+            System.out.println("You have room to add additional developers with a combined hourly rate of: " + iteratedMoneyToUsePerHour +
+                    "You have this many days: " + daysRemaining);
             
         }
     }
