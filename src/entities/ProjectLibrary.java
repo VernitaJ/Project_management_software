@@ -1,13 +1,10 @@
 package entities;
-import tools.*;
+import tools.Input;
 
-
-import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import static entities.Task.sortByDeadline;
 import static entities.Task.sortByStartDate;
 import static java.time.temporal.ChronoUnit.DAYS;
 
@@ -231,6 +228,29 @@ public class ProjectLibrary extends DataLibrary{
         return totalCostPerTask;
     }
     
+    public void getExtraDeveloperSuggestion(Project currentProject, User currentUser) {
+        double totalCostPerTaskUser = 0;
+        if(noTeam(currentProject)) {
+            return;
+        }
+        if(!confirmAccess(currentProject.getTeam(),currentUser)) {
+            return;
+        }
+        if(getOnBudgetMoney(currentProject) && getOnBudgetHours(currentProject)) {
+            double budgetMoney = currentProject.getBudget().getMoney();
+            double totalCost = getTotalCostProject(currentProject.taskList, false);
+            double projectDuration = currentProject.duration();
+            double costPerDay = totalCost / projectDuration;
+            double daysRemaining = getBudgetHoursRemaining(currentProject) / 24;
+            double iteratedCostRemainingDays = daysRemaining * costPerDay;
+            double iteratedRemainingMoney = budgetMoney - (totalCost + iteratedCostRemainingDays);
+            double iteratedMoneyToUsePerDay = iteratedRemainingMoney / daysRemaining;
+            double iteratedMoneyToUsePerHour = iteratedMoneyToUsePerDay / 8;
+            System.out.println("You have room to add additional developers with a combined hourly rate of: " + iteratedMoneyToUsePerHour +
+                    "You have this many days: " + daysRemaining);
+            
+        }
+    }
     
     public void viewBudget(Project currentProject, User currentUser) {
         if(noTeam(currentProject)) {
@@ -239,17 +259,53 @@ public class ProjectLibrary extends DataLibrary{
         if(!confirmAccess(currentProject.getTeam(),currentUser)) {
             return;
         }
-        double budgetSEK = currentProject.getBudget().getMoney();
+        double budgetMoney = currentProject.getBudget().getMoney();
         double budgetHours = currentProject.getBudget().getHours();
-        double hoursRemaining = budgetHours - getHoursWorkedProject(currentProject);
+        double hoursRemaining = getBudgetHoursRemaining(currentProject);
         double daysRemaining = hoursRemaining / 24;
-        double remainingSEK = budgetSEK - getTotalCostProject(currentProject.taskList, false);
+        double remainingMoney = getBudgetMoneyRemaining(currentProject);
+        String informBudgetReachedSEK = "";
+        String informBudgetReachedHours = "";
+        if(!getOnBudgetMoney(currentProject)) {
+            informBudgetReachedSEK = "\nYou have reached your budget limit in SEK!";
+        }
+        if(!getOnBudgetHours(currentProject)) {
+            informBudgetReachedHours = "\nYou have reached your budget limit in Hours!";
+        }
         System.out.println("Budget Statistics: " +
-                "\nTotal SEK: " + budgetSEK +
+                "\nTotal SEK: " + budgetMoney +
                 "\nTotal Hours: " + budgetHours +
                 "\nDays remaining on budget: " + daysRemaining +
                 "\nHours remaining on budget: " + hoursRemaining +
-                "\nSEK remaining on budget: " + remainingSEK);
+                informBudgetReachedHours +
+                "\nSEK remaining on budget: " + remainingMoney +
+                informBudgetReachedSEK);
+    }
+    
+    public double getBudgetMoneyRemaining(Project currentProject) {
+        return currentProject.getBudget().getMoney() - getTotalCostProject(currentProject.taskList, false);
+    }
+    
+    public double getBudgetHoursRemaining(Project currentProject) {
+        return currentProject.getBudget().getHours() - getHoursWorkedProject(currentProject);
+    }
+    
+    public boolean getOnBudgetMoney(Project currentProject) {
+        double budgetSEK = currentProject.getBudget().getMoney();
+        double currentCost = getTotalCostProject(currentProject.taskList, false);
+        if(budgetSEK > currentCost) {
+            return true;
+        }
+        return false;
+    }
+    
+    public boolean getOnBudgetHours(Project currentProject) {
+        double budgetHours = currentProject.getBudget().getHours();
+        double currentHours = getHoursWorkedProject(currentProject);
+        if(budgetHours > currentHours) {
+            return true;
+        }
+        return false;
     }
     
     public double getHoursWorkedProject(Project currentProject) {
@@ -336,7 +392,7 @@ public class ProjectLibrary extends DataLibrary{
         currentProject.getBudget().setMoney(value);
         System.out.println("Budget in hours has been updated");
     }
-
+    
 
     public void ganttChart(Project currentProject){
         ArrayList<Data> taskList = currentProject.taskList.list;

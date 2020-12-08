@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static entities.Task.sortByStartDate;
 import static entities.Task.sortByDeadline;
 
 public class TaskLibrary extends DataLibrary {
