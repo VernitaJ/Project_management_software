@@ -126,7 +126,6 @@ public class ProjectLibrary extends DataLibrary{
             }
             System.out.println("Start Date: " + currentProject.getStartDate());
             System.out.println("End Date: " + currentProject.getEndDate());
-            ganttChart(currentProject);
         } else {
             System.out.println("Project does not exist!");
         }
@@ -431,19 +430,22 @@ public class ProjectLibrary extends DataLibrary{
         LocalDate startDate = currentProject.getStartDate();
         LocalDate endDate = currentProject.getEndDate();
         long daysOfProject = DAYS.between(startDate, endDate);
-        long daysBetweenDisplayDates = Math.round(daysOfProject/10);
-        if (daysBetweenDisplayDates < 2){
-            daysBetweenDisplayDates = 2;
+        long remainder = daysOfProject%5;
+        long daysBetweenDisplayDates = Math.round(daysOfProject - remainder)/10;
+        if (daysBetweenDisplayDates < 12){
+            daysBetweenDisplayDates = 12;
         }
-        long amountOfDates = daysOfProject/daysBetweenDisplayDates + 1;
+        long amountOfDates = (daysOfProject/daysBetweenDisplayDates);
         LocalDate printedDate = startDate;
-        for (int i = 1; i < amountOfDates ; i++){
-            if (DAYS.between(printedDate, endDate) > (daysBetweenDisplayDates-1)){
-                System.out.print(printedDate + "          ");
+        for (int i = 0; i < amountOfDates+1; i++){
+            if (DAYS.between(printedDate, endDate) > 3){
+                System.out.print(printedDate);
+                String declare = " ";
+                System.out.print(declare.repeat((int) (daysBetweenDisplayDates-10)));
                 printedDate = printedDate.plusDays(daysBetweenDisplayDates);
             }
         }
-        System.out.println(endDate);
+        System.out.println(" Final Day of Project: " + input.GREEN + endDate + input.RESET);
         return daysBetweenDisplayDates;
     }
     
@@ -461,7 +463,7 @@ public class ProjectLibrary extends DataLibrary{
             for (int i = -5; i < spaceFromStart; i++) System.out.print(spacer);
             long durationOfTask = DAYS.between(currentTask.getStartDate(), currentTask.getDeadline());
             for (int i = 0; i < durationOfTask*charPerDay; i++){
-                if ((spaceFromStart+i)%20 == 0){
+                if ((spaceFromStart+i)%daysBetween == 0){
                     System.out.print(displayDateChar);
                 } else System.out.print(input.BLUE + "¤" + input.RESET);
             }
