@@ -1,6 +1,5 @@
 package entities;
 
-import access_roles.Roles;
 import java.util.ArrayList;
 
 public class User extends Data {
@@ -24,6 +23,18 @@ public class User extends Data {
         this.salary = salary;
         this.workingHours = workingHours;
         this.inbox = new ArrayList<>();
+    }
+
+    public void Profile() {
+        System.out.println("Print here with " + userName);
+        this.userName = userName;
+        this.eMail = eMail;
+        this.occupation = occupation;
+        this.companyName = companyName;
+        getUserName();
+        getEmail();
+        getOccupation();
+        getCompanyName();
     }
 
 
