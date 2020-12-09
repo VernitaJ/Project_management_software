@@ -4,7 +4,6 @@ import tools.Input;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import static entities.Message.sortByName;
@@ -151,41 +150,5 @@ public class UserLibrary extends DataLibrary {
                 System.out.println(((User) user).getUserName());
             }
         }
-    }
-
-    public void viewMyProfile(User user){
-        System.out.println("Username: " + user.getUserName());
-        System.out.println("Email: " + user.getEmail());
-        System.out.println("Occupation: " + user.getOccupation());
-        System.out.println("Company Name: " + user.getCompanyName());
-        System.out.println("User Level: TBA" );
-        System.out.println("Achievements: TBA" );
-    }
-
-
-    public void viewAllProfiles (){
-        int count = 1;
-        System.out.println("All users: ");
-        List<User> allUsers = UserLibrary.getInstance().getAllUsers();
-        allUsers.sort(Comparator.comparing(User::getUserName));
-
-        for (User user: allUsers) {
-            System.out.println(count + ". " + user.getUserName());
-            count++;
-            }
-        int choice = Input.getInstance().getInt("Select the user whose profile you wish to view: ");
-            if (choice >= 1 || choice < count) {
-                try {
-                    System.out.println("Username: " + allUsers.get(choice - 1).getUserName());
-                    System.out.println("Email: " + allUsers.get(choice - 1).getEmail());
-                    System.out.println("Occupation: " + allUsers.get(choice - 1).getOccupation());
-                    System.out.println("Company Name: " + allUsers.get(choice - 1).getCompanyName() );
-                    System.out.println("User Level: TBA" );
-                    System.out.println("Achievements: TBA" );
-                } catch (Exception e) {
-                    System.out.println("Your input does not match the available choices. Please try again.");
-            }
-        }
-
     }
 }

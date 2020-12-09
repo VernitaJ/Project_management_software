@@ -25,19 +25,6 @@ public class User extends Data {
         this.inbox = new ArrayList<>();
     }
 
-    public void Profile() {
-        System.out.println("Print here with " + userName);
-        this.userName = userName;
-        this.eMail = eMail;
-        this.occupation = occupation;
-        this.companyName = companyName;
-        getUserName();
-        getEmail();
-        getOccupation();
-        getCompanyName();
-    }
-
-
     public ArrayList<Message> getInbox() {
         return inbox;
     }
