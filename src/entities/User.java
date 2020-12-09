@@ -1,6 +1,7 @@
 package entities;
 
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 public class User extends Data {
 
@@ -8,6 +9,7 @@ public class User extends Data {
     private String userName;
     private String password;
     private String eMail;
+    private int experience;
     private String occupation;
     private String companyName;
     private float salary;
@@ -23,6 +25,7 @@ public class User extends Data {
         this.salary = salary;
         this.workingHours = workingHours;
         this.inbox = new ArrayList<>();
+        this.experience = 0;
     }
 
     public ArrayList<Message> getInbox() {
@@ -81,10 +84,6 @@ public class User extends Data {
         this.userName = userName;
     }
 
-    public void seteMail(String eMail) {
-        this.eMail = eMail;
-    }
-
     public void setSalary(float salary) {
         this.salary = salary;
     }
@@ -93,6 +92,25 @@ public class User extends Data {
         this.workingHours = workingHours;
     }
 
+    public void addExp(int xp)
+    {
+        experience += xp;
+    }
+
+    public int getLevel()
+    {
+        return experience/10;
+    }
+
+    public void getXpBar()
+    {
+        String box = "#";
+        String empty = "_";
+        int progress = experience%10;
+        int remaining = 10-progress;
+        System.out.println("Level: " + getLevel());
+        System.out.println("[" + box.repeat(progress*2) + empty.repeat(remaining*2) + "]" + " Progress: " + progress*10 + "%");
+    }
     /* public Roles getRole() {
         return role;
     }
