@@ -57,7 +57,6 @@ public class TeamLibrary extends DataLibrary{
             Input input = Input.getInstance();
             String newTeamName = input.getStr("Please enter the new team name: ");
             if (newTeamName.isBlank() || newTeamName.isEmpty() || newTeamName == null) {
-                // Need to implement the repeating input
                 System.out.println("Invalid team name provided. Please retry again.");
             } else {
                 team.setTeamName(newTeamName);
@@ -82,7 +81,7 @@ public class TeamLibrary extends DataLibrary{
             System.out.println("Owner: " + team.getOwner().getUser().getUserName());
             System.out.println("Maintainer(s): ");
 
-            int count = 1;;
+            int count = 1;
             for (User maintainer: maintainers) {
                 System.out.println(count + ". " + maintainer.getUserName());
                 count ++;
