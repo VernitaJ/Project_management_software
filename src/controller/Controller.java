@@ -1,6 +1,5 @@
 package controller;
 
-import access_roles.CustomRoles;
 import access_roles.Developer;
 import access_roles.Maintainer;
 import components.Login;
