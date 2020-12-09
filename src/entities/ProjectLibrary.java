@@ -1,7 +1,10 @@
 package entities;
-import tools.Input;
 
+import tools.Input;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -228,37 +231,44 @@ public class ProjectLibrary extends DataLibrary{
         return totalCostPerTask;
     }
     
-    public void getExtraDeveloperSuggestion(Project currentProject, User currentUser) {
-        double totalCostPerTaskUser = 0;
+    public void getExpenseForecast(Project currentProject, User currentUser) {
         if(noTeam(currentProject)) {
             return;
         }
         if(!confirmAccess(currentProject.getTeam(),currentUser)) {
             return;
         }
-        if(getOnBudgetMoney(currentProject) && getOnBudgetHours(currentProject)) {
-            double budgetMoney = currentProject.getBudget().getMoney();
-            double totalCost = getTotalCostProject(currentProject.taskList, false);
-            double projectDuration = currentProject.duration();
-            double costPerDay = totalCost / projectDuration;
-            double daysRemaining = getBudgetHoursRemaining(currentProject) / 24;
-            double iteratedCostRemainingDays = daysRemaining * costPerDay;
-            double iteratedRemainingMoney = budgetMoney - (totalCost + iteratedCostRemainingDays);
-            double iteratedMoneyToUsePerDay = iteratedRemainingMoney / daysRemaining;
-            double iteratedMoneyToUsePerHour = iteratedMoneyToUsePerDay / 8;
-            System.out.println("budgetMoney: " + budgetMoney +
-                    "\ntotalCost: " + totalCost +
-                    "\nprojectDuration: " + projectDuration +
-                    "\ncostPerDay: " + costPerDay +
-                    "\ndaysRemaining: " + daysRemaining +
-                    "\niteratedCostRemainingDays: " + iteratedCostRemainingDays +
-                    "\niteratedRemainingMoney: " + iteratedRemainingMoney +
-                    "\niteratedMoneyToUsePerDay: " + iteratedMoneyToUsePerDay +
-                    "\niteratedMoneyToUsePerHour: " + iteratedMoneyToUsePerHour);
-            System.out.println("You have room to add additional developers with a combined hourly rate of: " + iteratedMoneyToUsePerHour +
-                    "You have this many days: " + daysRemaining);
-            
+        String currency = currentProject.budget.CURRENCY;
+        double costPerDay = getTotalCostProject(currentProject.taskList, false) / currentProject.duration();
+        Period actualDaysRemainingPeriod = currentProject.getStartDate().
+                until(currentProject.getStartDate().
+                        plusDays(currentProject.duration()));
+        int actualDaysRemaining = actualDaysRemainingPeriod.getDays();
+        double iteratedCostRemainingDays = (getBudgetHoursRemaining(currentProject) / 24) * costPerDay;
+        double iteratedRemainingMoney =
+                currentProject.getBudget().getMoney() -
+                        getTotalCostProject(currentProject.taskList, false) -
+                        iteratedCostRemainingDays;
+        double iteratedMoneyToUsePerHour = (iteratedRemainingMoney /
+                getBudgetHoursRemaining(currentProject) / 24) / 8;
+        iteratedRemainingMoney = new BigDecimal(iteratedRemainingMoney).
+                setScale(2, RoundingMode.HALF_UP).
+                doubleValue();
+        iteratedMoneyToUsePerHour = new BigDecimal(iteratedMoneyToUsePerHour).
+                setScale(2, RoundingMode.HALF_UP).
+                doubleValue();
+        String message;
+        if(iteratedRemainingMoney > 0) {
+            message = "Your project is cheaper than planned. " +
+                    "\nThere is " + actualDaysRemaining + " days remaining until the current finish date." +
+                    "\nIf your project keeps the same linear pace, you will have " + iteratedRemainingMoney + currency + " extra when the project is completed." +
+                    "\nThis opens up for hiring additional resources with a combined rate of " + iteratedMoneyToUsePerHour + currency + "/hour";
+        } else {
+            message = "Your project will break the budget. " +
+                    "\nThere is " + actualDaysRemaining + " days remaining until the current finish date." +
+                    "\nIf your project keeps the same linear pace you will have overspent by " + iteratedRemainingMoney + currency + " when the project is completed";
         }
+        System.out.println(message);
     }
     
     public void viewBudget(Project currentProject, User currentUser) {
@@ -402,14 +412,14 @@ public class ProjectLibrary extends DataLibrary{
         System.out.println("Budget in hours has been updated");
     }
     
-
+    
     public void ganttChart(Project currentProject){
         ArrayList<Data> taskList = currentProject.taskList.list;
         Collections.sort(taskList, sortByStartDate);
         dateVisualisation(currentProject);
         printTasks(currentProject, taskList);
     }
-
+    
     public void dateVisualisation(Project currentProject) {
         LocalDate startDate = currentProject.getStartDate();
         LocalDate endDate = currentProject.getEndDate();
@@ -426,8 +436,8 @@ public class ProjectLibrary extends DataLibrary{
         }
         System.out.println(endDate);
     }
-
-
+    
+    
     public void printTasks(Project currentProject, ArrayList<Data> taskList){
         for (Data task : taskList){
             Task currentTask = (Task) task;
@@ -448,7 +458,7 @@ public class ProjectLibrary extends DataLibrary{
             System.out.println("\n");
         }
     }
-
+    
     public int charactersInName(Task task){
         String name = task.getName();
         int count = name.length();

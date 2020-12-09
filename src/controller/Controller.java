@@ -254,6 +254,7 @@ public class Controller {
                         "Add Budget",
                         "Change Budget",
                         "View Cost",
+                        "Suggest Employee",
                         currentProject.getName() + " Menu",
                         "Logout",
                         "Exit"
@@ -267,9 +268,10 @@ public class Controller {
                 case "2" -> addBudgetMenu(currentProject, currentUser);
                 case "3" -> updateBudgetMenu(currentProject, currentUser);
                 case "4" -> projectLibrary.viewCost(currentProject);
-                case "5" -> currentProjectMenu();
-                case "6" -> logout();
-                case "7" -> exit();
+                case "5" -> projectLibrary.getExpenseForecast(currentProject, currentUser);
+                case "6" -> currentProjectMenu();
+                case "7" -> logout();
+                case "8" -> exit();
             }
         } while (true);
     }
