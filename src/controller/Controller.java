@@ -121,7 +121,7 @@ public class Controller {
                 {
                         "Leaderboard",
                         "Projects",
-                        "Profile",
+                        "Profiles",
                         "Messaging",
                         "Logout",
                         "Exit"
@@ -386,8 +386,9 @@ public class Controller {
     private void profileMenu() {
         String[] options =
                 {
-                        "View Profile",
+                        "View My Profile",
                         "Edit Profile",
+                        "View All User Profiles",
                         "Main Menu",
                         "Logout",
                         "Exit"
@@ -398,11 +399,12 @@ public class Controller {
             String choice = menu.printMenu();
             switch (choice)
             {
-                case "1" -> notImplemented();
+                case "1" -> userLibrary.viewMyProfile(currentUser);
                 case "2" -> editProfileMenu();
-                case "3" -> mainMenu();
-                case "4" -> logout();
-                case "5" -> exit();
+                case "3" -> userLibrary.viewAllProfiles();
+                case "4" -> mainMenu();
+                case "5" -> logout();
+                case "6" -> exit();
             }
         } while (true);
     }

@@ -146,12 +146,12 @@ public class TeamLibrary extends DataLibrary{
                     count++;
                 }
             }
-            int choice = Input.getInstance().getInt("Select a new team member with role (" + role + "): ");
+            int choice = Input.getInstance().getInt("Select a new team member to be given role (" + role + "): ");
             if (choice >= 1 || choice < count) {
                 try {
                     team.addMember(nonMemberUsers.get(choice - 1), currentUser, role);
                 } catch (Exception e) {
-                    System.out.println(e.getMessage());
+                    System.out.println("Your input does not match the available choices. Please try again.");
                 }
             }
         }
