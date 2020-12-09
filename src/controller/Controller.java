@@ -74,20 +74,20 @@ public class Controller {
                     }
                     case "task" -> {
                         currentUser = (User) userLibrary.findUserInList(token[2]);
-                        currentProject = projectLibrary.listUsersProjects(currentUser).get(0);
+                        currentProject = projectLibrary.listUsersProjects(currentUser, false).get(0);
                         TaskLibrary currentTaskLibrary = currentProject.getTaskList();
                         currentTaskLibrary.addTaskToList(currentProject, currentUser, token[3], token[4], LocalDate.parse(token[5]), LocalDate.parse(token[6]));
                     }
                     case "workedhours" -> {
                         currentUser = (User) userLibrary.findUserInList(token[1]);
-                        currentProject = projectLibrary.listUsersProjects(currentUser).get(0);
+                        currentProject = projectLibrary.listUsersProjects(currentUser, false).get(0);
                         TaskLibrary currentTaskLibrary = currentProject.getTaskList();
-                        Task currentTask = currentTaskLibrary.listProjectsTasks(currentProject).get(0);
+                        Task currentTask = currentTaskLibrary.listProjectsTasks(currentProject, false).get(0);
                         currentTaskLibrary.addWorkedHoursToList(currentTask, currentUser, parseDouble(token[2]));
                     }
                     case "budget" -> {
                         currentUser = (User) userLibrary.findUserInList(token[1]);
-                        currentProject = projectLibrary.listUsersProjects(currentUser).get(0);
+                        currentProject = projectLibrary.listUsersProjects(currentUser, false).get(0);
                         projectLibrary.addBudgetToList(currentProject,parseDouble(token[2]),parseDouble(token[3]));
                     }
                 }
@@ -254,7 +254,7 @@ public class Controller {
                         "Add Budget",
                         "Change Budget",
                         "View Cost",
-                        "Suggest Employee",
+                        "Expenses Forecast",
                         currentProject.getName() + " Menu",
                         "Logout",
                         "Exit"

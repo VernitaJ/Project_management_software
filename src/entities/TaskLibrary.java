@@ -105,24 +105,26 @@ public class TaskLibrary extends DataLibrary {
         }
     }
 
-    public ArrayList<Task> listProjectsTasks(Project currentProject) {
+    public ArrayList<Task> listProjectsTasks(Project currentProject, boolean print) {
         ArrayList<Task> tempList = new ArrayList<>();
         for (Data task : currentProject.taskList.list) {
             Task currentTask = ((Task) task);
             tempList.add(currentTask);
         }
-        if (tempList.size() == 0) {
-            System.out.println("This task does not exist!");
-        } else {
-            for (int i = 0; i < tempList.size(); i++) {
-                System.out.println(i + 1 + ". " + tempList.get(i).getName());
+        if (print){
+            if (tempList.size() == 0) {
+                System.out.println("This task does not exist!");
+            } else {
+                for (int i = 0; i < tempList.size(); i++) {
+                    System.out.println(i + 1 + ". " + tempList.get(i).getName());
+                }
             }
         }
         return tempList;
     }
 
     public Task navigateBetweenTasks(Project currentProject) {
-        ArrayList<Task> taskList = listProjectsTasks(currentProject);
+        ArrayList<Task> taskList = listProjectsTasks(currentProject, true);
         if (taskList.size() == 0) {
             return null;
         } else {

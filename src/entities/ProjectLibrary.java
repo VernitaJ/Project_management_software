@@ -59,7 +59,7 @@ public class ProjectLibrary extends DataLibrary{
         currentProject.getBudget().setHours(hours);
     }
     
-    public ArrayList<Project> listUsersProjects(User currentUser){
+    public ArrayList<Project> listUsersProjects(User currentUser, boolean print){
         ArrayList<Project> tempList = new ArrayList<>();
         for(Data project : list){
             Project currentProject = ((Project)project);
@@ -72,20 +72,21 @@ public class ProjectLibrary extends DataLibrary{
                 tempList.add(currentProject);
             }
         }
-        
-        if (tempList.size() == 0){
-            System.out.println("You have no projects!");
-        } else {
-            for (int i=0; i<tempList.size(); i++){
-                System.out.println(" " + (i + 1) + ") " + tempList.get(i).getName());
+        if (print){
+            if (tempList.size() == 0){
+                System.out.println("You have no projects!");
+            } else {
+                for (int i=0; i<tempList.size(); i++){
+                    System.out.println(" " + (i + 1) + ") " + tempList.get(i).getName());
+                }
             }
         }
-        
         return tempList;
     }
+
     
     public Project navigateBetweenProjects(User currentUser){
-        ArrayList<Project> projectList = listUsersProjects(currentUser);
+        ArrayList<Project> projectList = listUsersProjects(currentUser, true);
         if(projectList.size()==0){
             return null;
         } else {
@@ -260,13 +261,13 @@ public class ProjectLibrary extends DataLibrary{
         String message;
         if(iteratedRemainingMoney > 0) {
             message = "Your project is cheaper than planned. " +
-                    "\nThere is " + actualDaysRemaining + " days remaining until the current finish date." +
+                    "\nThere are " + actualDaysRemaining + " days remaining until the current finish date." +
                     "\nIf your project keeps the same linear pace, you will have " + iteratedRemainingMoney + currency + " extra when the project is completed." +
                     "\nThis opens up for hiring additional resources with a combined rate of " + iteratedMoneyToUsePerHour + currency + "/hour";
         } else {
             message = "Your project will break the budget. " +
-                    "\nThere is " + actualDaysRemaining + " days remaining until the current finish date." +
-                    "\nIf your project keeps the same linear pace you will have overspent by " + iteratedRemainingMoney + currency + " when the project is completed";
+                    "\nThere are " + actualDaysRemaining + " days remaining until the current finish date." +
+                    "\nIf your project keeps the same linear pace you will have a deficit of " + input.RED + iteratedRemainingMoney + currency + input.RESET + " when the project is completed";
         }
         System.out.println(message);
     }
@@ -281,7 +282,9 @@ public class ProjectLibrary extends DataLibrary{
         double budgetMoney = currentProject.getBudget().getMoney();
         double budgetHours = currentProject.getBudget().getHours();
         double hoursRemaining = getBudgetHoursRemaining(currentProject);
-        double daysRemaining = hoursRemaining / 24;
+        double daysRemaining = new BigDecimal(hoursRemaining/24).
+                setScale(2, RoundingMode.HALF_UP).
+                doubleValue();
         double remainingMoney = getBudgetMoneyRemaining(currentProject);
         String informBudgetReachedSEK = "";
         String informBudgetReachedHours = "";
@@ -424,6 +427,7 @@ public class ProjectLibrary extends DataLibrary{
         LocalDate startDate = currentProject.getStartDate();
         LocalDate endDate = currentProject.getEndDate();
         long daysOfProject = DAYS.between(startDate, endDate);
+
         long amountOfDates = daysOfProject/20 + 1;
         LocalDate printedDate = startDate;
         System.out.println("\n" + input.PURPLE + "GANTT CHART" + input.RESET);
@@ -436,7 +440,6 @@ public class ProjectLibrary extends DataLibrary{
         }
         System.out.println(endDate);
     }
-    
     
     public void printTasks(Project currentProject, ArrayList<Data> taskList){
         for (Data task : taskList){
