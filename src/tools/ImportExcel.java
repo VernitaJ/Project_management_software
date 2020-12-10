@@ -1,11 +1,15 @@
 package tools;
 
 
+import entities.Project;
+import entities.ProjectLibrary;
+import entities.User;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 
@@ -23,7 +27,7 @@ public class ImportExcel {
      */
     ArrayList<String> headerList;
 
-    public ImportExcel() {
+    public ImportExcel(User currentUser) {
         try {
 
             //POIFSFileSystem fs = new POIFSFileSystem(new FileInputStream(System.getProperty("user.home") + "/ProjectData.xlsx"));
@@ -52,7 +56,7 @@ public class ImportExcel {
             for(int r = 0; r < rows; r++) {
                 row = sheet.getRow(r);
                 if(row != null) {
-                    confirmObjectType(row, row.getCell(0));
+                    confirmObjectType(row, row.getCell(0), currentUser);
                     for(int c = 0; c < cols; c++) {
                         cell = row.getCell(c);
                         if(cell != null) {
@@ -74,10 +78,10 @@ public class ImportExcel {
                 4. Add the cell data into the appropriate software data slot.
              */
     
-   private void confirmObjectType(XSSFRow row, XSSFCell cell) {
+   private void confirmObjectType(XSSFRow row, XSSFCell cell, User currentUser) {
        if(cell.toString().equalsIgnoreCase("Project")) {
            // Run Project Import
-           importProject(row);
+           importProject(row, currentUser);
            System.out.println("Project");
        } else if(cell.toString().equalsIgnoreCase("User")) {
            // User Import
@@ -91,8 +95,24 @@ public class ImportExcel {
        }
    }
    
-   private void importProject(XSSFRow row) {
-      // Index/Column 1-6
+   private void importProject(XSSFRow row, User currentUser) {
+       System.out.println(row.getCell(3).toString());
+       // Index/Column 1-6
+       /* ProjectLibrary.getInstance().addProjectToList(
+               new Project(row.getCell(1).toString(),
+                       currentUser,
+                       row.getCell(2).toString(),
+                       LocalDate.parse(row.getCell(3).toString()),
+                       LocalDate.parse(row.getCell(4).toString())));
+       /*
+       1 = project id
+       2 = project desc.
+       3 = start date
+       4 = end date
+       5 = budget hour
+       6 = budget money
+        */
+       System.out.println(ProjectLibrary.getInstance().listAll() + ": Project added successfully.");
    }
    
     private void assignHeaders(XSSFSheet sheet,  int cols) {
