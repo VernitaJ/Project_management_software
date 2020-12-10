@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+import static java.lang.Double.parseDouble;
+
 public class Controller {
     private Input input = Input.getInstance();
     private Menu menu;
@@ -67,10 +69,27 @@ public class Controller {
                     case "user" -> userLibrary.addUserToList(new User(token[1],token[2],token[3], token[4],token[5], Float.parseFloat(token[6]), Float.parseFloat(token[7])));
                     case "project" -> {
                         this.currentUser = (User) userLibrary.findUserInList(token[2]);
-                        projectLibrary.addProjectToList(new Project(token[1], currentUser, token[3], LocalDate.of(Integer.parseInt(token[4]), Integer.parseInt(token[5]), Integer.parseInt(token[6])), LocalDate.of(Integer.parseInt(token[7]), Integer.parseInt(token[8]), Integer.parseInt(token[9])), Float.parseFloat(token[10])));
+                        projectLibrary.addProjectToList(new Project(token[1], currentUser, token[3], LocalDate.of(Integer.parseInt(token[4]), Integer.parseInt(token[5]), Integer.parseInt(token[6])), LocalDate.of(Integer.parseInt(token[7]), Integer.parseInt(token[8]), Integer.parseInt(token[9]))));
                         this.currentUser = null;
                     }
-                    case "task" -> notImplemented();
+                    case "task" -> {
+                        currentUser = (User) userLibrary.findUserInList(token[2]);
+                        currentProject = projectLibrary.listUsersProjects(currentUser, false).get(0);
+                        TaskLibrary currentTaskLibrary = currentProject.getTaskList();
+                        currentTaskLibrary.addTaskToList(currentProject, currentUser, token[3], token[4], LocalDate.parse(token[5]), LocalDate.parse(token[6]));
+                    }
+                    case "workedhours" -> {
+                        currentUser = (User) userLibrary.findUserInList(token[1]);
+                        currentProject = projectLibrary.listUsersProjects(currentUser, false).get(0);
+                        TaskLibrary currentTaskLibrary = currentProject.getTaskList();
+                        Task currentTask = currentTaskLibrary.listProjectsTasks(currentProject, false).get(0);
+                        currentTaskLibrary.addWorkedHoursToList(currentTask, currentUser, parseDouble(token[2]));
+                    }
+                    case "budget" -> {
+                        currentUser = (User) userLibrary.findUserInList(token[1]);
+                        currentProject = projectLibrary.listUsersProjects(currentUser, false).get(0);
+                        projectLibrary.addBudgetToList(currentProject,parseDouble(token[2]),parseDouble(token[3]));
+                    }
                 }
             }
             br.close();
@@ -120,7 +139,7 @@ public class Controller {
                 {
                         "Leaderboard",
                         "Projects",
-                        "Profile",
+                        "Profiles",
                         "Messaging",
                         "Logout",
                         "Exit"
@@ -202,14 +221,10 @@ public class Controller {
         String[] options =
                 {
                         "View Project Details",
-                        "Countdown",
-                        "Completed Tasks",
-                        "Gantt Chart",
+                        "Tasks Menu",
+                        "Finance Menu",
                         "Team Menu",
-                        "View Tasks",
-                        "Add Task",
-                        "View total hours by task",
-                        "View Cost",
+                        "Gantt Chart",
                         "Update Status",
                         "Delete Project",
                         "Main Menu",
@@ -223,29 +238,130 @@ public class Controller {
             switch (choice)
             {
                 case "1" -> projectLibrary.viewProjectDetails(currentProject);
-                case "2" -> taskLibrary.countdown(currentProject);
-                case "3" -> taskLibrary.completedTasks(currentProject);
-                case "4" -> notImplemented();
-                case "5" -> teamMenu();
-                case "6" -> {
+                case "2" -> tasksMenu();
+                case "3" -> financeMenu(currentProject, currentUser);
+                case "4" -> teamMenu();
+                case "5" -> projectLibrary.ganttChart(currentProject);
+                case "6" -> projectLibrary.updateStatus(currentProject, currentUser);
+                case "7" -> {
+                    Boolean isSuccessful = projectLibrary.deleteProject(currentProject, currentUser);
+                    if(isSuccessful){
+                        mainMenu();
+                    }
+                }
+                case "8" -> mainMenu();
+                case "9" -> logout();
+                case "10" -> exit();
+            }
+        } while (true);
+    }
+
+    private void financeMenu(Project currentProject, User currentUser) {
+        String[] options =
+                {
+                        "View Project Budget",
+                        "Add Budget",
+                        "Change Budget",
+                        "View Cost",
+                        "View total hours by task",
+                        "Expenses Forecast",
+                        currentProject.getName() + " Menu",
+                        "Logout",
+                        "Exit"
+                };
+        menu = new Menu("Project: '" + currentProject.getName() + "' Budget Menu", options);
+        do {
+            String choice = menu.printMenu();
+            switch (choice)
+            {
+                case "1" -> projectLibrary.viewBudget(currentProject, currentUser);
+                case "2" -> addBudgetMenu(currentProject, currentUser);
+                case "3" -> updateBudgetMenu(currentProject, currentUser);
+                case "4" -> projectLibrary.viewCost(currentProject);
+                case "5" -> taskLibrary.printDetailedWorkedHours(currentProject);
+                case "6" -> projectLibrary.getExpenseForecast(currentProject, currentUser);
+                case "7" -> currentProjectMenu();
+                case "8" -> logout();
+                case "9" -> exit();
+            }
+        } while (true);
+    }
+    
+    private void addBudgetMenu(Project currentProject, User currentUser) {
+        String[] options =
+                {
+                        "Add Budget (SEK)",
+                        "Add Budgeted Hours",
+                        "Finance Menu",
+                        "Logout",
+                        "Exit"
+                };
+        menu = new Menu("Project: '" + currentProject.getName() + "' Budget Menu", options);
+        do {
+            String choice = menu.printMenu();
+            switch (choice)
+            {
+                case "1" -> projectLibrary.addBudgetMoney(currentProject, currentUser);
+                case "2" -> projectLibrary.addBudgetHours(currentProject, currentUser);
+                case "3" -> financeMenu(currentProject, currentUser);
+                case "4" -> logout();
+                case "5" -> exit();
+            }
+        } while (true);
+    }
+    
+    private void updateBudgetMenu(Project currentProject, User currentUser) {
+        String[] options =
+                {
+                        "Update Budget (SEK)",
+                        "Update Budgeted Hours",
+                        "Finance Menu",
+                        "Logout",
+                        "Exit"
+                };
+        menu = new Menu("Project: '" + currentProject.getName() + "' Budget Menu", options);
+        do {
+            String choice = menu.printMenu();
+            switch (choice)
+            {
+                case "1" -> projectLibrary.updateBudgetMoney(currentProject, currentUser);
+                case "2" -> projectLibrary.updateBudgetHours(currentProject, currentUser);
+                case "3" -> financeMenu(currentProject, currentUser);
+                case "4" -> logout();
+                case "5" -> exit();
+            }
+        } while (true);
+    }
+    
+    private void tasksMenu() {
+        String[] options =
+                {
+                        "Add Task",
+                        "View Tasks",
+                        "Completed Tasks",
+                        "Countdown",
+                        "Main Menu",
+                        "Logout",
+                        "Exit"
+                };
+        menu = new Menu(currentProject.getName() + ": Tasks" +  " Menu", options);
+        do
+        {
+            String choice = menu.printMenu();
+            switch (choice)
+            {
+                case "1" -> taskLibrary.createTask(currentProject, currentUser);
+                case "2" -> {
                     currentTask = taskLibrary.navigateBetweenTasks(currentProject);
                     if (currentTask != null) {
                         currentTaskMenu(currentProject, currentTask, currentUser);
                     }
                 } // taskMenu
-                case "7" -> taskLibrary.createTask(currentProject, currentUser);
-                case "8" -> taskLibrary.printDetailedWorkedHours(currentProject);
-                case "9" -> projectLibrary.viewCost(currentProject);
-                case "10" -> projectLibrary.updateStatus(currentProject, currentUser);
-                case "11" -> {
-                    Boolean isSuccessful = projectLibrary.deleteProject(currentProject, currentUser);
-                    if(isSuccessful){
-                        mainMenu();
-                    }
-                 }
-                case "12" -> mainMenu();
-                case "13" -> logout();
-                case "14" -> exit();
+                case "3" -> taskLibrary.completedTasks(currentProject);
+                case "4" -> taskLibrary.countdown(currentProject);
+                case "5" -> mainMenu();
+                case "6" -> logout();
+                case "7" -> exit();
             }
         } while (true);
     }
@@ -258,13 +374,11 @@ public class Controller {
         }
         else
         {
-            menuName = currentProject.getTeam().getTeamName() + " Menu";
+            menuName = "Team Menu";
         }
         String[] options =
                 {
-                        "Create Team",
                         "View Team",
-                        "Edit Team Name",
                         "Add Team Member",
                         "Remove Team Member",
                         "Change Team Member Role",
@@ -279,20 +393,19 @@ public class Controller {
             String choice = menu.printMenu();
             switch (choice)
             {
-                case "1" -> teamLibrary.createTeam(currentProject);
-                case "2" -> teamLibrary.viewTeam(currentProject.getTeam());
-                case "3" -> teamLibrary.editTeamName(currentProject.getTeam());
-                case "4" -> addMember();
-                case "5" -> teamLibrary.removeTeamMember(currentProject.getTeam(), currentUser);
-                case "6" -> changeMemberRoleMenu();
-                case "7" -> teamLibrary.removeTeam(currentProject, currentUser);
-                case "8" -> currentProjectMenu();
-                case "9" -> logout();
-                case "10" -> exit();
+                case "1" -> teamLibrary.viewTeam(currentProject.getTeam());
+                case "2" -> addMemberMenu();
+                case "3" -> teamLibrary.removeTeamMember(currentProject.getTeam(), currentUser);
+                case "4" -> changeMemberRoleMenu();
+               // case "7" -> teamLibrary.removeTeam(currentProject, currentUser);
+                case "5" -> currentProjectMenu();
+                case "6" -> projectMenu();
+                case "7" -> logout();
+                case "8" -> exit();
             }
         } while (true);
     }
-    private void addMember() {
+    private void addMemberMenu() {
         String[] options =
                 {
                         "Maintainer",
@@ -330,6 +443,7 @@ public class Controller {
                         "Delete Task",
                         "Add Worked Hours",
                         "Total Worked Hours",
+                        "Project Menu",
                         "Main Menu",
                         "Logout",
                         "Exit"
@@ -349,9 +463,10 @@ public class Controller {
                 case "7" -> taskLibrary.deleteTask(currentProject, currentUser);
                 case "8" -> taskLibrary.addWorkedHours(currentProject, currentTask, currentUser);
                 case "9" -> taskLibrary.printAllWorkedHours(currentTask);
-                case "10" -> mainMenu();
-                case "11" -> logout();
-                case "12" -> exit();
+                case "10" -> currentProjectMenu();
+                case "11" -> mainMenu();
+                case "12" -> logout();
+                case "13" -> exit();
             }
         } while (true);
     }
@@ -385,8 +500,9 @@ public class Controller {
     private void profileMenu() {
         String[] options =
                 {
-                        "View Profile",
+                        "View My Profile",
                         "Edit Profile",
+                        "View All User Profiles",
                         "Main Menu",
                         "Logout",
                         "Exit"
@@ -397,11 +513,12 @@ public class Controller {
             String choice = menu.printMenu();
             switch (choice)
             {
-                case "1" -> notImplemented();
+            //    case "1" -> userLibrary.viewMyProfile(currentUser);
                 case "2" -> editProfileMenu();
-                case "3" -> mainMenu();
-                case "4" -> logout();
-                case "5" -> exit();
+            //    case "3" -> userLibrary.viewAllProfiles();
+                case "4" -> mainMenu();
+                case "5" -> logout();
+                case "6" -> exit();
             }
         } while (true);
     }
@@ -468,7 +585,7 @@ public class Controller {
                         "Logout",
                         "Exit"
                 };
-        menu = new Menu(currentProject.getTeam().getTeamName() + " Menu", options);
+        menu = new Menu("Team Roles Menu", options);
         do
         {
             String choice = menu.printMenu();

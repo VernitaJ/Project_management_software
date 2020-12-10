@@ -2,8 +2,6 @@ package entities;
 
 import access_roles.Roles;
 
-import javax.management.relation.Role;
-
 public class TeamMember {
 
    private User user;

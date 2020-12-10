@@ -11,13 +11,13 @@ public class Project extends Data {
     private LocalDate createdDate;
     private LocalDate startDate;
     private LocalDate endDate;
-    private Budget budget;
+    protected Budget budget;
     protected TaskLibrary taskList;
     protected TeamLibrary teamLibrary = TeamLibrary.getInstance();
     private User projectManager;
-    private Team team = null; // no team by default as part of the acceptance criteria
+    private Team team;
 
-    public Project(String name, User projectManager, String description, LocalDate startDate, LocalDate endDate, float totalBudget) {
+    public Project(String name, User projectManager, String description, LocalDate startDate, LocalDate endDate) {
         this.name = name;
         this.description = description;
         this.createdDate = LocalDate.now();
@@ -26,7 +26,8 @@ public class Project extends Data {
         this.taskList = new TaskLibrary();
         this.status = "";
         this.projectManager = projectManager;
-        this.budget = new Budget(totalBudget);
+        this.budget = new Budget();
+        this.team = new Team(projectManager);
     }
 
     public void setStatus(String status) {
@@ -71,11 +72,19 @@ public class Project extends Data {
 
     public Team getTeam() { return team; }
 
-
+    public Budget getBudget() {
+        return budget;
+    }
+    
+    public TaskLibrary getTaskList() {
+        return taskList;
+    }
+    
     public long duration() {
         long daysBetween = ChronoUnit.DAYS.between(getStartDate(), getEndDate());
         return daysBetween;
     }
+
     public String timeLeftBeforeExceedingBudget()
     {
         return "Total Time Before Exceeding budget\n" +
@@ -91,10 +100,6 @@ public class Project extends Data {
                 "\n startDate: " + startDate +
                 "\n endDate: " + endDate +
                 "\n projectManager: " + projectManager;
-    }
-
-    public TaskLibrary getTaskList() {
-        return taskList;
     }
 
     //not mentioned in the user stories soooo idk
