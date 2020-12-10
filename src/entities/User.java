@@ -1,5 +1,6 @@
 package entities;
 
+import access_roles.Roles;
 import java.util.ArrayList;
 
 public class User extends Data {
@@ -24,6 +25,7 @@ public class User extends Data {
         this.workingHours = workingHours;
         this.inbox = new ArrayList<>();
     }
+
 
     public ArrayList<Message> getInbox() {
         return inbox;
