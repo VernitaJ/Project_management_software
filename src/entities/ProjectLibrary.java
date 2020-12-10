@@ -12,7 +12,7 @@ import static entities.Task.sortByStartDate;
 import static java.time.temporal.ChronoUnit.DAYS;
 
 public class ProjectLibrary extends DataLibrary{
-    private static final ProjectLibrary instance = null;
+    private static ProjectLibrary instance = null;
     Input input = Input.getInstance();
     
     public static ProjectLibrary getInstance() {
@@ -487,5 +487,15 @@ public class ProjectLibrary extends DataLibrary{
               System.out.println(project.toString());
           }
         }
+    }
+    
+    public Project projectNameExists(String stringToCheck) {
+        for(Data project : list){
+            Project currentProject = ((Project)project);
+            if(currentProject.getName().equalsIgnoreCase(stringToCheck)) {
+                return currentProject;
+            }
+        }
+        return null;
     }
 }

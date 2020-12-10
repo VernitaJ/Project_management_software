@@ -4,6 +4,7 @@ import access_roles.Developer;
 import access_roles.Maintainer;
 import components.Login;
 import entities.*;
+import tools.ImportExcel;
 import tools.Input;
 import tools.Menu;
 
@@ -47,6 +48,8 @@ public class Controller {
 
     public void run()
     {
+        User boye = new User("boye", "1", "pog@pog.com", "Leet", "Ericsson", 400, 2);
+        ImportExcel lego = new ImportExcel(userLibrary, teamLibrary, projectLibrary, boye);
         readFile();
         loginMenu();
     }

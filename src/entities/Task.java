@@ -25,6 +25,15 @@ public class Task extends Data{
         this.workedHours = new ArrayList<>();
     }
     
+    public Task(User createdBy, String name, String description) {
+        this.createdBy = createdBy;
+        this.name = name;
+        this.description = description;
+        this.status = "Default";
+        this.assignees = new ArrayList<User>();
+        this.workedHours = new ArrayList<>();
+    }
+    
     public String getName() {
         return name;
     }

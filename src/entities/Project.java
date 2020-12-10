@@ -99,7 +99,7 @@ public class Project extends Data {
                 "\n createdDate: " + createdDate +
                 "\n startDate: " + startDate +
                 "\n endDate: " + endDate +
-                "\n projectManager: " + projectManager;
+                "\n projectManager: " + projectManager.getUserName();
     }
 
     //not mentioned in the user stories soooo idk
