@@ -89,7 +89,7 @@ public class TaskLibrary extends DataLibrary {
         currentProject.taskList.addToList(new Task(currentUser, name, description, startDate, deadline));
         System.out.println("Task created");
         //achievement tracking
-        currentUser.achievementTracker.addPoints("deleteProject",1);
+        currentUser.achievementTracker.addPoints("createTask",1);
     }
 
     public void deleteTask(Project currentProject, User currentUser) {

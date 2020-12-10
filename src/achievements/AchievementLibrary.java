@@ -7,8 +7,11 @@ import java.util.HashMap;
 public class AchievementLibrary {
 
     private static AchievementLibrary instance = null;
+    protected  HashMap<String, Achievement> achievements = new HashMap<>();
 
-    private AchievementLibrary(){}
+    public AchievementLibrary(){
+        initAchievements();
+    }
 
     public static AchievementLibrary getInstance()
     {
@@ -22,7 +25,7 @@ public class AchievementLibrary {
         }
     }
 
-    protected  HashMap<String, Achievement> achievements;
+
 
     public Achievement getAchievement(String achievementName){
         return achievements.get(achievementName);
@@ -62,8 +65,8 @@ public class AchievementLibrary {
         addNewAchievement("createProject",
                 "Good idea?",
                 "Create some projects to earn this achievement",
-                5,
-                5);
+                2,
+                3);
 
         //Delete a project - Times: 3 - Max Tier: 3
         addNewAchievement("deleteProject",
@@ -76,8 +79,8 @@ public class AchievementLibrary {
         addNewAchievement("createTask",
                 "So you think your a supervisor now?",
                 "Create some tasks in a project to earn this achievement",
-                10,
-                3);
+                1,
+                2);
     }
 
 

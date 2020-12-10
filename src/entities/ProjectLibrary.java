@@ -165,7 +165,7 @@ public class ProjectLibrary extends DataLibrary{
                     System.out.println("Project successfully deleted!");
                     System.out.println("Returning to main menu...");
                     //achievement tracking
-                    currentUser.achievementTracker.addPoints("createTask",1);
+                    currentUser.achievementTracker.addPoints("deleteProject",1);
                     return true;
                 } else {
                     System.out.println("Something went wrong");

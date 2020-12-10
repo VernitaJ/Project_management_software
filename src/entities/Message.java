@@ -12,7 +12,7 @@ public class Message extends Data {
     private LocalDate dateSent;
     private boolean status;
 
-    Message(String sender, String receiver, String content) {
+    public Message(String sender, String receiver, String content) {
         this.sender = sender;
         this.receiver = receiver;
         this.content = content;

@@ -26,7 +26,7 @@ public class User extends Data {
         this.salary = salary;
         this.workingHours = workingHours;
         this.inbox = new ArrayList<>();
-        this.achievementTracker = new AchievementTracker();
+        this.achievementTracker = new AchievementTracker(this);
     }
 
 
