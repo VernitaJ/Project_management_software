@@ -4,6 +4,7 @@ import tools.Input;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import static entities.Message.sortByName;
@@ -123,6 +124,93 @@ public class UserLibrary extends DataLibrary {
         } else System.out.println("Inbox is Empty");
     }
 
+    public void viewMyProfile(User user){
+        System.out.println("Username: " + user.getUserName());
+        System.out.println("Email: " + user.getEmail());
+        System.out.println("Occupation: " + user.getOccupation());
+        System.out.println("Company Name: " + user.getCompanyName());
+        System.out.println("User Level: TBA" );
+        System.out.println("Achievements: TBA" );
+    }
+
+
+    public void changeUsername(User user) {
+        System.out.println("Your current username is: " + user.getUserName());
+        String option = input.getStr("Are you sure you want to change it?: Y/N ");
+        option = option.toLowerCase();
+        if (option.equals("y") || option.equals("yes")) {
+            String newUser = input.getStr("Enter your new username: ");
+            if (findUserInList(newUser) == null) {
+                user.setUserName(newUser);
+                System.out.println("Your username has been successfully changed to: " + user.getUserName());
+            } else {
+                System.out.println("Desired username is already in use. Please try again!");
+            }
+        } else {
+            System.out.println("Your username has not been changed.");
+        }
+    }
+
+    public void changePassword(User user) {
+        System.out.println("You are attempting to change your password.");
+        String option = input.getStr("Are you sure you want to change it?: Y/N ");
+        option = option.toLowerCase();
+        if (option.equals("y") || option.equals("yes")) {
+            String password = input.getStr("To proceed, enter your current password: ");
+            if (password.equals(user.getPassword())) {
+                do {
+                    password = passwordValidate();
+                } while (password == null);
+                user.setPassword(password);
+                System.out.println("Your password has been successfully changed!");
+            } else {
+                System.out.println("Your input does not match your registered password. Please try again!");
+            }
+        } else {
+            System.out.println("Your password has not been changed.");
+        }
+    }
+
+    public void updateEmail(User user){
+        System.out.println("Your current email is: " + user.getEmail());
+        String option = input.getStr("Are you sure you want to change it?: Y/N ");
+        option = option.toLowerCase();
+        if (option.equals("y") || option.equals("yes")) {
+            String newEmail = input.getStr("Enter your new email: ");
+            user.setEmail(newEmail);
+            System.out.println("Your email has been successfully changed to: " + user.getEmail());
+        } else {
+            System.out.println("Your email has not been changed.");
+        }
+    }
+
+    public void updateCompany(User user){
+        System.out.println("Your current listed place of employ is at company: " + user.getCompanyName());
+        String option = input.getStr("Are you sure you want to update it?: Y/N ");
+        option = option.toLowerCase();
+        if (option.equals("y") || option.equals("yes")) {
+            String newCompany = input.getStr("Enter the new name of the company for which you work: ");
+            user.setCompanyName(newCompany);
+            System.out.println("The company's name has been successfully updated to: " + user.getCompanyName());
+        } else {
+            System.out.println("Your listed company's name has not been updated.");
+        }
+    }
+
+    public void updateOccupation(User user){
+        System.out.println("Your current occupation is: " + user.getOccupation());
+        String option = input.getStr("Are you sure you want to update it?: Y/N ");
+        option = option.toLowerCase();
+        if (option.equals("y") || option.equals("yes")) {
+            String newOccupation = input.getStr("Enter your new occupation: ");
+            user.setOccupation(newOccupation);
+            System.out.println("Your occupation has been successfully updated to: " + user.getOccupation());
+        } else {
+            System.out.println("Your listed occupation has not been updated.");
+        }
+    }
+
+
     public void deleteMessage(User user){
         ArrayList<Message> inbox = user.getInbox();
         readMessage(user);
@@ -151,4 +239,31 @@ public class UserLibrary extends DataLibrary {
             }
         }
     }
+
+    public void viewAllProfiles (){
+        int count = 1;
+        System.out.println("All users: ");
+        List<User> allUsers = UserLibrary.getInstance().getAllUsers();
+        allUsers.sort(Comparator.comparing(User::getUserName));
+
+        for (User user: allUsers) {
+            System.out.println(count + ". " + user.getUserName());
+            count++;
+        }
+        int choice = Input.getInstance().getInt("Select the user whose profile you wish to view: ");
+        if (choice >= 1 || choice < count) {
+            try {
+                System.out.println("Username: " + allUsers.get(choice - 1).getUserName());
+                System.out.println("Email: " + allUsers.get(choice - 1).getEmail());
+                System.out.println("Occupation: " + allUsers.get(choice - 1).getOccupation());
+                System.out.println("Company Name: " + allUsers.get(choice - 1).getCompanyName() );
+                System.out.println("User Level: TBA" );
+                System.out.println("Achievements: TBA" );
+            } catch (Exception e) {
+                System.out.println("Your input does not match the available choices. Please try again.");
+            }
+        }
+
+    }
+
 }

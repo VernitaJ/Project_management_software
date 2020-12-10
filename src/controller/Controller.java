@@ -513,9 +513,9 @@ public class Controller {
             String choice = menu.printMenu();
             switch (choice)
             {
-            //    case "1" -> userLibrary.viewMyProfile(currentUser);
+                case "1" -> userLibrary.viewMyProfile(currentUser);
                 case "2" -> editProfileMenu();
-            //    case "3" -> userLibrary.viewAllProfiles();
+                case "3" -> userLibrary.viewAllProfiles();
                 case "4" -> mainMenu();
                 case "5" -> logout();
                 case "6" -> exit();
@@ -541,17 +541,18 @@ public class Controller {
             String choice = menu.printMenu();
             switch (choice)
             {
-                case "1" -> notImplemented();
-                case "2" -> notImplemented();
-                case "3" -> notImplemented();
-                case "4" -> notImplemented();
-                case "5" -> notImplemented();
+                case "1" -> userLibrary.changeUsername(currentUser);
+                case "2" -> userLibrary.changePassword(currentUser);
+                case "3" -> userLibrary.updateEmail(currentUser);
+                case "4" -> userLibrary.updateCompany(currentUser);
+                case "5" -> userLibrary.updateOccupation(currentUser);
                 case "6" -> mainMenu();
                 case "7" -> logout();
                 case "8" -> exit();
             }
         } while (true);
     }
+
 
     private void leaderboardMenu() {
         String[] options =
