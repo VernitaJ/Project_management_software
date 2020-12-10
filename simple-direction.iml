@@ -11,7 +11,7 @@
     <orderEntry type="library" name="poi-4.1" level="project" />
     <orderEntry type="library" name="commons-math3-3.6" level="project" />
     <orderEntry type="library" name="commons-collections4-4" level="project" />
-    <orderEntry type="library" name="ooxml-lib" level="project" />
     <orderEntry type="library" name="commons-compress-1" level="project" />
+    <orderEntry type="library" name="ooxml-lib" level="project" />
   </component>
 </module>

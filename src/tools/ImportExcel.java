@@ -6,10 +6,14 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import java.util.ArrayList;
 
-public class Import {
 
-    public Import() {
+public class ImportExcel {
+
+    ArrayList<String> headerList;
+
+    public ImportExcel() {
         try {
 
             //POIFSFileSystem fs = new POIFSFileSystem(new FileInputStream(System.getProperty("user.home") + "/ProjectData.xlsx"));
@@ -32,20 +36,61 @@ public class Import {
                     if(tmp > cols) cols = tmp;
                 }
             }
+                /*
+                - ROW
+                | COL
+                 */
 
-            for(int r = 0; r < rows; r++) {
-                row = sheet.getRow(r);
-                if(row != null) {
-                    for(int c = 0; c < cols; c++) {
-                        cell = row.getCell((short)c);
-                        if(cell != null) {
-                            System.out.println(cell);
-                        }
-                    }
-                }
-            }
+            /*
+                1. Set numbers for all the headers.
+                2. Match numbers with keywords from the software.
+                3. Loop over the rest of the data.
+                4. Add the cell data into the appropriate software data slot.
+             */
+
+            int amount = 0;
+
+            assignHeaders(sheet, cols);
+            
+
+
+//
+//            for(int r = 0; r < rows; r++) {
+//                amount++;
+//                row = sheet.getRow(r);
+//                if(row != null) {
+//                    for(int c = 0; c < cols; c++) {
+//                        cell = row.getCell(c);
+//                        if(cell != null) {
+//                            System.out.println(cell);
+//                        }
+//                    }
+//                }
+//            }
+            System.out.println(this.headerList);
         } catch(Exception ioe) {
             ioe.printStackTrace();
+        }
+    }
+
+    /*
+                1. Set numbers for all the headers.
+                2. Match numbers with keywords from the software.
+                3. Loop over the rest of the data.
+                4. Add the cell data into the appropriate software data slot.
+             */
+
+    private void assignHeaders(XSSFSheet sheet,  int cols) {
+        this.headerList = new ArrayList<>();
+        XSSFRow row = sheet.getRow(0);
+        XSSFCell cell;
+        if (row != null) {
+            for (int c = 0; c < cols; c++) {
+                cell = row.getCell(c);
+                if (cell != null) {
+                    headerList.add(cell.toString());
+                }
+            }
         }
     }
     

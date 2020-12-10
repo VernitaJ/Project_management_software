@@ -1,11 +1,10 @@
 import controller.Controller;
-import entities.Project;
-import entities.ProjectLibrary;
-import tools.Import;
+import tools.ImportExcel;
+
 
 public class Main {
     public static void main(String[] args) {
-        Import lego = new Import();
+        ImportExcel lego = new ImportExcel();
         Controller start = Controller.getInstance();
         start.run();
     }
