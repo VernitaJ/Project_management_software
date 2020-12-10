@@ -1,5 +1,6 @@
 package entities;
 
+import access_roles.Roles;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
@@ -27,6 +28,7 @@ public class User extends Data {
         this.inbox = new ArrayList<>();
         this.experience = 0;
     }
+
 
     public ArrayList<Message> getInbox() {
         return inbox;
