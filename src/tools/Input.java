@@ -140,4 +140,7 @@ public class Input
         scanner.reset();
     }
 
+    public void spacer(){
+        System.out.println("______________\n");
+    }
 }

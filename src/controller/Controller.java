@@ -374,13 +374,11 @@ public class Controller {
         }
         else
         {
-            menuName = currentProject.getTeam().getTeamName() + " Menu";
+            menuName = "Team Menu";
         }
         String[] options =
                 {
-                        "Create Team",
                         "View Team",
-                        "Edit Team Name",
                         "Add Team Member",
                         "Remove Team Member",
                         "Change Team Member Role",
@@ -395,20 +393,19 @@ public class Controller {
             String choice = menu.printMenu();
             switch (choice)
             {
-                case "1" -> teamLibrary.createTeam(currentProject);
-                case "2" -> teamLibrary.viewTeam(currentProject.getTeam());
-                case "3" -> teamLibrary.editTeamName(currentProject.getTeam());
-                case "4" -> addMember();
-                case "5" -> teamLibrary.removeTeamMember(currentProject.getTeam(), currentUser);
-                case "6" -> changeMemberRoleMenu();
-                case "7" -> teamLibrary.removeTeam(currentProject, currentUser);
-                case "8" -> currentProjectMenu();
-                case "9" -> logout();
-                case "10" -> exit();
+                case "1" -> teamLibrary.viewTeam(currentProject.getTeam());
+                case "2" -> addMemberMenu();
+                case "3" -> teamLibrary.removeTeamMember(currentProject.getTeam(), currentUser);
+                case "4" -> changeMemberRoleMenu();
+               // case "7" -> teamLibrary.removeTeam(currentProject, currentUser);
+                case "5" -> currentProjectMenu();
+                case "6" -> projectMenu();
+                case "7" -> logout();
+                case "8" -> exit();
             }
         } while (true);
     }
-    private void addMember() {
+    private void addMemberMenu() {
         String[] options =
                 {
                         "Maintainer",
@@ -586,7 +583,7 @@ public class Controller {
                         "Logout",
                         "Exit"
                 };
-        menu = new Menu(currentProject.getTeam().getTeamName() + " Menu", options);
+        menu = new Menu("Team Roles Menu", options);
         do
         {
             String choice = menu.printMenu();
