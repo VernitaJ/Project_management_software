@@ -94,7 +94,7 @@ public class ProjectLibrary extends DataLibrary{
         } else {
             int choice;
             do{
-                choice = input.getInt("Enter project number or 0 to return to the previous menu: ");
+                choice = input.getInt("\nEnter project number or 0 to return to previous menu: ");
             } while(choice < 0 || choice > projectList.size());
             
             if (choice == 0){

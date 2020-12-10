@@ -344,7 +344,7 @@ public class Controller {
                         "Logout",
                         "Exit"
                 };
-        menu = new Menu(currentProject.getName() + "Tasks: " +  " Menu", options);
+        menu = new Menu(currentProject.getName() + ": Tasks" +  " Menu", options);
         do
         {
             String choice = menu.printMenu();
@@ -443,6 +443,7 @@ public class Controller {
                         "Delete Task",
                         "Add Worked Hours",
                         "Total Worked Hours",
+                        "Project Menu",
                         "Main Menu",
                         "Logout",
                         "Exit"
@@ -462,9 +463,10 @@ public class Controller {
                 case "7" -> taskLibrary.deleteTask(currentProject, currentUser);
                 case "8" -> taskLibrary.addWorkedHours(currentProject, currentTask, currentUser);
                 case "9" -> taskLibrary.printAllWorkedHours(currentTask);
-                case "10" -> mainMenu();
-                case "11" -> logout();
-                case "12" -> exit();
+                case "10" -> currentProjectMenu();
+                case "11" -> mainMenu();
+                case "12" -> logout();
+                case "13" -> exit();
             }
         } while (true);
     }
