@@ -1,6 +1,5 @@
 package entities;
 
-import access_roles.Roles;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
