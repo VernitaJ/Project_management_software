@@ -1,0 +1,917 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>/*<a name="line.1"></a>
+<span class="sourceLineNo">002</span> * Licensed to the Apache Software Foundation (ASF) under one<a name="line.2"></a>
+<span class="sourceLineNo">003</span> * or more contributor license agreements.  See the NOTICE file<a name="line.3"></a>
+<span class="sourceLineNo">004</span> * distributed with this work for additional information<a name="line.4"></a>
+<span class="sourceLineNo">005</span> * regarding copyright ownership.  The ASF licenses this file<a name="line.5"></a>
+<span class="sourceLineNo">006</span> * to you under the Apache License, Version 2.0 (the<a name="line.6"></a>
+<span class="sourceLineNo">007</span> * "License"); you may not use this file except in compliance<a name="line.7"></a>
+<span class="sourceLineNo">008</span> * with the License.  You may obtain a copy of the License at<a name="line.8"></a>
+<span class="sourceLineNo">009</span> *<a name="line.9"></a>
+<span class="sourceLineNo">010</span> * http://www.apache.org/licenses/LICENSE-2.0<a name="line.10"></a>
+<span class="sourceLineNo">011</span> *<a name="line.11"></a>
+<span class="sourceLineNo">012</span> * Unless required by applicable law or agreed to in writing,<a name="line.12"></a>
+<span class="sourceLineNo">013</span> * software distributed under the License is distributed on an<a name="line.13"></a>
+<span class="sourceLineNo">014</span> * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY<a name="line.14"></a>
+<span class="sourceLineNo">015</span> * KIND, either express or implied.  See the License for the<a name="line.15"></a>
+<span class="sourceLineNo">016</span> * specific language governing permissions and limitations<a name="line.16"></a>
+<span class="sourceLineNo">017</span> * under the License.<a name="line.17"></a>
+<span class="sourceLineNo">018</span> */<a name="line.18"></a>
+<span class="sourceLineNo">019</span>package org.apache.commons.compress.archivers.dump;<a name="line.19"></a>
+<span class="sourceLineNo">020</span><a name="line.20"></a>
+<span class="sourceLineNo">021</span>import java.util.Collections;<a name="line.21"></a>
+<span class="sourceLineNo">022</span>import java.util.Date;<a name="line.22"></a>
+<span class="sourceLineNo">023</span>import java.util.EnumSet;<a name="line.23"></a>
+<span class="sourceLineNo">024</span>import java.util.HashSet;<a name="line.24"></a>
+<span class="sourceLineNo">025</span>import java.util.Set;<a name="line.25"></a>
+<span class="sourceLineNo">026</span>import org.apache.commons.compress.archivers.ArchiveEntry;<a name="line.26"></a>
+<span class="sourceLineNo">027</span><a name="line.27"></a>
+<span class="sourceLineNo">028</span>/**<a name="line.28"></a>
+<span class="sourceLineNo">029</span> * This class represents an entry in a Dump archive. It consists<a name="line.29"></a>
+<span class="sourceLineNo">030</span> * of the entry's header, the entry's File and any extended attributes.<a name="line.30"></a>
+<span class="sourceLineNo">031</span> * &lt;p&gt;<a name="line.31"></a>
+<span class="sourceLineNo">032</span> * DumpEntries that are created from the header bytes read from<a name="line.32"></a>
+<span class="sourceLineNo">033</span> * an archive are instantiated with the DumpArchiveEntry( byte[] )<a name="line.33"></a>
+<span class="sourceLineNo">034</span> * constructor. These entries will be used when extracting from<a name="line.34"></a>
+<span class="sourceLineNo">035</span> * or listing the contents of an archive. These entries have their<a name="line.35"></a>
+<span class="sourceLineNo">036</span> * header filled in using the header bytes. They also set the File<a name="line.36"></a>
+<span class="sourceLineNo">037</span> * to null, since they reference an archive entry not a file.<a name="line.37"></a>
+<span class="sourceLineNo">038</span> * &lt;p&gt;<a name="line.38"></a>
+<span class="sourceLineNo">039</span> * DumpEntries can also be constructed from nothing but a name.<a name="line.39"></a>
+<span class="sourceLineNo">040</span> * This allows the programmer to construct the entry by hand, for<a name="line.40"></a>
+<span class="sourceLineNo">041</span> * instance when only an InputStream is available for writing to<a name="line.41"></a>
+<span class="sourceLineNo">042</span> * the archive, and the header information is constructed from<a name="line.42"></a>
+<span class="sourceLineNo">043</span> * other information. In this case the header fields are set to<a name="line.43"></a>
+<span class="sourceLineNo">044</span> * defaults and the File is set to null.<a name="line.44"></a>
+<span class="sourceLineNo">045</span> *<a name="line.45"></a>
+<span class="sourceLineNo">046</span> * &lt;p&gt;<a name="line.46"></a>
+<span class="sourceLineNo">047</span> * The C structure for a Dump Entry's header is:<a name="line.47"></a>
+<span class="sourceLineNo">048</span> * &lt;pre&gt;<a name="line.48"></a>
+<span class="sourceLineNo">049</span> * #define TP_BSIZE    1024          // size of each file block<a name="line.49"></a>
+<span class="sourceLineNo">050</span> * #define NTREC       10            // number of blocks to write at once<a name="line.50"></a>
+<span class="sourceLineNo">051</span> * #define HIGHDENSITYTREC 32        // number of blocks to write on high-density tapes<a name="line.51"></a>
+<span class="sourceLineNo">052</span> * #define TP_NINDIR   (TP_BSIZE/2)  // number if indirect inodes in record<a name="line.52"></a>
+<span class="sourceLineNo">053</span> * #define TP_NINOS    (TP_NINDIR / sizeof (int32_t))<a name="line.53"></a>
+<span class="sourceLineNo">054</span> * #define LBLSIZE     16<a name="line.54"></a>
+<span class="sourceLineNo">055</span> * #define NAMELEN     64<a name="line.55"></a>
+<span class="sourceLineNo">056</span> *<a name="line.56"></a>
+<span class="sourceLineNo">057</span> * #define OFS_MAGIC     (int)60011  // old format magic value<a name="line.57"></a>
+<span class="sourceLineNo">058</span> * #define NFS_MAGIC     (int)60012  // new format magic value<a name="line.58"></a>
+<span class="sourceLineNo">059</span> * #define FS_UFS2_MAGIC (int)0x19540119<a name="line.59"></a>
+<span class="sourceLineNo">060</span> * #define CHECKSUM      (int)84446  // constant used in checksum algorithm<a name="line.60"></a>
+<span class="sourceLineNo">061</span> *<a name="line.61"></a>
+<span class="sourceLineNo">062</span> * struct  s_spcl {<a name="line.62"></a>
+<span class="sourceLineNo">063</span> *   int32_t c_type;             // record type (see below)<a name="line.63"></a>
+<span class="sourceLineNo">064</span> *   int32_t &lt;b&gt;c_date&lt;/b&gt;;             // date of this dump<a name="line.64"></a>
+<span class="sourceLineNo">065</span> *   int32_t &lt;b&gt;c_ddate&lt;/b&gt;;            // date of previous dump<a name="line.65"></a>
+<span class="sourceLineNo">066</span> *   int32_t c_volume;           // dump volume number<a name="line.66"></a>
+<span class="sourceLineNo">067</span> *   u_int32_t c_tapea;          // logical block of this record<a name="line.67"></a>
+<span class="sourceLineNo">068</span> *   dump_ino_t c_ino;           // number of inode<a name="line.68"></a>
+<span class="sourceLineNo">069</span> *   int32_t &lt;b&gt;c_magic&lt;/b&gt;;            // magic number (see above)<a name="line.69"></a>
+<span class="sourceLineNo">070</span> *   int32_t c_checksum;         // record checksum<a name="line.70"></a>
+<span class="sourceLineNo">071</span> * #ifdef  __linux__<a name="line.71"></a>
+<span class="sourceLineNo">072</span> *   struct  new_bsd_inode c_dinode;<a name="line.72"></a>
+<span class="sourceLineNo">073</span> * #else<a name="line.73"></a>
+<span class="sourceLineNo">074</span> * #ifdef sunos<a name="line.74"></a>
+<span class="sourceLineNo">075</span> *   struct  new_bsd_inode c_dinode;<a name="line.75"></a>
+<span class="sourceLineNo">076</span> * #else<a name="line.76"></a>
+<span class="sourceLineNo">077</span> *   struct  dinode  c_dinode;   // ownership and mode of inode<a name="line.77"></a>
+<span class="sourceLineNo">078</span> * #endif<a name="line.78"></a>
+<span class="sourceLineNo">079</span> * #endif<a name="line.79"></a>
+<span class="sourceLineNo">080</span> *   int32_t c_count;            // number of valid c_addr entries<a name="line.80"></a>
+<span class="sourceLineNo">081</span> *   union u_data c_data;        // see above<a name="line.81"></a>
+<span class="sourceLineNo">082</span> *   char    &lt;b&gt;c_label[LBLSIZE]&lt;/b&gt;;   // dump label<a name="line.82"></a>
+<span class="sourceLineNo">083</span> *   int32_t &lt;b&gt;c_level&lt;/b&gt;;            // level of this dump<a name="line.83"></a>
+<span class="sourceLineNo">084</span> *   char    &lt;b&gt;c_filesys[NAMELEN]&lt;/b&gt;; // name of dumpped file system<a name="line.84"></a>
+<span class="sourceLineNo">085</span> *   char    &lt;b&gt;c_dev[NAMELEN]&lt;/b&gt;;     // name of dumpped device<a name="line.85"></a>
+<span class="sourceLineNo">086</span> *   char    &lt;b&gt;c_host[NAMELEN]&lt;/b&gt;;    // name of dumpped host<a name="line.86"></a>
+<span class="sourceLineNo">087</span> *   int32_t c_flags;            // additional information (see below)<a name="line.87"></a>
+<span class="sourceLineNo">088</span> *   int32_t c_firstrec;         // first record on volume<a name="line.88"></a>
+<span class="sourceLineNo">089</span> *   int32_t c_ntrec;            // blocksize on volume<a name="line.89"></a>
+<span class="sourceLineNo">090</span> *   int32_t c_extattributes;    // additional inode info (see below)<a name="line.90"></a>
+<span class="sourceLineNo">091</span> *   int32_t c_spare[30];        // reserved for future uses<a name="line.91"></a>
+<span class="sourceLineNo">092</span> * } s_spcl;<a name="line.92"></a>
+<span class="sourceLineNo">093</span> *<a name="line.93"></a>
+<span class="sourceLineNo">094</span> * //<a name="line.94"></a>
+<span class="sourceLineNo">095</span> * // flag values<a name="line.95"></a>
+<span class="sourceLineNo">096</span> * //<a name="line.96"></a>
+<span class="sourceLineNo">097</span> * #define DR_NEWHEADER     0x0001  // new format tape header<a name="line.97"></a>
+<span class="sourceLineNo">098</span> * #define DR_NEWINODEFMT   0x0002  // new format inodes on tape<a name="line.98"></a>
+<span class="sourceLineNo">099</span> * #define DR_COMPRESSED    0x0080  // dump tape is compressed<a name="line.99"></a>
+<span class="sourceLineNo">100</span> * #define DR_METAONLY      0x0100  // only the metadata of the inode has been dumped<a name="line.100"></a>
+<span class="sourceLineNo">101</span> * #define DR_INODEINFO     0x0002  // [SIC] TS_END header contains c_inos information<a name="line.101"></a>
+<span class="sourceLineNo">102</span> * #define DR_EXTATTRIBUTES 0x8000<a name="line.102"></a>
+<span class="sourceLineNo">103</span> *<a name="line.103"></a>
+<span class="sourceLineNo">104</span> * //<a name="line.104"></a>
+<span class="sourceLineNo">105</span> * // extattributes inode info<a name="line.105"></a>
+<span class="sourceLineNo">106</span> * //<a name="line.106"></a>
+<span class="sourceLineNo">107</span> * #define EXT_REGULAR         0<a name="line.107"></a>
+<span class="sourceLineNo">108</span> * #define EXT_MACOSFNDRINFO   1<a name="line.108"></a>
+<span class="sourceLineNo">109</span> * #define EXT_MACOSRESFORK    2<a name="line.109"></a>
+<span class="sourceLineNo">110</span> * #define EXT_XATTR           3<a name="line.110"></a>
+<span class="sourceLineNo">111</span> *<a name="line.111"></a>
+<span class="sourceLineNo">112</span> * // used for EA on tape<a name="line.112"></a>
+<span class="sourceLineNo">113</span> * #define EXT2_GOOD_OLD_INODE_SIZE    128<a name="line.113"></a>
+<span class="sourceLineNo">114</span> * #define EXT2_XATTR_MAGIC        0xEA020000  // block EA<a name="line.114"></a>
+<span class="sourceLineNo">115</span> * #define EXT2_XATTR_MAGIC2       0xEA020001  // in inode EA<a name="line.115"></a>
+<span class="sourceLineNo">116</span> * &lt;/pre&gt;<a name="line.116"></a>
+<span class="sourceLineNo">117</span> * &lt;p&gt;<a name="line.117"></a>
+<span class="sourceLineNo">118</span> * The fields in &lt;b&gt;bold&lt;/b&gt; are the same for all blocks. (This permitted<a name="line.118"></a>
+<span class="sourceLineNo">119</span> * multiple dumps to be written to a single tape.)<a name="line.119"></a>
+<span class="sourceLineNo">120</span> * &lt;/p&gt;<a name="line.120"></a>
+<span class="sourceLineNo">121</span> *<a name="line.121"></a>
+<span class="sourceLineNo">122</span> * &lt;p&gt;<a name="line.122"></a>
+<span class="sourceLineNo">123</span> * The C structure for the inode (file) information is:<a name="line.123"></a>
+<span class="sourceLineNo">124</span> * &lt;pre&gt;<a name="line.124"></a>
+<span class="sourceLineNo">125</span> * struct bsdtimeval {           //  **** alpha-*-linux is deviant<a name="line.125"></a>
+<span class="sourceLineNo">126</span> *   __u32   tv_sec;<a name="line.126"></a>
+<span class="sourceLineNo">127</span> *   __u32   tv_usec;<a name="line.127"></a>
+<span class="sourceLineNo">128</span> * };<a name="line.128"></a>
+<span class="sourceLineNo">129</span> *<a name="line.129"></a>
+<span class="sourceLineNo">130</span> * #define NDADDR      12<a name="line.130"></a>
+<span class="sourceLineNo">131</span> * #define NIADDR       3<a name="line.131"></a>
+<span class="sourceLineNo">132</span> *<a name="line.132"></a>
+<span class="sourceLineNo">133</span> * //<a name="line.133"></a>
+<span class="sourceLineNo">134</span> * // This is the new (4.4) BSD inode structure<a name="line.134"></a>
+<span class="sourceLineNo">135</span> * // copied from the FreeBSD 2.0 &amp;lt;ufs/ufs/dinode.h&amp;gt; include file<a name="line.135"></a>
+<span class="sourceLineNo">136</span> * //<a name="line.136"></a>
+<span class="sourceLineNo">137</span> * struct new_bsd_inode {<a name="line.137"></a>
+<span class="sourceLineNo">138</span> *   __u16       di_mode;           // file type, standard Unix permissions<a name="line.138"></a>
+<span class="sourceLineNo">139</span> *   __s16       di_nlink;          // number of hard links to file.<a name="line.139"></a>
+<span class="sourceLineNo">140</span> *   union {<a name="line.140"></a>
+<span class="sourceLineNo">141</span> *      __u16       oldids[2];<a name="line.141"></a>
+<span class="sourceLineNo">142</span> *      __u32       inumber;<a name="line.142"></a>
+<span class="sourceLineNo">143</span> *   }           di_u;<a name="line.143"></a>
+<span class="sourceLineNo">144</span> *   u_quad_t    di_size;           // file size<a name="line.144"></a>
+<span class="sourceLineNo">145</span> *   struct bsdtimeval   di_atime;  // time file was last accessed<a name="line.145"></a>
+<span class="sourceLineNo">146</span> *   struct bsdtimeval   di_mtime;  // time file was last modified<a name="line.146"></a>
+<span class="sourceLineNo">147</span> *   struct bsdtimeval   di_ctime;  // time file was created<a name="line.147"></a>
+<span class="sourceLineNo">148</span> *   __u32       di_db[NDADDR];<a name="line.148"></a>
+<span class="sourceLineNo">149</span> *   __u32       di_ib[NIADDR];<a name="line.149"></a>
+<span class="sourceLineNo">150</span> *   __u32       di_flags;          //<a name="line.150"></a>
+<span class="sourceLineNo">151</span> *   __s32       di_blocks;         // number of disk blocks<a name="line.151"></a>
+<span class="sourceLineNo">152</span> *   __s32       di_gen;            // generation number<a name="line.152"></a>
+<span class="sourceLineNo">153</span> *   __u32       di_uid;            // user id (see /etc/passwd)<a name="line.153"></a>
+<span class="sourceLineNo">154</span> *   __u32       di_gid;            // group id (see /etc/group)<a name="line.154"></a>
+<span class="sourceLineNo">155</span> *   __s32       di_spare[2];       // unused<a name="line.155"></a>
+<span class="sourceLineNo">156</span> * };<a name="line.156"></a>
+<span class="sourceLineNo">157</span> * &lt;/pre&gt;<a name="line.157"></a>
+<span class="sourceLineNo">158</span> * &lt;p&gt;<a name="line.158"></a>
+<span class="sourceLineNo">159</span> * It is important to note that the header DOES NOT have the name of the<a name="line.159"></a>
+<span class="sourceLineNo">160</span> * file. It can't since hard links mean that you may have multiple file names<a name="line.160"></a>
+<span class="sourceLineNo">161</span> * for a single physical file. You must read the contents of the directory<a name="line.161"></a>
+<span class="sourceLineNo">162</span> * entries to learn the mapping(s) from file name to inode.<a name="line.162"></a>
+<span class="sourceLineNo">163</span> * &lt;/p&gt;<a name="line.163"></a>
+<span class="sourceLineNo">164</span> *<a name="line.164"></a>
+<span class="sourceLineNo">165</span> * &lt;p&gt;<a name="line.165"></a>
+<span class="sourceLineNo">166</span> * The C structure that indicates if a specific block is a real block<a name="line.166"></a>
+<span class="sourceLineNo">167</span> * that contains data or is a sparse block that is not persisted to the<a name="line.167"></a>
+<span class="sourceLineNo">168</span> * disk is:&lt;/p&gt;<a name="line.168"></a>
+<span class="sourceLineNo">169</span> * &lt;pre&gt;<a name="line.169"></a>
+<span class="sourceLineNo">170</span> * #define TP_BSIZE    1024<a name="line.170"></a>
+<span class="sourceLineNo">171</span> * #define TP_NINDIR   (TP_BSIZE/2)<a name="line.171"></a>
+<span class="sourceLineNo">172</span> *<a name="line.172"></a>
+<span class="sourceLineNo">173</span> * union u_data {<a name="line.173"></a>
+<span class="sourceLineNo">174</span> *   char    s_addrs[TP_NINDIR]; // 1 =&amp;gt; data; 0 =&amp;gt; hole in inode<a name="line.174"></a>
+<span class="sourceLineNo">175</span> *   int32_t s_inos[TP_NINOS];   // table of first inode on each volume<a name="line.175"></a>
+<span class="sourceLineNo">176</span> * } u_data;<a name="line.176"></a>
+<span class="sourceLineNo">177</span> * &lt;/pre&gt;<a name="line.177"></a>
+<span class="sourceLineNo">178</span> *<a name="line.178"></a>
+<span class="sourceLineNo">179</span> * @NotThreadSafe<a name="line.179"></a>
+<span class="sourceLineNo">180</span> */<a name="line.180"></a>
+<span class="sourceLineNo">181</span>public class DumpArchiveEntry implements ArchiveEntry {<a name="line.181"></a>
+<span class="sourceLineNo">182</span>    private String name;<a name="line.182"></a>
+<span class="sourceLineNo">183</span>    private TYPE type = TYPE.UNKNOWN;<a name="line.183"></a>
+<span class="sourceLineNo">184</span>    private int mode;<a name="line.184"></a>
+<span class="sourceLineNo">185</span>    private Set&lt;PERMISSION&gt; permissions = Collections.emptySet();<a name="line.185"></a>
+<span class="sourceLineNo">186</span>    private long size;<a name="line.186"></a>
+<span class="sourceLineNo">187</span>    private long atime;<a name="line.187"></a>
+<span class="sourceLineNo">188</span>    private long mtime;<a name="line.188"></a>
+<span class="sourceLineNo">189</span>    private int uid;<a name="line.189"></a>
+<span class="sourceLineNo">190</span>    private int gid;<a name="line.190"></a>
+<span class="sourceLineNo">191</span><a name="line.191"></a>
+<span class="sourceLineNo">192</span>    /**<a name="line.192"></a>
+<span class="sourceLineNo">193</span>     * Currently unused<a name="line.193"></a>
+<span class="sourceLineNo">194</span>     */<a name="line.194"></a>
+<span class="sourceLineNo">195</span>    private final DumpArchiveSummary summary = null;<a name="line.195"></a>
+<span class="sourceLineNo">196</span><a name="line.196"></a>
+<span class="sourceLineNo">197</span>    // this information is available from standard index.<a name="line.197"></a>
+<span class="sourceLineNo">198</span>    private final TapeSegmentHeader header = new TapeSegmentHeader();<a name="line.198"></a>
+<span class="sourceLineNo">199</span>    private String simpleName;<a name="line.199"></a>
+<span class="sourceLineNo">200</span>    private String originalName;<a name="line.200"></a>
+<span class="sourceLineNo">201</span><a name="line.201"></a>
+<span class="sourceLineNo">202</span>    // this information is available from QFA index<a name="line.202"></a>
+<span class="sourceLineNo">203</span>    private int volume;<a name="line.203"></a>
+<span class="sourceLineNo">204</span>    private long offset;<a name="line.204"></a>
+<span class="sourceLineNo">205</span>    private int ino;<a name="line.205"></a>
+<span class="sourceLineNo">206</span>    private int nlink;<a name="line.206"></a>
+<span class="sourceLineNo">207</span>    private long ctime;<a name="line.207"></a>
+<span class="sourceLineNo">208</span>    private int generation;<a name="line.208"></a>
+<span class="sourceLineNo">209</span>    private boolean isDeleted;<a name="line.209"></a>
+<span class="sourceLineNo">210</span><a name="line.210"></a>
+<span class="sourceLineNo">211</span>    /**<a name="line.211"></a>
+<span class="sourceLineNo">212</span>     * Default constructor.<a name="line.212"></a>
+<span class="sourceLineNo">213</span>     */<a name="line.213"></a>
+<span class="sourceLineNo">214</span>    public DumpArchiveEntry() {<a name="line.214"></a>
+<span class="sourceLineNo">215</span>    }<a name="line.215"></a>
+<span class="sourceLineNo">216</span><a name="line.216"></a>
+<span class="sourceLineNo">217</span>    /**<a name="line.217"></a>
+<span class="sourceLineNo">218</span>     * Constructor taking only file name.<a name="line.218"></a>
+<span class="sourceLineNo">219</span>     * @param name pathname<a name="line.219"></a>
+<span class="sourceLineNo">220</span>     * @param simpleName actual file name.<a name="line.220"></a>
+<span class="sourceLineNo">221</span>     */<a name="line.221"></a>
+<span class="sourceLineNo">222</span>    public DumpArchiveEntry(final String name, final String simpleName) {<a name="line.222"></a>
+<span class="sourceLineNo">223</span>        setName(name);<a name="line.223"></a>
+<span class="sourceLineNo">224</span>        this.simpleName = simpleName;<a name="line.224"></a>
+<span class="sourceLineNo">225</span>    }<a name="line.225"></a>
+<span class="sourceLineNo">226</span><a name="line.226"></a>
+<span class="sourceLineNo">227</span>    /**<a name="line.227"></a>
+<span class="sourceLineNo">228</span>     * Constructor taking name, inode and type.<a name="line.228"></a>
+<span class="sourceLineNo">229</span>     *<a name="line.229"></a>
+<span class="sourceLineNo">230</span>     * @param name the name<a name="line.230"></a>
+<span class="sourceLineNo">231</span>     * @param simpleName the simple name<a name="line.231"></a>
+<span class="sourceLineNo">232</span>     * @param ino the ino<a name="line.232"></a>
+<span class="sourceLineNo">233</span>     * @param type the type<a name="line.233"></a>
+<span class="sourceLineNo">234</span>     */<a name="line.234"></a>
+<span class="sourceLineNo">235</span>    protected DumpArchiveEntry(final String name, final String simpleName, final int ino,<a name="line.235"></a>
+<span class="sourceLineNo">236</span>                               final TYPE type) {<a name="line.236"></a>
+<span class="sourceLineNo">237</span>        setType(type);<a name="line.237"></a>
+<span class="sourceLineNo">238</span>        setName(name);<a name="line.238"></a>
+<span class="sourceLineNo">239</span>        this.simpleName = simpleName;<a name="line.239"></a>
+<span class="sourceLineNo">240</span>        this.ino = ino;<a name="line.240"></a>
+<span class="sourceLineNo">241</span>        this.offset = 0;<a name="line.241"></a>
+<span class="sourceLineNo">242</span>    }<a name="line.242"></a>
+<span class="sourceLineNo">243</span><a name="line.243"></a>
+<span class="sourceLineNo">244</span>    /**<a name="line.244"></a>
+<span class="sourceLineNo">245</span>     * Returns the path of the entry.<a name="line.245"></a>
+<span class="sourceLineNo">246</span>     * @return the path of the entry.<a name="line.246"></a>
+<span class="sourceLineNo">247</span>     */<a name="line.247"></a>
+<span class="sourceLineNo">248</span>    public String getSimpleName() {<a name="line.248"></a>
+<span class="sourceLineNo">249</span>        return simpleName;<a name="line.249"></a>
+<span class="sourceLineNo">250</span>    }<a name="line.250"></a>
+<span class="sourceLineNo">251</span><a name="line.251"></a>
+<span class="sourceLineNo">252</span>    /**<a name="line.252"></a>
+<span class="sourceLineNo">253</span>     * Sets the path of the entry.<a name="line.253"></a>
+<span class="sourceLineNo">254</span>     * @param simpleName the simple name<a name="line.254"></a>
+<span class="sourceLineNo">255</span>     */<a name="line.255"></a>
+<span class="sourceLineNo">256</span>    protected void setSimpleName(final String simpleName) {<a name="line.256"></a>
+<span class="sourceLineNo">257</span>        this.simpleName = simpleName;<a name="line.257"></a>
+<span class="sourceLineNo">258</span>    }<a name="line.258"></a>
+<span class="sourceLineNo">259</span><a name="line.259"></a>
+<span class="sourceLineNo">260</span>    /**<a name="line.260"></a>
+<span class="sourceLineNo">261</span>     * Returns the ino of the entry.<a name="line.261"></a>
+<span class="sourceLineNo">262</span>     * @return the ino<a name="line.262"></a>
+<span class="sourceLineNo">263</span>     */<a name="line.263"></a>
+<span class="sourceLineNo">264</span>    public int getIno() {<a name="line.264"></a>
+<span class="sourceLineNo">265</span>        return header.getIno();<a name="line.265"></a>
+<span class="sourceLineNo">266</span>    }<a name="line.266"></a>
+<span class="sourceLineNo">267</span><a name="line.267"></a>
+<span class="sourceLineNo">268</span>    /**<a name="line.268"></a>
+<span class="sourceLineNo">269</span>     * Return the number of hard links to the entry.<a name="line.269"></a>
+<span class="sourceLineNo">270</span>     * @return the number of hard links<a name="line.270"></a>
+<span class="sourceLineNo">271</span>     */<a name="line.271"></a>
+<span class="sourceLineNo">272</span>    public int getNlink() {<a name="line.272"></a>
+<span class="sourceLineNo">273</span>        return nlink;<a name="line.273"></a>
+<span class="sourceLineNo">274</span>    }<a name="line.274"></a>
+<span class="sourceLineNo">275</span><a name="line.275"></a>
+<span class="sourceLineNo">276</span>    /**<a name="line.276"></a>
+<span class="sourceLineNo">277</span>     * Set the number of hard links.<a name="line.277"></a>
+<span class="sourceLineNo">278</span>     * @param nlink the number of hard links<a name="line.278"></a>
+<span class="sourceLineNo">279</span>     */<a name="line.279"></a>
+<span class="sourceLineNo">280</span>    public void setNlink(final int nlink) {<a name="line.280"></a>
+<span class="sourceLineNo">281</span>        this.nlink = nlink;<a name="line.281"></a>
+<span class="sourceLineNo">282</span>    }<a name="line.282"></a>
+<span class="sourceLineNo">283</span><a name="line.283"></a>
+<span class="sourceLineNo">284</span>    /**<a name="line.284"></a>
+<span class="sourceLineNo">285</span>     * Get file creation time.<a name="line.285"></a>
+<span class="sourceLineNo">286</span>     * @return the creation time<a name="line.286"></a>
+<span class="sourceLineNo">287</span>     */<a name="line.287"></a>
+<span class="sourceLineNo">288</span>    public Date getCreationTime() {<a name="line.288"></a>
+<span class="sourceLineNo">289</span>        return new Date(ctime);<a name="line.289"></a>
+<span class="sourceLineNo">290</span>    }<a name="line.290"></a>
+<span class="sourceLineNo">291</span><a name="line.291"></a>
+<span class="sourceLineNo">292</span>    /**<a name="line.292"></a>
+<span class="sourceLineNo">293</span>     * Set the file creation time.<a name="line.293"></a>
+<span class="sourceLineNo">294</span>     * @param ctime the creation time<a name="line.294"></a>
+<span class="sourceLineNo">295</span>     */<a name="line.295"></a>
+<span class="sourceLineNo">296</span>    public void setCreationTime(final Date ctime) {<a name="line.296"></a>
+<span class="sourceLineNo">297</span>        this.ctime = ctime.getTime();<a name="line.297"></a>
+<span class="sourceLineNo">298</span>    }<a name="line.298"></a>
+<span class="sourceLineNo">299</span><a name="line.299"></a>
+<span class="sourceLineNo">300</span>    /**<a name="line.300"></a>
+<span class="sourceLineNo">301</span>     * Return the generation of the file.<a name="line.301"></a>
+<span class="sourceLineNo">302</span>     * @return the generation<a name="line.302"></a>
+<span class="sourceLineNo">303</span>     */<a name="line.303"></a>
+<span class="sourceLineNo">304</span>    public int getGeneration() {<a name="line.304"></a>
+<span class="sourceLineNo">305</span>        return generation;<a name="line.305"></a>
+<span class="sourceLineNo">306</span>    }<a name="line.306"></a>
+<span class="sourceLineNo">307</span><a name="line.307"></a>
+<span class="sourceLineNo">308</span>    /**<a name="line.308"></a>
+<span class="sourceLineNo">309</span>     * Set the generation of the file.<a name="line.309"></a>
+<span class="sourceLineNo">310</span>     * @param generation the generation<a name="line.310"></a>
+<span class="sourceLineNo">311</span>     */<a name="line.311"></a>
+<span class="sourceLineNo">312</span>    public void setGeneration(final int generation) {<a name="line.312"></a>
+<span class="sourceLineNo">313</span>        this.generation = generation;<a name="line.313"></a>
+<span class="sourceLineNo">314</span>    }<a name="line.314"></a>
+<span class="sourceLineNo">315</span><a name="line.315"></a>
+<span class="sourceLineNo">316</span>    /**<a name="line.316"></a>
+<span class="sourceLineNo">317</span>     * Has this file been deleted? (On valid on incremental dumps.)<a name="line.317"></a>
+<span class="sourceLineNo">318</span>     * @return whether the file has been deleted<a name="line.318"></a>
+<span class="sourceLineNo">319</span>     */<a name="line.319"></a>
+<span class="sourceLineNo">320</span>    public boolean isDeleted() {<a name="line.320"></a>
+<span class="sourceLineNo">321</span>        return isDeleted;<a name="line.321"></a>
+<span class="sourceLineNo">322</span>    }<a name="line.322"></a>
+<span class="sourceLineNo">323</span><a name="line.323"></a>
+<span class="sourceLineNo">324</span>    /**<a name="line.324"></a>
+<span class="sourceLineNo">325</span>     * Set whether this file has been deleted.<a name="line.325"></a>
+<span class="sourceLineNo">326</span>     * @param isDeleted whether the file has been deleted<a name="line.326"></a>
+<span class="sourceLineNo">327</span>     */<a name="line.327"></a>
+<span class="sourceLineNo">328</span>    public void setDeleted(final boolean isDeleted) {<a name="line.328"></a>
+<span class="sourceLineNo">329</span>        this.isDeleted = isDeleted;<a name="line.329"></a>
+<span class="sourceLineNo">330</span>    }<a name="line.330"></a>
+<span class="sourceLineNo">331</span><a name="line.331"></a>
+<span class="sourceLineNo">332</span>    /**<a name="line.332"></a>
+<span class="sourceLineNo">333</span>     * Return the offset within the archive<a name="line.333"></a>
+<span class="sourceLineNo">334</span>     * @return the offset<a name="line.334"></a>
+<span class="sourceLineNo">335</span>     */<a name="line.335"></a>
+<span class="sourceLineNo">336</span>    public long getOffset() {<a name="line.336"></a>
+<span class="sourceLineNo">337</span>        return offset;<a name="line.337"></a>
+<span class="sourceLineNo">338</span>    }<a name="line.338"></a>
+<span class="sourceLineNo">339</span><a name="line.339"></a>
+<span class="sourceLineNo">340</span>    /**<a name="line.340"></a>
+<span class="sourceLineNo">341</span>     * Set the offset within the archive.<a name="line.341"></a>
+<span class="sourceLineNo">342</span>     * @param offset the offset<a name="line.342"></a>
+<span class="sourceLineNo">343</span>     */<a name="line.343"></a>
+<span class="sourceLineNo">344</span>    public void setOffset(final long offset) {<a name="line.344"></a>
+<span class="sourceLineNo">345</span>        this.offset = offset;<a name="line.345"></a>
+<span class="sourceLineNo">346</span>    }<a name="line.346"></a>
+<span class="sourceLineNo">347</span><a name="line.347"></a>
+<span class="sourceLineNo">348</span>    /**<a name="line.348"></a>
+<span class="sourceLineNo">349</span>     * Return the tape volume where this file is located.<a name="line.349"></a>
+<span class="sourceLineNo">350</span>     * @return the volume<a name="line.350"></a>
+<span class="sourceLineNo">351</span>     */<a name="line.351"></a>
+<span class="sourceLineNo">352</span>    public int getVolume() {<a name="line.352"></a>
+<span class="sourceLineNo">353</span>        return volume;<a name="line.353"></a>
+<span class="sourceLineNo">354</span>    }<a name="line.354"></a>
+<span class="sourceLineNo">355</span><a name="line.355"></a>
+<span class="sourceLineNo">356</span>    /**<a name="line.356"></a>
+<span class="sourceLineNo">357</span>     * Set the tape volume.<a name="line.357"></a>
+<span class="sourceLineNo">358</span>     * @param volume the volume<a name="line.358"></a>
+<span class="sourceLineNo">359</span>     */<a name="line.359"></a>
+<span class="sourceLineNo">360</span>    public void setVolume(final int volume) {<a name="line.360"></a>
+<span class="sourceLineNo">361</span>        this.volume = volume;<a name="line.361"></a>
+<span class="sourceLineNo">362</span>    }<a name="line.362"></a>
+<span class="sourceLineNo">363</span><a name="line.363"></a>
+<span class="sourceLineNo">364</span>    /**<a name="line.364"></a>
+<span class="sourceLineNo">365</span>     * Return the type of the tape segment header.<a name="line.365"></a>
+<span class="sourceLineNo">366</span>     * @return the segment header<a name="line.366"></a>
+<span class="sourceLineNo">367</span>     */<a name="line.367"></a>
+<span class="sourceLineNo">368</span>    public DumpArchiveConstants.SEGMENT_TYPE getHeaderType() {<a name="line.368"></a>
+<span class="sourceLineNo">369</span>        return header.getType();<a name="line.369"></a>
+<span class="sourceLineNo">370</span>    }<a name="line.370"></a>
+<span class="sourceLineNo">371</span><a name="line.371"></a>
+<span class="sourceLineNo">372</span>    /**<a name="line.372"></a>
+<span class="sourceLineNo">373</span>     * Return the number of records in this segment.<a name="line.373"></a>
+<span class="sourceLineNo">374</span>     * @return the number of records<a name="line.374"></a>
+<span class="sourceLineNo">375</span>     */<a name="line.375"></a>
+<span class="sourceLineNo">376</span>    public int getHeaderCount() {<a name="line.376"></a>
+<span class="sourceLineNo">377</span>        return header.getCount();<a name="line.377"></a>
+<span class="sourceLineNo">378</span>    }<a name="line.378"></a>
+<span class="sourceLineNo">379</span><a name="line.379"></a>
+<span class="sourceLineNo">380</span>    /**<a name="line.380"></a>
+<span class="sourceLineNo">381</span>     * Return the number of sparse records in this segment.<a name="line.381"></a>
+<span class="sourceLineNo">382</span>     * @return the number of sparse records<a name="line.382"></a>
+<span class="sourceLineNo">383</span>     */<a name="line.383"></a>
+<span class="sourceLineNo">384</span>    public int getHeaderHoles() {<a name="line.384"></a>
+<span class="sourceLineNo">385</span>        return header.getHoles();<a name="line.385"></a>
+<span class="sourceLineNo">386</span>    }<a name="line.386"></a>
+<span class="sourceLineNo">387</span><a name="line.387"></a>
+<span class="sourceLineNo">388</span>    /**<a name="line.388"></a>
+<span class="sourceLineNo">389</span>     * Is this a sparse record?<a name="line.389"></a>
+<span class="sourceLineNo">390</span>     * @param idx index of the record to check<a name="line.390"></a>
+<span class="sourceLineNo">391</span>     * @return whether this is a sparse record<a name="line.391"></a>
+<span class="sourceLineNo">392</span>     */<a name="line.392"></a>
+<span class="sourceLineNo">393</span>    public boolean isSparseRecord(final int idx) {<a name="line.393"></a>
+<span class="sourceLineNo">394</span>        return (header.getCdata(idx) &amp; 0x01) == 0;<a name="line.394"></a>
+<span class="sourceLineNo">395</span>    }<a name="line.395"></a>
+<span class="sourceLineNo">396</span><a name="line.396"></a>
+<span class="sourceLineNo">397</span>    @Override<a name="line.397"></a>
+<span class="sourceLineNo">398</span>    public int hashCode() {<a name="line.398"></a>
+<span class="sourceLineNo">399</span>        return ino;<a name="line.399"></a>
+<span class="sourceLineNo">400</span>    }<a name="line.400"></a>
+<span class="sourceLineNo">401</span><a name="line.401"></a>
+<span class="sourceLineNo">402</span>    @Override<a name="line.402"></a>
+<span class="sourceLineNo">403</span>    public boolean equals(final Object o) {<a name="line.403"></a>
+<span class="sourceLineNo">404</span>        if (o == this) {<a name="line.404"></a>
+<span class="sourceLineNo">405</span>            return true;<a name="line.405"></a>
+<span class="sourceLineNo">406</span>        } else if (o == null || !o.getClass().equals(getClass())) {<a name="line.406"></a>
+<span class="sourceLineNo">407</span>            return false;<a name="line.407"></a>
+<span class="sourceLineNo">408</span>        }<a name="line.408"></a>
+<span class="sourceLineNo">409</span><a name="line.409"></a>
+<span class="sourceLineNo">410</span>        final DumpArchiveEntry rhs = (DumpArchiveEntry) o;<a name="line.410"></a>
+<span class="sourceLineNo">411</span><a name="line.411"></a>
+<span class="sourceLineNo">412</span>        if (rhs.header == null) {<a name="line.412"></a>
+<span class="sourceLineNo">413</span>            return false;<a name="line.413"></a>
+<span class="sourceLineNo">414</span>        }<a name="line.414"></a>
+<span class="sourceLineNo">415</span><a name="line.415"></a>
+<span class="sourceLineNo">416</span>        if (ino != rhs.ino) {<a name="line.416"></a>
+<span class="sourceLineNo">417</span>            return false;<a name="line.417"></a>
+<span class="sourceLineNo">418</span>        }<a name="line.418"></a>
+<span class="sourceLineNo">419</span><a name="line.419"></a>
+<span class="sourceLineNo">420</span>        // summary is always null right now, but this may change some day<a name="line.420"></a>
+<span class="sourceLineNo">421</span>        if ((summary == null &amp;&amp; rhs.summary != null) // NOSONAR<a name="line.421"></a>
+<span class="sourceLineNo">422</span>                || (summary != null &amp;&amp; !summary.equals(rhs.summary))) { // NOSONAR<a name="line.422"></a>
+<span class="sourceLineNo">423</span>            return false;<a name="line.423"></a>
+<span class="sourceLineNo">424</span>        }<a name="line.424"></a>
+<span class="sourceLineNo">425</span><a name="line.425"></a>
+<span class="sourceLineNo">426</span>        return true;<a name="line.426"></a>
+<span class="sourceLineNo">427</span>    }<a name="line.427"></a>
+<span class="sourceLineNo">428</span><a name="line.428"></a>
+<span class="sourceLineNo">429</span>    @Override<a name="line.429"></a>
+<span class="sourceLineNo">430</span>    public String toString() {<a name="line.430"></a>
+<span class="sourceLineNo">431</span>        return getName();<a name="line.431"></a>
+<span class="sourceLineNo">432</span>    }<a name="line.432"></a>
+<span class="sourceLineNo">433</span><a name="line.433"></a>
+<span class="sourceLineNo">434</span>    /**<a name="line.434"></a>
+<span class="sourceLineNo">435</span>     * Populate the dump archive entry and tape segment header with<a name="line.435"></a>
+<span class="sourceLineNo">436</span>     * the contents of the buffer.<a name="line.436"></a>
+<span class="sourceLineNo">437</span>     *<a name="line.437"></a>
+<span class="sourceLineNo">438</span>     * @param buffer buffer to read content from<a name="line.438"></a>
+<span class="sourceLineNo">439</span>     */<a name="line.439"></a>
+<span class="sourceLineNo">440</span>    static DumpArchiveEntry parse(final byte[] buffer) {<a name="line.440"></a>
+<span class="sourceLineNo">441</span>        final DumpArchiveEntry entry = new DumpArchiveEntry();<a name="line.441"></a>
+<span class="sourceLineNo">442</span>        final TapeSegmentHeader header = entry.header;<a name="line.442"></a>
+<span class="sourceLineNo">443</span><a name="line.443"></a>
+<span class="sourceLineNo">444</span>        header.type = DumpArchiveConstants.SEGMENT_TYPE.find(DumpArchiveUtil.convert32(<a name="line.444"></a>
+<span class="sourceLineNo">445</span>                    buffer, 0));<a name="line.445"></a>
+<span class="sourceLineNo">446</span><a name="line.446"></a>
+<span class="sourceLineNo">447</span>        //header.dumpDate = new Date(1000L * DumpArchiveUtil.convert32(buffer, 4));<a name="line.447"></a>
+<span class="sourceLineNo">448</span>        //header.previousDumpDate = new Date(1000L * DumpArchiveUtil.convert32(<a name="line.448"></a>
+<span class="sourceLineNo">449</span>        //            buffer, 8));<a name="line.449"></a>
+<span class="sourceLineNo">450</span>        header.volume = DumpArchiveUtil.convert32(buffer, 12);<a name="line.450"></a>
+<span class="sourceLineNo">451</span>        //header.tapea = DumpArchiveUtil.convert32(buffer, 16);<a name="line.451"></a>
+<span class="sourceLineNo">452</span>        entry.ino = header.ino = DumpArchiveUtil.convert32(buffer, 20);<a name="line.452"></a>
+<span class="sourceLineNo">453</span><a name="line.453"></a>
+<span class="sourceLineNo">454</span>        //header.magic = DumpArchiveUtil.convert32(buffer, 24);<a name="line.454"></a>
+<span class="sourceLineNo">455</span>        //header.checksum = DumpArchiveUtil.convert32(buffer, 28);<a name="line.455"></a>
+<span class="sourceLineNo">456</span>        final int m = DumpArchiveUtil.convert16(buffer, 32);<a name="line.456"></a>
+<span class="sourceLineNo">457</span><a name="line.457"></a>
+<span class="sourceLineNo">458</span>        // determine the type of the file.<a name="line.458"></a>
+<span class="sourceLineNo">459</span>        entry.setType(TYPE.find((m &gt;&gt; 12) &amp; 0x0F));<a name="line.459"></a>
+<span class="sourceLineNo">460</span><a name="line.460"></a>
+<span class="sourceLineNo">461</span>        // determine the standard permissions<a name="line.461"></a>
+<span class="sourceLineNo">462</span>        entry.setMode(m);<a name="line.462"></a>
+<span class="sourceLineNo">463</span><a name="line.463"></a>
+<span class="sourceLineNo">464</span>        entry.nlink = DumpArchiveUtil.convert16(buffer, 34);<a name="line.464"></a>
+<span class="sourceLineNo">465</span>        // inumber, oldids?<a name="line.465"></a>
+<span class="sourceLineNo">466</span>        entry.setSize(DumpArchiveUtil.convert64(buffer, 40));<a name="line.466"></a>
+<span class="sourceLineNo">467</span><a name="line.467"></a>
+<span class="sourceLineNo">468</span>        long t = (1000L * DumpArchiveUtil.convert32(buffer, 48)) +<a name="line.468"></a>
+<span class="sourceLineNo">469</span>            (DumpArchiveUtil.convert32(buffer, 52) / 1000);<a name="line.469"></a>
+<span class="sourceLineNo">470</span>        entry.setAccessTime(new Date(t));<a name="line.470"></a>
+<span class="sourceLineNo">471</span>        t = (1000L * DumpArchiveUtil.convert32(buffer, 56)) +<a name="line.471"></a>
+<span class="sourceLineNo">472</span>            (DumpArchiveUtil.convert32(buffer, 60) / 1000);<a name="line.472"></a>
+<span class="sourceLineNo">473</span>        entry.setLastModifiedDate(new Date(t));<a name="line.473"></a>
+<span class="sourceLineNo">474</span>        t = (1000L * DumpArchiveUtil.convert32(buffer, 64)) +<a name="line.474"></a>
+<span class="sourceLineNo">475</span>            (DumpArchiveUtil.convert32(buffer, 68) / 1000);<a name="line.475"></a>
+<span class="sourceLineNo">476</span>        entry.ctime = t;<a name="line.476"></a>
+<span class="sourceLineNo">477</span><a name="line.477"></a>
+<span class="sourceLineNo">478</span>        // db: 72-119 - direct blocks<a name="line.478"></a>
+<span class="sourceLineNo">479</span>        // id: 120-131 - indirect blocks<a name="line.479"></a>
+<span class="sourceLineNo">480</span>        //entry.flags = DumpArchiveUtil.convert32(buffer, 132);<a name="line.480"></a>
+<span class="sourceLineNo">481</span>        //entry.blocks = DumpArchiveUtil.convert32(buffer, 136);<a name="line.481"></a>
+<span class="sourceLineNo">482</span>        entry.generation = DumpArchiveUtil.convert32(buffer, 140);<a name="line.482"></a>
+<span class="sourceLineNo">483</span>        entry.setUserId(DumpArchiveUtil.convert32(buffer, 144));<a name="line.483"></a>
+<span class="sourceLineNo">484</span>        entry.setGroupId(DumpArchiveUtil.convert32(buffer, 148));<a name="line.484"></a>
+<span class="sourceLineNo">485</span>        // two 32-bit spare values.<a name="line.485"></a>
+<span class="sourceLineNo">486</span>        header.count = DumpArchiveUtil.convert32(buffer, 160);<a name="line.486"></a>
+<span class="sourceLineNo">487</span><a name="line.487"></a>
+<span class="sourceLineNo">488</span>        header.holes = 0;<a name="line.488"></a>
+<span class="sourceLineNo">489</span><a name="line.489"></a>
+<span class="sourceLineNo">490</span>        for (int i = 0; (i &lt; 512) &amp;&amp; (i &lt; header.count); i++) {<a name="line.490"></a>
+<span class="sourceLineNo">491</span>            if (buffer[164 + i] == 0) {<a name="line.491"></a>
+<span class="sourceLineNo">492</span>                header.holes++;<a name="line.492"></a>
+<span class="sourceLineNo">493</span>            }<a name="line.493"></a>
+<span class="sourceLineNo">494</span>        }<a name="line.494"></a>
+<span class="sourceLineNo">495</span><a name="line.495"></a>
+<span class="sourceLineNo">496</span>        System.arraycopy(buffer, 164, header.cdata, 0, 512);<a name="line.496"></a>
+<span class="sourceLineNo">497</span><a name="line.497"></a>
+<span class="sourceLineNo">498</span>        entry.volume = header.getVolume();<a name="line.498"></a>
+<span class="sourceLineNo">499</span><a name="line.499"></a>
+<span class="sourceLineNo">500</span>        //entry.isSummaryOnly = false;<a name="line.500"></a>
+<span class="sourceLineNo">501</span>        return entry;<a name="line.501"></a>
+<span class="sourceLineNo">502</span>    }<a name="line.502"></a>
+<span class="sourceLineNo">503</span><a name="line.503"></a>
+<span class="sourceLineNo">504</span>    /**<a name="line.504"></a>
+<span class="sourceLineNo">505</span>     * Update entry with information from next tape segment header.<a name="line.505"></a>
+<span class="sourceLineNo">506</span>     */<a name="line.506"></a>
+<span class="sourceLineNo">507</span>    void update(final byte[] buffer) {<a name="line.507"></a>
+<span class="sourceLineNo">508</span>        header.volume = DumpArchiveUtil.convert32(buffer, 16);<a name="line.508"></a>
+<span class="sourceLineNo">509</span>        header.count = DumpArchiveUtil.convert32(buffer, 160);<a name="line.509"></a>
+<span class="sourceLineNo">510</span><a name="line.510"></a>
+<span class="sourceLineNo">511</span>        header.holes = 0;<a name="line.511"></a>
+<span class="sourceLineNo">512</span><a name="line.512"></a>
+<span class="sourceLineNo">513</span>        for (int i = 0; (i &lt; 512) &amp;&amp; (i &lt; header.count); i++) {<a name="line.513"></a>
+<span class="sourceLineNo">514</span>            if (buffer[164 + i] == 0) {<a name="line.514"></a>
+<span class="sourceLineNo">515</span>                header.holes++;<a name="line.515"></a>
+<span class="sourceLineNo">516</span>            }<a name="line.516"></a>
+<span class="sourceLineNo">517</span>        }<a name="line.517"></a>
+<span class="sourceLineNo">518</span><a name="line.518"></a>
+<span class="sourceLineNo">519</span>        System.arraycopy(buffer, 164, header.cdata, 0, 512);<a name="line.519"></a>
+<span class="sourceLineNo">520</span>    }<a name="line.520"></a>
+<span class="sourceLineNo">521</span><a name="line.521"></a>
+<span class="sourceLineNo">522</span>    /**<a name="line.522"></a>
+<span class="sourceLineNo">523</span>     * Archive entry as stored on tape. There is one TSH for (at most)<a name="line.523"></a>
+<span class="sourceLineNo">524</span>     * every 512k in the file.<a name="line.524"></a>
+<span class="sourceLineNo">525</span>     */<a name="line.525"></a>
+<span class="sourceLineNo">526</span>    static class TapeSegmentHeader {<a name="line.526"></a>
+<span class="sourceLineNo">527</span>        private DumpArchiveConstants.SEGMENT_TYPE type;<a name="line.527"></a>
+<span class="sourceLineNo">528</span>        private int volume;<a name="line.528"></a>
+<span class="sourceLineNo">529</span>        private int ino;<a name="line.529"></a>
+<span class="sourceLineNo">530</span>        private int count;<a name="line.530"></a>
+<span class="sourceLineNo">531</span>        private int holes;<a name="line.531"></a>
+<span class="sourceLineNo">532</span>        private final byte[] cdata = new byte[512]; // map of any 'holes'<a name="line.532"></a>
+<span class="sourceLineNo">533</span><a name="line.533"></a>
+<span class="sourceLineNo">534</span>        public DumpArchiveConstants.SEGMENT_TYPE getType() {<a name="line.534"></a>
+<span class="sourceLineNo">535</span>            return type;<a name="line.535"></a>
+<span class="sourceLineNo">536</span>        }<a name="line.536"></a>
+<span class="sourceLineNo">537</span><a name="line.537"></a>
+<span class="sourceLineNo">538</span>        public int getVolume() {<a name="line.538"></a>
+<span class="sourceLineNo">539</span>            return volume;<a name="line.539"></a>
+<span class="sourceLineNo">540</span>        }<a name="line.540"></a>
+<span class="sourceLineNo">541</span><a name="line.541"></a>
+<span class="sourceLineNo">542</span>        public int getIno() {<a name="line.542"></a>
+<span class="sourceLineNo">543</span>            return ino;<a name="line.543"></a>
+<span class="sourceLineNo">544</span>        }<a name="line.544"></a>
+<span class="sourceLineNo">545</span><a name="line.545"></a>
+<span class="sourceLineNo">546</span>        void setIno(final int ino) {<a name="line.546"></a>
+<span class="sourceLineNo">547</span>            this.ino = ino;<a name="line.547"></a>
+<span class="sourceLineNo">548</span>        }<a name="line.548"></a>
+<span class="sourceLineNo">549</span><a name="line.549"></a>
+<span class="sourceLineNo">550</span>        public int getCount() {<a name="line.550"></a>
+<span class="sourceLineNo">551</span>            return count;<a name="line.551"></a>
+<span class="sourceLineNo">552</span>        }<a name="line.552"></a>
+<span class="sourceLineNo">553</span><a name="line.553"></a>
+<span class="sourceLineNo">554</span>        public int getHoles() {<a name="line.554"></a>
+<span class="sourceLineNo">555</span>            return holes;<a name="line.555"></a>
+<span class="sourceLineNo">556</span>        }<a name="line.556"></a>
+<span class="sourceLineNo">557</span><a name="line.557"></a>
+<span class="sourceLineNo">558</span>        public int getCdata(final int idx) {<a name="line.558"></a>
+<span class="sourceLineNo">559</span>            return cdata[idx];<a name="line.559"></a>
+<span class="sourceLineNo">560</span>        }<a name="line.560"></a>
+<span class="sourceLineNo">561</span>    }<a name="line.561"></a>
+<span class="sourceLineNo">562</span><a name="line.562"></a>
+<span class="sourceLineNo">563</span>    /**<a name="line.563"></a>
+<span class="sourceLineNo">564</span>     * Returns the name of the entry.<a name="line.564"></a>
+<span class="sourceLineNo">565</span>     *<a name="line.565"></a>
+<span class="sourceLineNo">566</span>     * &lt;p&gt;This method returns the raw name as it is stored inside of the archive.&lt;/p&gt;<a name="line.566"></a>
+<span class="sourceLineNo">567</span>     *<a name="line.567"></a>
+<span class="sourceLineNo">568</span>     * @return the name of the entry.<a name="line.568"></a>
+<span class="sourceLineNo">569</span>     */<a name="line.569"></a>
+<span class="sourceLineNo">570</span>    @Override<a name="line.570"></a>
+<span class="sourceLineNo">571</span>    public String getName() {<a name="line.571"></a>
+<span class="sourceLineNo">572</span>        return name;<a name="line.572"></a>
+<span class="sourceLineNo">573</span>    }<a name="line.573"></a>
+<span class="sourceLineNo">574</span><a name="line.574"></a>
+<span class="sourceLineNo">575</span>    /**<a name="line.575"></a>
+<span class="sourceLineNo">576</span>     * Returns the unmodified name of the entry.<a name="line.576"></a>
+<span class="sourceLineNo">577</span>     * @return the name of the entry.<a name="line.577"></a>
+<span class="sourceLineNo">578</span>     */<a name="line.578"></a>
+<span class="sourceLineNo">579</span>    String getOriginalName() {<a name="line.579"></a>
+<span class="sourceLineNo">580</span>        return originalName;<a name="line.580"></a>
+<span class="sourceLineNo">581</span>    }<a name="line.581"></a>
+<span class="sourceLineNo">582</span><a name="line.582"></a>
+<span class="sourceLineNo">583</span>    /**<a name="line.583"></a>
+<span class="sourceLineNo">584</span>     * Sets the name of the entry.<a name="line.584"></a>
+<span class="sourceLineNo">585</span>     * @param name the name<a name="line.585"></a>
+<span class="sourceLineNo">586</span>     */<a name="line.586"></a>
+<span class="sourceLineNo">587</span>    public final void setName(String name) {<a name="line.587"></a>
+<span class="sourceLineNo">588</span>        this.originalName = name;<a name="line.588"></a>
+<span class="sourceLineNo">589</span>        if (name != null) {<a name="line.589"></a>
+<span class="sourceLineNo">590</span>            if (isDirectory() &amp;&amp; !name.endsWith("/")) {<a name="line.590"></a>
+<span class="sourceLineNo">591</span>                name += "/";<a name="line.591"></a>
+<span class="sourceLineNo">592</span>            }<a name="line.592"></a>
+<span class="sourceLineNo">593</span>            if (name.startsWith("./")) {<a name="line.593"></a>
+<span class="sourceLineNo">594</span>                name = name.substring(2);<a name="line.594"></a>
+<span class="sourceLineNo">595</span>            }<a name="line.595"></a>
+<span class="sourceLineNo">596</span>        }<a name="line.596"></a>
+<span class="sourceLineNo">597</span>        this.name = name;<a name="line.597"></a>
+<span class="sourceLineNo">598</span>    }<a name="line.598"></a>
+<span class="sourceLineNo">599</span><a name="line.599"></a>
+<span class="sourceLineNo">600</span>    /**<a name="line.600"></a>
+<span class="sourceLineNo">601</span>     * The last modified date.<a name="line.601"></a>
+<span class="sourceLineNo">602</span>     * @return the last modified date<a name="line.602"></a>
+<span class="sourceLineNo">603</span>     */<a name="line.603"></a>
+<span class="sourceLineNo">604</span>    @Override<a name="line.604"></a>
+<span class="sourceLineNo">605</span>    public Date getLastModifiedDate() {<a name="line.605"></a>
+<span class="sourceLineNo">606</span>        return new Date(mtime);<a name="line.606"></a>
+<span class="sourceLineNo">607</span>    }<a name="line.607"></a>
+<span class="sourceLineNo">608</span><a name="line.608"></a>
+<span class="sourceLineNo">609</span>    /**<a name="line.609"></a>
+<span class="sourceLineNo">610</span>     * Is this a directory?<a name="line.610"></a>
+<span class="sourceLineNo">611</span>     * @return whether this is a directory<a name="line.611"></a>
+<span class="sourceLineNo">612</span>     */<a name="line.612"></a>
+<span class="sourceLineNo">613</span>    @Override<a name="line.613"></a>
+<span class="sourceLineNo">614</span>    public boolean isDirectory() {<a name="line.614"></a>
+<span class="sourceLineNo">615</span>        return type == TYPE.DIRECTORY;<a name="line.615"></a>
+<span class="sourceLineNo">616</span>    }<a name="line.616"></a>
+<span class="sourceLineNo">617</span><a name="line.617"></a>
+<span class="sourceLineNo">618</span>    /**<a name="line.618"></a>
+<span class="sourceLineNo">619</span>     * Is this a regular file?<a name="line.619"></a>
+<span class="sourceLineNo">620</span>     * @return whether this is a regular file<a name="line.620"></a>
+<span class="sourceLineNo">621</span>     */<a name="line.621"></a>
+<span class="sourceLineNo">622</span>    public boolean isFile() {<a name="line.622"></a>
+<span class="sourceLineNo">623</span>        return type == TYPE.FILE;<a name="line.623"></a>
+<span class="sourceLineNo">624</span>    }<a name="line.624"></a>
+<span class="sourceLineNo">625</span><a name="line.625"></a>
+<span class="sourceLineNo">626</span>    /**<a name="line.626"></a>
+<span class="sourceLineNo">627</span>     * Is this a network device?<a name="line.627"></a>
+<span class="sourceLineNo">628</span>     * @return whether this is a socket<a name="line.628"></a>
+<span class="sourceLineNo">629</span>     */<a name="line.629"></a>
+<span class="sourceLineNo">630</span>    public boolean isSocket() {<a name="line.630"></a>
+<span class="sourceLineNo">631</span>        return type == TYPE.SOCKET;<a name="line.631"></a>
+<span class="sourceLineNo">632</span>    }<a name="line.632"></a>
+<span class="sourceLineNo">633</span><a name="line.633"></a>
+<span class="sourceLineNo">634</span>    /**<a name="line.634"></a>
+<span class="sourceLineNo">635</span>     * Is this a character device?<a name="line.635"></a>
+<span class="sourceLineNo">636</span>     * @return whether this is a character device<a name="line.636"></a>
+<span class="sourceLineNo">637</span>     */<a name="line.637"></a>
+<span class="sourceLineNo">638</span>    public boolean isChrDev() {<a name="line.638"></a>
+<span class="sourceLineNo">639</span>        return type == TYPE.CHRDEV;<a name="line.639"></a>
+<span class="sourceLineNo">640</span>    }<a name="line.640"></a>
+<span class="sourceLineNo">641</span><a name="line.641"></a>
+<span class="sourceLineNo">642</span>    /**<a name="line.642"></a>
+<span class="sourceLineNo">643</span>     * Is this a block device?<a name="line.643"></a>
+<span class="sourceLineNo">644</span>     * @return whether this is a block device<a name="line.644"></a>
+<span class="sourceLineNo">645</span>     */<a name="line.645"></a>
+<span class="sourceLineNo">646</span>    public boolean isBlkDev() {<a name="line.646"></a>
+<span class="sourceLineNo">647</span>        return type == TYPE.BLKDEV;<a name="line.647"></a>
+<span class="sourceLineNo">648</span>    }<a name="line.648"></a>
+<span class="sourceLineNo">649</span><a name="line.649"></a>
+<span class="sourceLineNo">650</span>    /**<a name="line.650"></a>
+<span class="sourceLineNo">651</span>     * Is this a fifo/pipe?<a name="line.651"></a>
+<span class="sourceLineNo">652</span>     * @return whether this is a fifo<a name="line.652"></a>
+<span class="sourceLineNo">653</span>     */<a name="line.653"></a>
+<span class="sourceLineNo">654</span>    public boolean isFifo() {<a name="line.654"></a>
+<span class="sourceLineNo">655</span>        return type == TYPE.FIFO;<a name="line.655"></a>
+<span class="sourceLineNo">656</span>    }<a name="line.656"></a>
+<span class="sourceLineNo">657</span><a name="line.657"></a>
+<span class="sourceLineNo">658</span>    /**<a name="line.658"></a>
+<span class="sourceLineNo">659</span>     * Get the type of the entry.<a name="line.659"></a>
+<span class="sourceLineNo">660</span>     * @return the type<a name="line.660"></a>
+<span class="sourceLineNo">661</span>     */<a name="line.661"></a>
+<span class="sourceLineNo">662</span>    public TYPE getType() {<a name="line.662"></a>
+<span class="sourceLineNo">663</span>        return type;<a name="line.663"></a>
+<span class="sourceLineNo">664</span>    }<a name="line.664"></a>
+<span class="sourceLineNo">665</span><a name="line.665"></a>
+<span class="sourceLineNo">666</span>    /**<a name="line.666"></a>
+<span class="sourceLineNo">667</span>     * Set the type of the entry.<a name="line.667"></a>
+<span class="sourceLineNo">668</span>     * @param type the type<a name="line.668"></a>
+<span class="sourceLineNo">669</span>     */<a name="line.669"></a>
+<span class="sourceLineNo">670</span>    public void setType(final TYPE type) {<a name="line.670"></a>
+<span class="sourceLineNo">671</span>        this.type = type;<a name="line.671"></a>
+<span class="sourceLineNo">672</span>    }<a name="line.672"></a>
+<span class="sourceLineNo">673</span><a name="line.673"></a>
+<span class="sourceLineNo">674</span>    /**<a name="line.674"></a>
+<span class="sourceLineNo">675</span>     * Return the access permissions on the entry.<a name="line.675"></a>
+<span class="sourceLineNo">676</span>     * @return the access permissions<a name="line.676"></a>
+<span class="sourceLineNo">677</span>     */<a name="line.677"></a>
+<span class="sourceLineNo">678</span>    public int getMode() {<a name="line.678"></a>
+<span class="sourceLineNo">679</span>        return mode;<a name="line.679"></a>
+<span class="sourceLineNo">680</span>    }<a name="line.680"></a>
+<span class="sourceLineNo">681</span><a name="line.681"></a>
+<span class="sourceLineNo">682</span>    /**<a name="line.682"></a>
+<span class="sourceLineNo">683</span>     * Set the access permissions on the entry.<a name="line.683"></a>
+<span class="sourceLineNo">684</span>     * @param mode the access permissions<a name="line.684"></a>
+<span class="sourceLineNo">685</span>     */<a name="line.685"></a>
+<span class="sourceLineNo">686</span>    public void setMode(final int mode) {<a name="line.686"></a>
+<span class="sourceLineNo">687</span>        this.mode = mode &amp; 07777;<a name="line.687"></a>
+<span class="sourceLineNo">688</span>        this.permissions = PERMISSION.find(mode);<a name="line.688"></a>
+<span class="sourceLineNo">689</span>    }<a name="line.689"></a>
+<span class="sourceLineNo">690</span><a name="line.690"></a>
+<span class="sourceLineNo">691</span>    /**<a name="line.691"></a>
+<span class="sourceLineNo">692</span>     * Returns the permissions on the entry.<a name="line.692"></a>
+<span class="sourceLineNo">693</span>     * @return the permissions<a name="line.693"></a>
+<span class="sourceLineNo">694</span>     */<a name="line.694"></a>
+<span class="sourceLineNo">695</span>    public Set&lt;PERMISSION&gt; getPermissions() {<a name="line.695"></a>
+<span class="sourceLineNo">696</span>        return permissions;<a name="line.696"></a>
+<span class="sourceLineNo">697</span>    }<a name="line.697"></a>
+<span class="sourceLineNo">698</span><a name="line.698"></a>
+<span class="sourceLineNo">699</span>    /**<a name="line.699"></a>
+<span class="sourceLineNo">700</span>     * Returns the size of the entry.<a name="line.700"></a>
+<span class="sourceLineNo">701</span>     * @return the size<a name="line.701"></a>
+<span class="sourceLineNo">702</span>     */<a name="line.702"></a>
+<span class="sourceLineNo">703</span>    @Override<a name="line.703"></a>
+<span class="sourceLineNo">704</span>    public long getSize() {<a name="line.704"></a>
+<span class="sourceLineNo">705</span>        return isDirectory() ? SIZE_UNKNOWN : size;<a name="line.705"></a>
+<span class="sourceLineNo">706</span>    }<a name="line.706"></a>
+<span class="sourceLineNo">707</span><a name="line.707"></a>
+<span class="sourceLineNo">708</span>    /**<a name="line.708"></a>
+<span class="sourceLineNo">709</span>     * Returns the size of the entry as read from the archive.<a name="line.709"></a>
+<span class="sourceLineNo">710</span>     */<a name="line.710"></a>
+<span class="sourceLineNo">711</span>    long getEntrySize() {<a name="line.711"></a>
+<span class="sourceLineNo">712</span>        return size;<a name="line.712"></a>
+<span class="sourceLineNo">713</span>    }<a name="line.713"></a>
+<span class="sourceLineNo">714</span><a name="line.714"></a>
+<span class="sourceLineNo">715</span>    /**<a name="line.715"></a>
+<span class="sourceLineNo">716</span>     * Set the size of the entry.<a name="line.716"></a>
+<span class="sourceLineNo">717</span>     * @param size the size<a name="line.717"></a>
+<span class="sourceLineNo">718</span>     */<a name="line.718"></a>
+<span class="sourceLineNo">719</span>    public void setSize(final long size) {<a name="line.719"></a>
+<span class="sourceLineNo">720</span>        this.size = size;<a name="line.720"></a>
+<span class="sourceLineNo">721</span>    }<a name="line.721"></a>
+<span class="sourceLineNo">722</span><a name="line.722"></a>
+<span class="sourceLineNo">723</span>    /**<a name="line.723"></a>
+<span class="sourceLineNo">724</span>     * Set the time the file was last modified.<a name="line.724"></a>
+<span class="sourceLineNo">725</span>     * @param mtime the last modified time<a name="line.725"></a>
+<span class="sourceLineNo">726</span>     */<a name="line.726"></a>
+<span class="sourceLineNo">727</span>    public void setLastModifiedDate(final Date mtime) {<a name="line.727"></a>
+<span class="sourceLineNo">728</span>        this.mtime = mtime.getTime();<a name="line.728"></a>
+<span class="sourceLineNo">729</span>    }<a name="line.729"></a>
+<span class="sourceLineNo">730</span><a name="line.730"></a>
+<span class="sourceLineNo">731</span>    /**<a name="line.731"></a>
+<span class="sourceLineNo">732</span>     * Returns the time the file was last accessed.<a name="line.732"></a>
+<span class="sourceLineNo">733</span>     * @return the access time<a name="line.733"></a>
+<span class="sourceLineNo">734</span>     */<a name="line.734"></a>
+<span class="sourceLineNo">735</span>    public Date getAccessTime() {<a name="line.735"></a>
+<span class="sourceLineNo">736</span>        return new Date(atime);<a name="line.736"></a>
+<span class="sourceLineNo">737</span>    }<a name="line.737"></a>
+<span class="sourceLineNo">738</span><a name="line.738"></a>
+<span class="sourceLineNo">739</span>    /**<a name="line.739"></a>
+<span class="sourceLineNo">740</span>     * Set the time the file was last accessed.<a name="line.740"></a>
+<span class="sourceLineNo">741</span>     * @param atime the access time<a name="line.741"></a>
+<span class="sourceLineNo">742</span>     */<a name="line.742"></a>
+<span class="sourceLineNo">743</span>    public void setAccessTime(final Date atime) {<a name="line.743"></a>
+<span class="sourceLineNo">744</span>        this.atime = atime.getTime();<a name="line.744"></a>
+<span class="sourceLineNo">745</span>    }<a name="line.745"></a>
+<span class="sourceLineNo">746</span><a name="line.746"></a>
+<span class="sourceLineNo">747</span>    /**<a name="line.747"></a>
+<span class="sourceLineNo">748</span>     * Return the user id.<a name="line.748"></a>
+<span class="sourceLineNo">749</span>     * @return the user id<a name="line.749"></a>
+<span class="sourceLineNo">750</span>     */<a name="line.750"></a>
+<span class="sourceLineNo">751</span>    public int getUserId() {<a name="line.751"></a>
+<span class="sourceLineNo">752</span>        return uid;<a name="line.752"></a>
+<span class="sourceLineNo">753</span>    }<a name="line.753"></a>
+<span class="sourceLineNo">754</span><a name="line.754"></a>
+<span class="sourceLineNo">755</span>    /**<a name="line.755"></a>
+<span class="sourceLineNo">756</span>     * Set the user id.<a name="line.756"></a>
+<span class="sourceLineNo">757</span>     * @param uid the user id<a name="line.757"></a>
+<span class="sourceLineNo">758</span>     */<a name="line.758"></a>
+<span class="sourceLineNo">759</span>    public void setUserId(final int uid) {<a name="line.759"></a>
+<span class="sourceLineNo">760</span>        this.uid = uid;<a name="line.760"></a>
+<span class="sourceLineNo">761</span>    }<a name="line.761"></a>
+<span class="sourceLineNo">762</span><a name="line.762"></a>
+<span class="sourceLineNo">763</span>    /**<a name="line.763"></a>
+<span class="sourceLineNo">764</span>     * Return the group id<a name="line.764"></a>
+<span class="sourceLineNo">765</span>     * @return the group id<a name="line.765"></a>
+<span class="sourceLineNo">766</span>     */<a name="line.766"></a>
+<span class="sourceLineNo">767</span>    public int getGroupId() {<a name="line.767"></a>
+<span class="sourceLineNo">768</span>        return gid;<a name="line.768"></a>
+<span class="sourceLineNo">769</span>    }<a name="line.769"></a>
+<span class="sourceLineNo">770</span><a name="line.770"></a>
+<span class="sourceLineNo">771</span>    /**<a name="line.771"></a>
+<span class="sourceLineNo">772</span>     * Set the group id.<a name="line.772"></a>
+<span class="sourceLineNo">773</span>     * @param gid the group id<a name="line.773"></a>
+<span class="sourceLineNo">774</span>     */<a name="line.774"></a>
+<span class="sourceLineNo">775</span>    public void setGroupId(final int gid) {<a name="line.775"></a>
+<span class="sourceLineNo">776</span>        this.gid = gid;<a name="line.776"></a>
+<span class="sourceLineNo">777</span>    }<a name="line.777"></a>
+<span class="sourceLineNo">778</span><a name="line.778"></a>
+<span class="sourceLineNo">779</span>    public enum TYPE {<a name="line.779"></a>
+<span class="sourceLineNo">780</span>        WHITEOUT(14),<a name="line.780"></a>
+<span class="sourceLineNo">781</span>        SOCKET(12),<a name="line.781"></a>
+<span class="sourceLineNo">782</span>        LINK(10),<a name="line.782"></a>
+<span class="sourceLineNo">783</span>        FILE(8),<a name="line.783"></a>
+<span class="sourceLineNo">784</span>        BLKDEV(6),<a name="line.784"></a>
+<span class="sourceLineNo">785</span>        DIRECTORY(4),<a name="line.785"></a>
+<span class="sourceLineNo">786</span>        CHRDEV(2),<a name="line.786"></a>
+<span class="sourceLineNo">787</span>        FIFO(1),<a name="line.787"></a>
+<span class="sourceLineNo">788</span>        UNKNOWN(15);<a name="line.788"></a>
+<span class="sourceLineNo">789</span><a name="line.789"></a>
+<span class="sourceLineNo">790</span>        private int code;<a name="line.790"></a>
+<span class="sourceLineNo">791</span><a name="line.791"></a>
+<span class="sourceLineNo">792</span>        TYPE(final int code) {<a name="line.792"></a>
+<span class="sourceLineNo">793</span>            this.code = code;<a name="line.793"></a>
+<span class="sourceLineNo">794</span>        }<a name="line.794"></a>
+<span class="sourceLineNo">795</span><a name="line.795"></a>
+<span class="sourceLineNo">796</span>        public static TYPE find(final int code) {<a name="line.796"></a>
+<span class="sourceLineNo">797</span>            TYPE type = UNKNOWN;<a name="line.797"></a>
+<span class="sourceLineNo">798</span><a name="line.798"></a>
+<span class="sourceLineNo">799</span>            for (final TYPE t : TYPE.values()) {<a name="line.799"></a>
+<span class="sourceLineNo">800</span>                if (code == t.code) {<a name="line.800"></a>
+<span class="sourceLineNo">801</span>                    type = t;<a name="line.801"></a>
+<span class="sourceLineNo">802</span>                }<a name="line.802"></a>
+<span class="sourceLineNo">803</span>            }<a name="line.803"></a>
+<span class="sourceLineNo">804</span><a name="line.804"></a>
+<span class="sourceLineNo">805</span>            return type;<a name="line.805"></a>
+<span class="sourceLineNo">806</span>        }<a name="line.806"></a>
+<span class="sourceLineNo">807</span>    }<a name="line.807"></a>
+<span class="sourceLineNo">808</span><a name="line.808"></a>
+<span class="sourceLineNo">809</span>    public enum PERMISSION {<a name="line.809"></a>
+<span class="sourceLineNo">810</span>        SETUID(04000),<a name="line.810"></a>
+<span class="sourceLineNo">811</span>        SETGUI(02000),<a name="line.811"></a>
+<span class="sourceLineNo">812</span>        STICKY(01000),<a name="line.812"></a>
+<span class="sourceLineNo">813</span>        USER_READ(00400),<a name="line.813"></a>
+<span class="sourceLineNo">814</span>        USER_WRITE(00200),<a name="line.814"></a>
+<span class="sourceLineNo">815</span>        USER_EXEC(00100),<a name="line.815"></a>
+<span class="sourceLineNo">816</span>        GROUP_READ(00040),<a name="line.816"></a>
+<span class="sourceLineNo">817</span>        GROUP_WRITE(00020),<a name="line.817"></a>
+<span class="sourceLineNo">818</span>        GROUP_EXEC(00010),<a name="line.818"></a>
+<span class="sourceLineNo">819</span>        WORLD_READ(00004),<a name="line.819"></a>
+<span class="sourceLineNo">820</span>        WORLD_WRITE(00002),<a name="line.820"></a>
+<span class="sourceLineNo">821</span>        WORLD_EXEC(00001);<a name="line.821"></a>
+<span class="sourceLineNo">822</span><a name="line.822"></a>
+<span class="sourceLineNo">823</span>        private int code;<a name="line.823"></a>
+<span class="sourceLineNo">824</span><a name="line.824"></a>
+<span class="sourceLineNo">825</span>        PERMISSION(final int code) {<a name="line.825"></a>
+<span class="sourceLineNo">826</span>            this.code = code;<a name="line.826"></a>
+<span class="sourceLineNo">827</span>        }<a name="line.827"></a>
+<span class="sourceLineNo">828</span><a name="line.828"></a>
+<span class="sourceLineNo">829</span>        public static Set&lt;PERMISSION&gt; find(final int code) {<a name="line.829"></a>
+<span class="sourceLineNo">830</span>            final Set&lt;PERMISSION&gt; set = new HashSet&lt;&gt;();<a name="line.830"></a>
+<span class="sourceLineNo">831</span><a name="line.831"></a>
+<span class="sourceLineNo">832</span>            for (final PERMISSION p : PERMISSION.values()) {<a name="line.832"></a>
+<span class="sourceLineNo">833</span>                if ((code &amp; p.code) == p.code) {<a name="line.833"></a>
+<span class="sourceLineNo">834</span>                    set.add(p);<a name="line.834"></a>
+<span class="sourceLineNo">835</span>                }<a name="line.835"></a>
+<span class="sourceLineNo">836</span>            }<a name="line.836"></a>
+<span class="sourceLineNo">837</span><a name="line.837"></a>
+<span class="sourceLineNo">838</span>            if (set.isEmpty()) {<a name="line.838"></a>
+<span class="sourceLineNo">839</span>                return Collections.emptySet();<a name="line.839"></a>
+<span class="sourceLineNo">840</span>            }<a name="line.840"></a>
+<span class="sourceLineNo">841</span><a name="line.841"></a>
+<span class="sourceLineNo">842</span>            return EnumSet.copyOf(set);<a name="line.842"></a>
+<span class="sourceLineNo">843</span>        }<a name="line.843"></a>
+<span class="sourceLineNo">844</span>    }<a name="line.844"></a>
+<span class="sourceLineNo">845</span>}<a name="line.845"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>

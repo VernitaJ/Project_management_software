@@ -1,22 +1,22 @@
 package tools;
 
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 
-import java.io.FileInputStream;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
 
 public class Import {
 
     public Import() {
         try {
-            POIFSFileSystem fs = new POIFSFileSystem(new FileInputStream(file));
-            HSSFWorkbook wb = new HSSFWorkbook(fs);
-            HSSFSheet sheet = wb.getSheetAt(0);
-            HSSFRow row;
-            HSSFCell cell;
+
+            //POIFSFileSystem fs = new POIFSFileSystem(new FileInputStream(System.getProperty("user.home") + "/ProjectData.xlsx"));
+            XSSFWorkbook wb = new XSSFWorkbook(System.getProperty("user.home") + "/ProjectData.xlsx");
+            XSSFSheet sheet = wb.getSheetAt(0);
+            XSSFRow row;
+            XSSFCell cell;
 
             int rows; // No of rows
             rows = sheet.getPhysicalNumberOfRows();
@@ -39,7 +39,7 @@ public class Import {
                     for(int c = 0; c < cols; c++) {
                         cell = row.getCell((short)c);
                         if(cell != null) {
-                            // Your code here
+                            System.out.println(cell);
                         }
                     }
                 }
