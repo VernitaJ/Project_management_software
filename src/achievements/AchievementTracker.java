@@ -32,4 +32,11 @@ public class AchievementTracker {
         }
         System.out.println(achievementName + " " + tracker.get(achievementName) + "/" + library.getAchievementRequirement(achievementName));
     }
+
+    public int getCurrentTier(String achievement){
+        int currentPoints = tracker.get(achievement);
+        int requiredPoints = library.getAchievement(achievement).getRequiredPoints();
+        return currentPoints/requiredPoints;
+    }
+
 }
