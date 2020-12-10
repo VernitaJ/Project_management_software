@@ -361,7 +361,7 @@ public class ProjectLibrary extends DataLibrary{
         }
         double value = -1;
         do {
-            value = input.getDouble("What is the total budget value in SEK?");
+            value = input.getDouble("What is the total budget value in SEK? ");
         } while(value < 0);
         currentProject.getBudget().setMoney(value);
         System.out.println("Budget in SEK has been added");
@@ -380,7 +380,7 @@ public class ProjectLibrary extends DataLibrary{
         }
         double value = -1;
         do {
-            value = input.getDouble("What is the total budget in hours?");
+            value = input.getDouble("What is the total budget in hours? ");
         } while(value < 0);
         currentProject.getBudget().setMoney(value);
         System.out.println("Budget in hours has been added");
