@@ -48,6 +48,8 @@ public class ProjectLibrary extends DataLibrary{
         LocalDate endDate = input.getDate("Project end date (YYYY-MM-DD): ");
         if(confirmAction("Are you sure you want to create this project?")) {
             addToList(new Project(name, currentUser, description, startDate, endDate));
+            //achievement tracking
+            currentUser.achievementTracker.addPoints("createProject",1);
         }
     }
     
@@ -162,6 +164,8 @@ public class ProjectLibrary extends DataLibrary{
                 if(removeItFromList(projectToDelete.getID())){
                     System.out.println("Project successfully deleted!");
                     System.out.println("Returning to main menu...");
+                    //achievement tracking
+                    currentUser.achievementTracker.addPoints("deleteProject",1);
                     return true;
                 } else {
                     System.out.println("Something went wrong");

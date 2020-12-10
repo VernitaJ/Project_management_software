@@ -1,5 +1,7 @@
 package entities;
 
+import achievements.AchievementTracker;
+
 import java.util.ArrayList;
 
 public class User extends Data {
@@ -13,6 +15,7 @@ public class User extends Data {
     private float salary;
     private float workingHours;
     private ArrayList<Message> inbox;
+    protected AchievementTracker achievementTracker;
 
     public User(String userName, String password, String eMail, String occupation, String companyName, float salary, float workingHours) {
         this.userName = userName;
@@ -23,6 +26,7 @@ public class User extends Data {
         this.salary = salary;
         this.workingHours = workingHours;
         this.inbox = new ArrayList<>();
+        this.achievementTracker = new AchievementTracker(this);
     }
 
 
