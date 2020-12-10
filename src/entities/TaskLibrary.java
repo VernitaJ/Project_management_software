@@ -57,12 +57,18 @@ public class TaskLibrary extends DataLibrary {
             System.out.println("Returning to project menu...");
             return;
         }
-
-        LocalDate startDate = input.getDate("Task Start Date (YYYY-MM-DD): ");
-        if (input.abort(description)) {
-            System.out.println("Returning to project menu...");
-            return;
-        }
+    
+        LocalDate startDate;
+        do {
+            startDate = input.getDate("Task Start Date (YYYY-MM-DD): ");
+            if (input.abort(description)) {
+                System.out.println("Returning to project menu...");
+                return;
+            }
+            if(startDate.isBefore(currentProject.getStartDate())) {
+                System.out.println("Sorry, that date is before the Project startdate, which is");
+            }
+        } while (startDate.isBefore(currentProject.getStartDate()));
         LocalDate deadline;
         do {
             deadline = input.getDate("Task Deadline (YYYY-MM-DD): ");
@@ -73,8 +79,12 @@ public class TaskLibrary extends DataLibrary {
             if (deadline.isAfter(currentProject.getEndDate())){
                 System.out.println("Sorry, that date falls after the Project deadline, which is" + currentProject.getEndDate());
             }
-        } while (deadline.isAfter(currentProject.getEndDate()));
+            if(deadline.isBefore(startDate)) {
+                System.out.println("Sorry, the task cannot end before it begins.");
+            }
+        } while (deadline.isAfter(currentProject.getEndDate()) || deadline.isBefore(startDate));
         currentProject.taskList.addToList(new Task(currentUser, name, description, startDate, deadline));
+        System.out.println("Task created");
     }
 
     public void deleteTask(Project currentProject, User currentUser) {
