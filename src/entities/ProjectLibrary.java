@@ -446,7 +446,7 @@ public class ProjectLibrary extends DataLibrary{
         System.out.println();
         return daysBetweenDisplayDates;
     }
-    
+
     public void printTasks(Project currentProject, ArrayList<Data> taskList, long daysBetween){
         for (Data task : taskList){
             Task currentTask = (Task) task;
@@ -491,7 +491,7 @@ public class ProjectLibrary extends DataLibrary{
     
     public Project projectNameExists(String stringToCheck) {
         for(Data project : list){
-            Project currentProject = ((Project)project);
+            Project currentProject = ((Project) project);
             if(currentProject.getName().equalsIgnoreCase(stringToCheck)) {
                 return currentProject;
             }
