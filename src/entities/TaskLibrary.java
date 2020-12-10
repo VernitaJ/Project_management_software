@@ -59,30 +59,33 @@ public class TaskLibrary extends DataLibrary {
         }
     
         LocalDate startDate;
+        LocalDate projectStartDate = currentProject.getStartDate();
         do {
             startDate = input.getDate("Task Start Date (YYYY-MM-DD): ");
             if (input.abort(description)) {
                 System.out.println("Returning to project menu...");
                 return;
             }
-            if(startDate.isBefore(currentProject.getStartDate())) {
-                System.out.println("Sorry, that date is before the Project startdate, which is");
+            if(startDate.isBefore(projectStartDate)) {
+                System.out.println("Sorry, that date is before the Project start date, which is" + projectStartDate);
             }
-        } while (startDate.isBefore(currentProject.getStartDate()));
+        } while (startDate.isBefore(projectStartDate));
+
         LocalDate deadline;
+        LocalDate projectEndDate = currentProject.getEndDate();
         do {
             deadline = input.getDate("Task Deadline (YYYY-MM-DD): ");
             if (input.abort(description)) {
                 System.out.println("Returning to project menu...");
                 return;
             }
-            if (deadline.isAfter(currentProject.getEndDate())){
-                System.out.println("Sorry, that date falls after the Project deadline, which is" + currentProject.getEndDate());
+            if (deadline.isAfter(projectEndDate)){
+                System.out.println("Sorry, that date falls after the Project deadline, which is" + projectEndDate);
             }
             if(deadline.isBefore(startDate)) {
                 System.out.println("Sorry, the task cannot end before it begins.");
             }
-        } while (deadline.isAfter(currentProject.getEndDate()) || deadline.isBefore(startDate));
+        } while (deadline.isAfter(projectEndDate) || deadline.isBefore(startDate));
         currentProject.taskList.addToList(new Task(currentUser, name, description, startDate, deadline));
         System.out.println("Task created");
     }
