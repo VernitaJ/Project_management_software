@@ -13,6 +13,11 @@ public class AchievementTracker {
         tracker.put(achievementName, total);
         return total;
     }
+    public int getCurrentTier(String achievement){
+        int currentPoints = tracker.get(achievement);
+        int requiredPoints = library.getAchievement(achievement).getRequiredPoints();
+        return currentPoints/requiredPoints;
+    }
 
     public ArrayList<String> getUserAchievements(){
         ArrayList<String> accomplishedOnes = new ArrayList<>();
@@ -30,13 +35,31 @@ public class AchievementTracker {
         if(!tracker.containsKey(achievementName)){
             return;
         }
-        System.out.println(achievementName + " " + tracker.get(achievementName) + "/" + library.getAchievementRequirement(achievementName));
+        int currentTier = getCurrentTier(achievementName);
+        String tier;
+        if(currentTier >= library.getAchievementMaxTier(achievementName)){
+            tier = "Tier Max";
+        } else {
+            tier = "Tier" + currentTier;
+        }
+        System.out.println(library.getAchievementTitle(achievementName)+ " - " + tier);
+        System.out.println(library.getAchievementDescription(achievementName));
+        if(!tier.equalsIgnoreCase("Tier Max")){
+            int progress = tracker.get(achievementName) - (currentTier* library.getAchievementRequirement(achievementName));
+            System.out.println(progress + " points more required to achieve next tier");
+        }
+
     }
 
-    public int getCurrentTier(String achievement){
-        int currentPoints = tracker.get(achievement);
-        int requiredPoints = library.getAchievement(achievement).getRequiredPoints();
-        return currentPoints/requiredPoints;
+    public void printUserAchievements(){
+        ArrayList<String> accomplishedOnes = getUserAchievements();
+        for(String achievement : accomplishedOnes){
+            printAchievementStatus(achievement);
+        }
     }
+
+
+
+
 
 }

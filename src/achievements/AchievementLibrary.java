@@ -31,6 +31,15 @@ public class AchievementLibrary {
     public int getAchievementRequirement(String achievementName){
         return achievements.get(achievementName).getRequiredPoints();
     }
+    public int getAchievementMaxTier(String achievementName){
+        return achievements.get(achievementName).getMaxTier();
+    }
+    public String getAchievementTitle(String achievementName){
+        return achievements.get(achievementName).getTitle();
+    }
+    public String getAchievementDescription(String achievementName){
+        return achievements.get(achievementName).getDescription();
+    }
 
     public boolean addNewAchievement(String name, String title, String description, int requiredPoints, int maxTier){
         if(achievements.containsKey(name)){
