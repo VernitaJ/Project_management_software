@@ -108,6 +108,8 @@ public class UserLibrary extends DataLibrary {
             if (userConfirm.equalsIgnoreCase("y")){
                 userToSendTo.getInbox().add(new Message(senderUserName,receiver,content));
                 System.out.println("Message sent.");
+                //achievement tracking
+                sender.achievementTracker.addPoints("sendMessage",1);
             }
         } else System.out.println("That user doesn't exist.");
     }

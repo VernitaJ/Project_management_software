@@ -42,8 +42,8 @@ public class AchievementLibrary {
     }
 
     public void initAchievements(){
-        //Create a message - Times: 25 - Max Tier: 3
-        addNewAchievement("createMessage",
+        //Send a message - Times: 25 - Max Tier: 3
+        addNewAchievement("sendMessage",
                      "Sender of many messages",
                 "Send some messages to earn this achievement",
                 25,
