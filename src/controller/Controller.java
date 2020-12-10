@@ -1,6 +1,5 @@
 package controller;
 
-import access_roles.CustomRoles;
 import access_roles.Developer;
 import access_roles.Maintainer;
 import components.Login;
@@ -121,7 +120,7 @@ public class Controller {
                 {
                         "Leaderboard",
                         "Projects",
-                        "Profiles",
+                        "Profile",
                         "Messaging",
                         "Logout",
                         "Exit"
@@ -386,9 +385,8 @@ public class Controller {
     private void profileMenu() {
         String[] options =
                 {
-                        "View My Profile",
+                        "View Profile",
                         "Edit Profile",
-                        "View All User Profiles",
                         "Main Menu",
                         "Logout",
                         "Exit"
@@ -399,12 +397,11 @@ public class Controller {
             String choice = menu.printMenu();
             switch (choice)
             {
-                case "1" -> userLibrary.viewMyProfile(currentUser);
+                case "1" -> notImplemented();
                 case "2" -> editProfileMenu();
-                case "3" -> userLibrary.viewAllProfiles();
-                case "4" -> mainMenu();
-                case "5" -> logout();
-                case "6" -> exit();
+                case "3" -> mainMenu();
+                case "4" -> logout();
+                case "5" -> exit();
             }
         } while (true);
     }
