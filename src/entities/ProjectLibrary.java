@@ -46,7 +46,9 @@ public class ProjectLibrary extends DataLibrary{
         String description = input.getStr("Project description: ");
         LocalDate startDate = input.getDate("Project start date (YYYY-MM-DD): ");
         LocalDate endDate = input.getDate("Project end date (YYYY-MM-DD): ");
-        addToList(new Project(name, currentUser, description, startDate, endDate));
+        if(confirmAction("Are you sure you want to create this project?")) {
+            addToList(new Project(name, currentUser, description, startDate, endDate));
+        }
     }
     
     public void addProjectToList(Project project)
@@ -474,5 +476,16 @@ public class ProjectLibrary extends DataLibrary{
         String name = task.getName();
         int count = name.length();
         return count;
+    }
+
+    public void printAllProjects()
+    {
+        for (Data project : list)
+        {
+          if (project instanceof Project)
+          {
+              System.out.println(project.toString());
+          }
+        }
     }
 }

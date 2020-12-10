@@ -24,4 +24,8 @@ abstract class Data {
     public String toString() {
         return "ID: " + ID;
     }
+
+    public String printTaskInfo(Task task) {
+        return(null);
+    }
 }

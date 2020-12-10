@@ -61,14 +61,14 @@ public class Input
         int userInput = 0;
         boolean complianceCheck = false;
         while (!complianceCheck) {
+            System.out.print(str);
             try {
-                System.out.print(str);
                 userInput = scanner.nextInt();
-                scanner.nextLine();
                 complianceCheck = true;
-            } catch (InputMismatchException e){
-                e.printStackTrace();
+            } catch (InputMismatchException e) {
+                System.out.println("Incorrect input provided. Please type a number.");
             }
+            scanner.nextLine();
         }
         return userInput;
     }

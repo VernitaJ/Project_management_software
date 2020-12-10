@@ -1,6 +1,6 @@
 package entities;
-import components.Login;
 import exceptions.IDAlreadyInUseException;
+
 import java.util.ArrayList;
 
 // If necessary, more methods can be added in the future
@@ -58,7 +58,7 @@ public class DataLibrary {
         }
     }
 
-    ArrayList<Data> getDataList() {
+    public ArrayList<Data> getDataList() {
         return list;
     }
 

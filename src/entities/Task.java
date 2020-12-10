@@ -99,7 +99,8 @@ public class Task extends Data{
         this.workedHours.add(log);
     }
 
-    public String toString(Task task) {
+@Override
+    public String printTaskInfo(Task task) {
         return "Task: " + task.getName() + "\n" + task.getDescription() + "" + "\n" + "Team Members: " + task.getAssignees().toString() + "\n";
     }
 }

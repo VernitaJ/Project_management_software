@@ -93,6 +93,16 @@ public class Project extends Data {
                 + timeLeftBeforeExceedingBudget();
     }
 
+    @Override
+    public String toString() {
+        return  "Name: " + name +
+                "\n Description: " + description +
+                "\n createdDate: " + createdDate +
+                "\n startDate: " + startDate +
+                "\n endDate: " + endDate +
+                "\n projectManager: " + projectManager;
+    }
+
     //not mentioned in the user stories soooo idk
     /*
     public void updateName(){

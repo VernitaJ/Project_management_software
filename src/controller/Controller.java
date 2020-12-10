@@ -119,7 +119,16 @@ public class Controller {
             {
                 case "1" -> createUser();
                 case "2" -> login();
-                case "3" -> notImplemented();
+                case "3" -> {
+                    if (systemAdminLogin())
+                    {
+                        sysAdminMenu();
+                    }
+                    else
+                    {
+                        loginMenu();
+                    }
+                }
                 case "4" -> exit();
             }
         } while (true);
@@ -130,7 +139,7 @@ public class Controller {
                 {
                         "Leaderboard",
                         "Projects",
-                        "Profile",
+                        "Profiles",
                         "Messaging",
                         "Logout",
                         "Exit"
@@ -156,8 +165,8 @@ public class Controller {
                 {
                         "Import (test) Data",
                         "Export (test) Data",
-                        "Remove User",
-                        "Main Menu",
+                        "View all Projects",
+                        "View all Users",
                         "Logout",
                         "Exit"
                 };
@@ -169,9 +178,9 @@ public class Controller {
             {
                 case "1" -> notImplemented();
                 case "2" -> notImplemented();
-                case "3" -> notImplemented();
-                case "4" -> mainMenu();
-                case "5" -> logout();
+                case "3" -> viewAllProjects();
+                case "4" -> viewAllUsers();
+                case "5" -> loginMenu();
                 case "6" -> exit();
             }
         } while (true);
@@ -254,6 +263,7 @@ public class Controller {
                         "Add Budget",
                         "Change Budget",
                         "View Cost",
+                        "View total hours by task",
                         "Expenses Forecast",
                         currentProject.getName() + " Menu",
                         "Logout",
@@ -268,10 +278,11 @@ public class Controller {
                 case "2" -> addBudgetMenu(currentProject, currentUser);
                 case "3" -> updateBudgetMenu(currentProject, currentUser);
                 case "4" -> projectLibrary.viewCost(currentProject);
-                case "5" -> projectLibrary.getExpenseForecast(currentProject, currentUser);
-                case "6" -> currentProjectMenu();
-                case "7" -> logout();
-                case "8" -> exit();
+                case "5" -> taskLibrary.printDetailedWorkedHours(currentProject);
+                case "6" -> projectLibrary.getExpenseForecast(currentProject, currentUser);
+                case "7" -> currentProjectMenu();
+                case "8" -> logout();
+                case "9" -> exit();
             }
         } while (true);
     }
@@ -434,6 +445,7 @@ public class Controller {
                         "Update Status",
                         "Delete Task",
                         "Add Worked Hours",
+                        "Total Worked Hours",
                         "Main Menu",
                         "Logout",
                         "Exit"
@@ -452,9 +464,10 @@ public class Controller {
                 case "6" -> taskLibrary.updateStatus(currentProject, currentTask, currentUser);
                 case "7" -> taskLibrary.deleteTask(currentProject, currentUser);
                 case "8" -> taskLibrary.addWorkedHours(currentProject, currentTask, currentUser);
-                case "9" -> mainMenu();
-                case "10" -> logout();
-                case "11" -> exit();
+                case "9" -> taskLibrary.printAllWorkedHours(currentTask);
+                case "10" -> mainMenu();
+                case "11" -> logout();
+                case "12" -> exit();
             }
         } while (true);
     }
@@ -488,8 +501,9 @@ public class Controller {
     private void profileMenu() {
         String[] options =
                 {
-                        "View Profile",
+                        "View My Profile",
                         "Edit Profile",
+                        "View All User Profiles",
                         "Main Menu",
                         "Logout",
                         "Exit"
@@ -500,11 +514,12 @@ public class Controller {
             String choice = menu.printMenu();
             switch (choice)
             {
-                case "1" -> notImplemented();
+            //    case "1" -> userLibrary.viewMyProfile(currentUser);
                 case "2" -> editProfileMenu();
-                case "3" -> mainMenu();
-                case "4" -> logout();
-                case "5" -> exit();
+            //    case "3" -> userLibrary.viewAllProfiles();
+                case "4" -> mainMenu();
+                case "5" -> logout();
+                case "6" -> exit();
             }
         } while (true);
     }
@@ -607,6 +622,26 @@ public class Controller {
             }
         }
         return null;
+    }
+
+    private boolean systemAdminLogin(){
+        if (Login.getInstance().authorizeAdmin())
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    private void viewAllProjects()
+    {
+        projectLibrary.printAllProjects();
+    }
+    private void viewAllUsers()
+    {
+        UserLibrary.getInstance().printAllUsers();
     }
 
     private void createUser() {
