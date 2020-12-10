@@ -1,6 +1,5 @@
 package entities;
 
-import access_roles.Roles;
 import java.util.ArrayList;
 
 public class User extends Data {
