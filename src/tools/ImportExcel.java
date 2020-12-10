@@ -10,7 +10,17 @@ import java.util.ArrayList;
 
 
 public class ImportExcel {
-
+                /*
+                - ROW
+                | COL
+                 */
+    
+    /*
+        1. Set numbers for all the headers.
+        2. Match numbers with keywords from the software.
+        3. Loop over the rest of the data.
+        4. Add the cell data into the appropriate software data slot.
+     */
     ArrayList<String> headerList;
 
     public ImportExcel() {
@@ -36,37 +46,21 @@ public class ImportExcel {
                     if(tmp > cols) cols = tmp;
                 }
             }
-                /*
-                - ROW
-                | COL
-                 */
-
-            /*
-                1. Set numbers for all the headers.
-                2. Match numbers with keywords from the software.
-                3. Loop over the rest of the data.
-                4. Add the cell data into the appropriate software data slot.
-             */
-
-            int amount = 0;
 
             assignHeaders(sheet, cols);
-            
 
-
-//
-//            for(int r = 0; r < rows; r++) {
-//                amount++;
-//                row = sheet.getRow(r);
-//                if(row != null) {
-//                    for(int c = 0; c < cols; c++) {
-//                        cell = row.getCell(c);
-//                        if(cell != null) {
-//                            System.out.println(cell);
-//                        }
-//                    }
-//                }
-//            }
+            for(int r = 0; r < rows; r++) {
+                row = sheet.getRow(r);
+                if(row != null) {
+                    confirmObjectType(row, row.getCell(0));
+                    for(int c = 0; c < cols; c++) {
+                        cell = row.getCell(c);
+                        if(cell != null) {
+                           // System.out.println(cell);
+                        }
+                    }
+                }
+            }
             System.out.println(this.headerList);
         } catch(Exception ioe) {
             ioe.printStackTrace();
@@ -79,7 +73,28 @@ public class ImportExcel {
                 3. Loop over the rest of the data.
                 4. Add the cell data into the appropriate software data slot.
              */
-
+    
+   private void confirmObjectType(XSSFRow row, XSSFCell cell) {
+       if(cell.toString().equalsIgnoreCase("Project")) {
+           // Run Project Import
+           importProject(row);
+           System.out.println("Project");
+       } else if(cell.toString().equalsIgnoreCase("User")) {
+           // User Import
+           System.out.println("User");
+       } else if(cell.toString().equalsIgnoreCase("Task")) {
+           // Task Import
+           System.out.println("Task");
+       } else if(cell.toString().equalsIgnoreCase("Worklog")) {
+           // Run Workload Import
+           System.out.println("Worklog");
+       }
+   }
+   
+   private void importProject(XSSFRow row) {
+      // Index/Column 1-6
+   }
+   
     private void assignHeaders(XSSFSheet sheet,  int cols) {
         this.headerList = new ArrayList<>();
         XSSFRow row = sheet.getRow(0);
