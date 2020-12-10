@@ -25,6 +25,7 @@ public class User extends Data {
         this.inbox = new ArrayList<>();
     }
 
+
     public ArrayList<Message> getInbox() {
         return inbox;
     }

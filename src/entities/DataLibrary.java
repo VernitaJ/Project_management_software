@@ -1,6 +1,6 @@
 package entities;
-import components.Login;
 import exceptions.IDAlreadyInUseException;
+
 import java.util.ArrayList;
 
 // If necessary, more methods can be added in the future

@@ -16,7 +16,7 @@ public class Input
     public static final String RED = "\u001B[31m";
     public static final String BLUE = "\u001B[34m";
     public static final String PURPLE = "\u001B[35m";
-    public static final String CYAN = "\u001B[36m";
+    public static final String GREEN = "\u001B[32m";
     public static final String WHITE = "\u001B[37m";
 
     private Input(){}
@@ -61,14 +61,14 @@ public class Input
         int userInput = 0;
         boolean complianceCheck = false;
         while (!complianceCheck) {
+            System.out.print(str);
             try {
-                System.out.print(str);
                 userInput = scanner.nextInt();
-                scanner.nextLine();
                 complianceCheck = true;
-            } catch (InputMismatchException e){
-                e.printStackTrace();
+            } catch (InputMismatchException e) {
+                System.out.println("Incorrect input provided. Please type a number.");
             }
+            scanner.nextLine();
         }
         return userInput;
     }

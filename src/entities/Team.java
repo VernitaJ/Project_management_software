@@ -111,7 +111,7 @@ public class Team extends Data {
                 System.out.println("Invalid user provided for the team.");
             }
         } else {
-            System.out.println("You do not have the correct access level");
+            System.out.println("You do not have the required access level.");
         }
     }
 
@@ -152,7 +152,7 @@ public class Team extends Data {
             throw new Exception(teamOwnerUser.getUserName() + " is not the team leader of the team '" + this.teamName + "'.");
         // Team leader should not be able to remove self from the team
         if (teamOwnerUser.getUserName().equals(teamMember.getUserName()))
-            throw new Exception("The team leader " + teamOwnerUser.getUserName() + " cannot remove self from the team '" + this.teamName + "'.");
+            throw new Exception("The team leader " + teamOwnerUser.getUserName() + " cannot remove themself from the team '" + this.teamName + "'.");
 
         if (memberList.containsKey(teamMember.getUserName())){
             this.memberList.remove(teamMember.getUserName());
@@ -202,21 +202,22 @@ public class Team extends Data {
 
     public TeamMember roleChange(User currentUser) {
         TeamMember currentMember = findTeamMember(currentUser);
-        if (currentMember != null && currentMember.getRole().adminAccess()) ;
-        for (String member : memberList.keySet()) {
-            System.out.println(memberList.get(member).getUser().getUserName());
-        }
-        String memberToChange = input.getStr("Team Member whose role you would like to modify: ");
-        try {
-            if (memberList.containsKey(memberToChange) && memberToChange.contentEquals(getOwner().getRoleType())) {
-                return memberList.get(memberToChange);
-            } else {
-                    System.out.println("User selected is has an access level that denies modification.");
+        if (currentMember != null && currentMember.getRole().adminAccess()) {
+            for (String member : memberList.keySet()) {
+                System.out.println(memberList.get(member).getUser().getUserName());
             }
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+            String memberToChange = input.getStr("Team Member whose role you would like to modify: ");
+            try {
+                if (memberList.containsKey(memberToChange) && !memberList.get(memberToChange).getRoleType().equals(getOwner().getRoleType())) {
+                    return memberList.get(memberToChange);
+                } else {
+                    System.out.println("User selected has an access level that denies modification.");
+                }
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
         }
-        return currentMember;
+        return null;
     }
     /*
     public WeakHashMap<String, TeamMember> getMemberList() {
