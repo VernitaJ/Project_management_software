@@ -1,11 +1,15 @@
 package entities;
 
+import achievements.AchievementTracker;
+
 import java.util.ArrayList;
 
 public class User extends Data {
 
-   // private Roles role;
+    AchievementTracker achievementTracker;
+    // private Roles role;
     private String userName;
+    private int experience;
     private String password;
     private String eMail;
     private String occupation;
