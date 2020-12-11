@@ -327,5 +327,15 @@ public class TaskLibrary extends DataLibrary {
             System.out.println("Total time worked on project tasks: " + allTasksHours + ".");
         }
     }
+    
+    public Task taskNameExists(String stringToCheck) {
+        for(Data task : list){
+            Task currentTask = ((Task) task);
+            if(currentTask.getName().equalsIgnoreCase(stringToCheck)) {
+                return currentTask;
+            }
+        }
+        return null;
+    }
 }
 

@@ -10,6 +10,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+import static java.lang.Double.parseDouble;
 import static java.lang.Float.parseFloat;
 
 
@@ -80,12 +81,11 @@ public class ImportExcel {
                     }
                 }
             }
-            System.out.println(this.headerList);
         } catch (Exception ioe) {
             ioe.printStackTrace();
         }
     }
-    /*
+            /*
                 1. Set numbers for all the headers.
                 2. Match numbers with keywords from the software.
                 3. Loop over the rest of the data.
@@ -104,6 +104,7 @@ public class ImportExcel {
             importTask(row);
         } else if (cell.toString().equalsIgnoreCase("Worklog")) {
             // Run Workload Import
+            importWorkLog(row);
         }
     }
 
@@ -143,7 +144,7 @@ public class ImportExcel {
         System.out.println("User added successfully.");
        /*
        30-35
-        */
+       */
     }
 
     private void importTask(XSSFRow row) {
@@ -160,8 +161,7 @@ public class ImportExcel {
                 LocalDate.parse(row.getCell(3).toString()),
                 LocalDate.parse(row.getCell(4).toString()));
         System.out.println("Task added successfully.");
-        TaskLibrary.getInstance().listProjectsTasks(currentProject, true);
-
+        // TaskLibrary.getInstance().listProjectsTasks(currentProject, true);
     }
         /*
         1 = Project
@@ -170,7 +170,35 @@ public class ImportExcel {
         6 = Desc
         8 = Est. Hours
         */
-
+    
+    private void importWorkLog(XSSFRow row) {
+        String projectName = row.getCell(1).toString();
+        Project currentProject = this.projectLibrary.projectNameExists(projectName);
+        String taskName = row.getCell(7).toString();
+        Task currentTask = currentProject.getTaskList().taskNameExists(taskName);
+        User user = (User) userLibrary.findUserInList(row.getCell(18).toString());
+        if(currentProject == null) {
+            return;
+        }
+        if(taskName == null) {
+            return;
+        }
+        if(user == null) {
+            return;
+        }
+        currentTask.addWorkedHours(
+                new WorkedHours(
+                        (User) userLibrary.findUserInList(row.getCell(18).toString()),
+                        parseDouble(row.getCell(13).toString())));
+        System.out.println(user.getUserName() + " " + parseDouble(row.getCell(13).toString()));
+        /*
+        1 = Project Description
+        7 = Task Description
+        12 = comment
+        13 = Hours
+        18 = User that adds time
+         */
+    }
 
     private void assignHeaders(XSSFSheet sheet, int cols) {
         this.headerList = new ArrayList<>();
