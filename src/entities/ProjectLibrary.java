@@ -256,7 +256,7 @@ public class ProjectLibrary extends DataLibrary{
                         getTotalCostProject(currentProject.taskList, false) -
                         iteratedCostRemainingDays;
         double iteratedMoneyToUsePerHour = (iteratedRemainingMoney /
-                getBudgetHoursRemaining(currentProject) / 24) / 8;
+                getBudgetHoursRemaining(currentProject)) ;
         iteratedRemainingMoney = new BigDecimal(iteratedRemainingMoney).
                 setScale(2, RoundingMode.HALF_UP).
                 doubleValue();
