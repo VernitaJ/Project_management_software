@@ -48,6 +48,8 @@ public class ProjectLibrary extends DataLibrary{
         LocalDate endDate = input.getDate("Project end date (YYYY-MM-DD): ");
         if(confirmAction("Are you sure you want to create this project?")) {
             addToList(new Project(name, currentUser, description, startDate, endDate));
+            //achievement tracking
+            currentUser.achievementTracker.addPoints("createProject",1);
         }
     }
     
@@ -94,7 +96,7 @@ public class ProjectLibrary extends DataLibrary{
         } else {
             int choice;
             do{
-                choice = input.getInt("Enter project number or 0 to return to the previous menu: ");
+                choice = input.getInt("\nEnter project number or 0 to return to previous menu: ");
             } while(choice < 0 || choice > projectList.size());
             
             if (choice == 0){
@@ -162,6 +164,8 @@ public class ProjectLibrary extends DataLibrary{
                 if(removeItFromList(projectToDelete.getID())){
                     System.out.println("Project successfully deleted!");
                     System.out.println("Returning to main menu...");
+                    //achievement tracking
+                    currentUser.achievementTracker.addPoints("deleteProject",1);
                     return true;
                 } else {
                     System.out.println("Something went wrong");
@@ -361,7 +365,7 @@ public class ProjectLibrary extends DataLibrary{
         }
         double value = -1;
         do {
-            value = input.getDouble("What is the total budget value in SEK?");
+            value = input.getDouble("What is the total budget value in SEK? ");
         } while(value < 0);
         currentProject.getBudget().setMoney(value);
         System.out.println("Budget in SEK has been added");
@@ -380,7 +384,7 @@ public class ProjectLibrary extends DataLibrary{
         }
         double value = -1;
         do {
-            value = input.getDouble("What is the total budget in hours?");
+            value = input.getDouble("What is the total budget in hours? ");
         } while(value < 0);
         currentProject.getBudget().setMoney(value);
         System.out.println("Budget in hours has been added");

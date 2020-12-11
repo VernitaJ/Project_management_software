@@ -11,7 +11,6 @@ public class Team extends Data {
 
     private Input input = Input.getInstance();
     private RoleFactory roleFactory = new RoleFactory();
-    private String teamName;
     private String ownerUserName;
 
     private WeakHashMap<String, TeamMember> memberList;
@@ -19,9 +18,7 @@ public class Team extends Data {
     /*
         Create a team with 1 team member: the team's owner.
      */
-    public Team(User teamOwner, String teamName){
-        // this.teamName = input.getStr("Enter desired team name:");
-        this.teamName = teamName;
+    public Team(User teamOwner){
         this.memberList = new WeakHashMap<String, TeamMember>();
         this.ownerUserName = teamOwner.getUserName();
         this.memberList.put(teamOwner.getUserName(), new TeamMember(teamOwner, roleFactory.createOwner()));
@@ -29,14 +26,6 @@ public class Team extends Data {
 
     public Team() {
         this.memberList = new WeakHashMap<>();
-    }
-
-    public String getTeamName() {
-        return teamName;
-    }
-
-    public void setTeamName(String teamName) {
-        this.teamName = teamName;
     }
 
     public TeamMember getOwner() {
@@ -59,8 +48,8 @@ public class Team extends Data {
     {
         if (hasAdminAccess(user)){
             String roleType = input.getStr("Enter role name: ");
-            String canCreateTask = input.getStr("Can role create a task? Y/N: ");
-            String adminAccess = input.getStr("Does the role have admin access? Y/N: ");
+            String canCreateTask = input.getStr("Can the " + roleType + " role create a task? Y/N: ");
+            String adminAccess = input.getStr("Does the " + roleType + " role have admin access? Y/N: ");
             boolean createTask = false;
             boolean hasAdminAccess = false;
             if (canCreateTask.equalsIgnoreCase("Y")){
@@ -135,7 +124,7 @@ public class Team extends Data {
         if (memberList.containsKey(user.getUserName())) {
             return this.memberList.get(user.getUserName()).getUser();
         } else {
-            throw new Exception("User '" + user.getUserName() + "' is not part of the team + '" + teamName + "'.");
+            throw new Exception(user.getUserName() + " is not part of the team.");
         }
     }
 
@@ -143,21 +132,21 @@ public class Team extends Data {
         TeamMember currentMember = findTeamMember(teamOwnerUser);
         // The target team member cannot be null
         if (teamMember == null)
-            throw new Exception("Cannot remove a 'null' member from the team '" + this.teamName + "'.");
+            throw new Exception("Cannot remove a 'null' member from the team.");
         // Team leader cannot be null
         if (currentMember == null)
-            throw new Exception(teamOwnerUser.getUserName() + " is not part of the team '" + this.teamName + "'.");
+            throw new Exception(teamOwnerUser.getUserName() + " is not part of the team.");
         // Only team leader can remove others from the team
         if (teamOwnerUser.getUserName().equals(getOwner().getUser().getUserName()) == false)
-            throw new Exception(teamOwnerUser.getUserName() + " is not the team leader of the team '" + this.teamName + "'.");
+            throw new Exception(teamOwnerUser.getUserName() + " is not the team leader of the team.");
         // Team leader should not be able to remove self from the team
         if (teamOwnerUser.getUserName().equals(teamMember.getUserName()))
-            throw new Exception("The team leader " + teamOwnerUser.getUserName() + " cannot remove themself from the team '" + this.teamName + "'.");
+            throw new Exception("The team leader " + teamOwnerUser.getUserName() + " cannot remove themself from the team.");
 
         if (memberList.containsKey(teamMember.getUserName())){
             this.memberList.remove(teamMember.getUserName());
         } else {
-            throw new Exception("Cannot remove " + teamMember.getUserName() + " from the team '" + teamName + "'. The user is not part of this team.");
+            throw new Exception("Cannot remove " + teamMember.getUserName() + ". The user is not part of this team.");
         }
     }
 
@@ -219,17 +208,5 @@ public class Team extends Data {
         }
         return null;
     }
-    /*
-    public WeakHashMap<String, TeamMember> getMemberList() {
-        return memberList;
-    }
-
-    //to be changed when getTeamMember function is implemented
-
-    private String toString(Team team){
-        return team.getOwner().getUser().getUserName();
-    }
-     */
-
 }
 

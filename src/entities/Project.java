@@ -11,13 +11,11 @@ public class Project extends Data {
     private LocalDate createdDate;
     private LocalDate startDate;
     private LocalDate endDate;
-
-
     protected Budget budget;
     protected TaskLibrary taskList;
     protected TeamLibrary teamLibrary = TeamLibrary.getInstance();
     private User projectManager;
-    private Team team = null; // no team by default as part of the acceptance criteria
+    private Team team;
 
     public Project(String name, User projectManager, String description, LocalDate startDate, LocalDate endDate) {
         this.name = name;
@@ -29,6 +27,7 @@ public class Project extends Data {
         this.status = "";
         this.projectManager = projectManager;
         this.budget = new Budget();
+        this.team = new Team(projectManager);
     }
 
     public void setStatus(String status) {

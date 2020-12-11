@@ -344,7 +344,7 @@ public class Controller {
                         "Logout",
                         "Exit"
                 };
-        menu = new Menu(currentProject.getName() + "Tasks: " +  " Menu", options);
+        menu = new Menu(currentProject.getName() + ": Tasks" +  " Menu", options);
         do
         {
             String choice = menu.printMenu();
@@ -374,13 +374,11 @@ public class Controller {
         }
         else
         {
-            menuName = currentProject.getTeam().getTeamName() + " Menu";
+            menuName = "Team Menu";
         }
         String[] options =
                 {
-                        "Create Team",
                         "View Team",
-                        "Edit Team Name",
                         "Add Team Member",
                         "Remove Team Member",
                         "Change Team Member Role",
@@ -395,20 +393,19 @@ public class Controller {
             String choice = menu.printMenu();
             switch (choice)
             {
-                case "1" -> teamLibrary.createTeam(currentProject);
-                case "2" -> teamLibrary.viewTeam(currentProject.getTeam());
-                case "3" -> teamLibrary.editTeamName(currentProject.getTeam());
-                case "4" -> addMember();
-                case "5" -> teamLibrary.removeTeamMember(currentProject.getTeam(), currentUser);
-                case "6" -> changeMemberRoleMenu();
-                case "7" -> teamLibrary.removeTeam(currentProject, currentUser);
-                case "8" -> currentProjectMenu();
-                case "9" -> logout();
-                case "10" -> exit();
+                case "1" -> teamLibrary.viewTeam(currentProject.getTeam());
+                case "2" -> addMemberMenu();
+                case "3" -> teamLibrary.removeTeamMember(currentProject.getTeam(), currentUser);
+                case "4" -> changeMemberRoleMenu();
+               // case "7" -> teamLibrary.removeTeam(currentProject, currentUser);
+                case "5" -> currentProjectMenu();
+                case "6" -> projectMenu();
+                case "7" -> logout();
+                case "8" -> exit();
             }
         } while (true);
     }
-    private void addMember() {
+    private void addMemberMenu() {
         String[] options =
                 {
                         "Maintainer",
@@ -446,6 +443,7 @@ public class Controller {
                         "Delete Task",
                         "Add Worked Hours",
                         "Total Worked Hours",
+                        "Project Menu",
                         "Main Menu",
                         "Logout",
                         "Exit"
@@ -465,9 +463,10 @@ public class Controller {
                 case "7" -> taskLibrary.deleteTask(currentProject, currentUser);
                 case "8" -> taskLibrary.addWorkedHours(currentProject, currentTask, currentUser);
                 case "9" -> taskLibrary.printAllWorkedHours(currentTask);
-                case "10" -> mainMenu();
-                case "11" -> logout();
-                case "12" -> exit();
+                case "10" -> currentProjectMenu();
+                case "11" -> mainMenu();
+                case "12" -> logout();
+                case "13" -> exit();
             }
         } while (true);
     }
@@ -514,9 +513,9 @@ public class Controller {
             String choice = menu.printMenu();
             switch (choice)
             {
-            //    case "1" -> userLibrary.viewMyProfile(currentUser);
+                case "1" -> userLibrary.viewMyProfile(currentUser);
                 case "2" -> editProfileMenu();
-            //    case "3" -> userLibrary.viewAllProfiles();
+                case "3" -> userLibrary.viewAllProfiles();
                 case "4" -> mainMenu();
                 case "5" -> logout();
                 case "6" -> exit();
@@ -542,17 +541,18 @@ public class Controller {
             String choice = menu.printMenu();
             switch (choice)
             {
-                case "1" -> notImplemented();
-                case "2" -> notImplemented();
-                case "3" -> notImplemented();
-                case "4" -> notImplemented();
-                case "5" -> notImplemented();
+                case "1" -> userLibrary.changeUsername(currentUser);
+                case "2" -> userLibrary.changePassword(currentUser);
+                case "3" -> userLibrary.updateEmail(currentUser);
+                case "4" -> userLibrary.updateCompany(currentUser);
+                case "5" -> userLibrary.updateOccupation(currentUser);
                 case "6" -> mainMenu();
                 case "7" -> logout();
                 case "8" -> exit();
             }
         } while (true);
     }
+
 
     private void leaderboardMenu() {
         String[] options =
@@ -586,7 +586,7 @@ public class Controller {
                         "Logout",
                         "Exit"
                 };
-        menu = new Menu(currentProject.getTeam().getTeamName() + " Menu", options);
+        menu = new Menu("Team Roles Menu", options);
         do
         {
             String choice = menu.printMenu();

@@ -1,7 +1,6 @@
 package entities;
 
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
 
 public class User extends Data {
 
@@ -9,7 +8,6 @@ public class User extends Data {
     private String userName;
     private String password;
     private String eMail;
-    private int experience;
     private String occupation;
     private String companyName;
     private float salary;
@@ -26,6 +24,7 @@ public class User extends Data {
         this.workingHours = workingHours;
         this.inbox = new ArrayList<>();
         this.experience = 0;
+        this.achievementTracker = new AchievementTracker(this);
     }
 
 
