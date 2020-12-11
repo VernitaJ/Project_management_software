@@ -176,11 +176,12 @@ public class ImportExcel {
         Project currentProject = this.projectLibrary.projectNameExists(projectName);
         String taskName = row.getCell(7).toString();
         Task currentTask = currentProject.getTaskList().taskNameExists(taskName);
-        User user = (User) userLibrary.findUserInList(row.getCell(18).toString());
+        User user = (User) this.userLibrary.findUserInList(row.getCell(18).toString().toLowerCase());
+        System.out.println(projectName + " " + taskName + " " + user.getUserName() + " " + parseDouble(row.getCell(13).toString()));
         if(currentProject == null) {
             return;
         }
-        if(taskName == null) {
+        if(taskName == null || taskName.equals("")) {
             return;
         }
         if(user == null) {
@@ -190,7 +191,7 @@ public class ImportExcel {
                 new WorkedHours(
                         (User) userLibrary.findUserInList(row.getCell(18).toString()),
                         parseDouble(row.getCell(13).toString())));
-        System.out.println(user.getUserName() + " " + parseDouble(row.getCell(13).toString()));
+        
         /*
         1 = Project Description
         7 = Task Description
