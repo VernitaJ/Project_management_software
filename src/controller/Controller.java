@@ -338,6 +338,7 @@ public class Controller {
                 {
                         "Add Task",
                         "View Tasks",
+                        "Remove Task",
                         "Completed Tasks",
                         "Countdown",
                         "Main Menu",
@@ -357,11 +358,12 @@ public class Controller {
                         currentTaskMenu(currentProject, currentTask, currentUser);
                     }
                 } // taskMenu
-                case "3" -> taskLibrary.completedTasks(currentProject);
-                case "4" -> taskLibrary.countdown(currentProject);
-                case "5" -> mainMenu();
-                case "6" -> logout();
-                case "7" -> exit();
+                case "3" -> taskLibrary.deleteTask(currentProject, currentUser);
+                case "4" -> taskLibrary.completedTasks(currentProject);
+                case "5" -> taskLibrary.countdown(currentProject);
+                case "6" -> mainMenu();
+                case "7" -> logout();
+                case "8" -> exit();
             }
         } while (true);
     }
@@ -440,7 +442,6 @@ public class Controller {
                         "Update Name",
                         "Update Description",
                         "Update Status",
-                        "Delete Task",
                         "Add Worked Hours",
                         "Total Worked Hours",
                         "Project Menu",
@@ -457,16 +458,15 @@ public class Controller {
                 case "1" -> taskLibrary.viewTaskDetails(currentTask);
                 case "2" -> taskLibrary.addAssignee(currentProject, currentTask, currentUser);
                 case "3" -> taskLibrary.removeAssignee(currentProject.getTeam(), currentTask.getAssignees(), currentUser);
-                case "4" -> notImplemented();
-                case "5" -> notImplemented();
+                case "4" -> taskLibrary.updateName(currentProject, currentTask, currentUser);
+                case "5" -> taskLibrary.updateDescription(currentProject, currentTask, currentUser);
                 case "6" -> taskLibrary.updateStatus(currentProject, currentTask, currentUser);
-                case "7" -> taskLibrary.deleteTask(currentProject, currentUser);
-                case "8" -> taskLibrary.addWorkedHours(currentProject, currentTask, currentUser);
-                case "9" -> taskLibrary.printAllWorkedHours(currentTask);
-                case "10" -> currentProjectMenu();
-                case "11" -> mainMenu();
-                case "12" -> logout();
-                case "13" -> exit();
+                case "7" -> taskLibrary.addWorkedHours(currentProject, currentTask, currentUser);
+                case "8" -> taskLibrary.printAllWorkedHours(currentTask);
+                case "9" -> currentProjectMenu();
+                case "10" -> mainMenu();
+                case "11" -> logout();
+                case "12" -> exit();
             }
         } while (true);
     }
