@@ -27,6 +27,7 @@ public class AchievementTracker {
         if(required == library.getAchievementRequirement(achievementName) &&
            getCurrentTier(achievementName) <= library.getAchievementMaxTier(achievementName) ){
             sendCongratsMessage(achievementName);
+            user.addExp(library.getAchievementRequirement(achievementName));
         }
 
 
@@ -50,6 +51,18 @@ public class AchievementTracker {
             }
         }
         return accomplishedOnes;
+    }
+
+    public int getNumOfUserAchievements(){
+        int totalAchievements=0;
+        for(String achievementName : tracker.keySet()){
+
+            //if user have enough points to have this achievement, add name to return list;
+            if(tracker.get(achievementName) >= library.getAchievementRequirement(achievementName)){
+                totalAchievements++;
+            }
+        }
+        return totalAchievements;
     }
 
 

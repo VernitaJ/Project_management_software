@@ -147,6 +147,7 @@ public class Controller {
         menu = new Menu("Main Menu", options);
         do
         {
+            currentUser.getXpBar();
             String choice = menu.printMenu();
             switch (choice)
             {
