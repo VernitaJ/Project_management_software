@@ -65,7 +65,7 @@ public class AchievementLibrary {
         addNewAchievement("createProject",
                 "Good idea?",
                 "Create some projects to earn this achievement",
-                1,
+                5,
                 3);
 
         //Delete a project - Times: 3 - Max Tier: 3
@@ -79,8 +79,8 @@ public class AchievementLibrary {
         addNewAchievement("createTask",
                 "So you think your a supervisor now?",
                 "Create some tasks in a project to earn this achievement",
-                1,
-                2);
+                10,
+                3);
     }
 
 
