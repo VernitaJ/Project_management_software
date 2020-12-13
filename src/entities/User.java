@@ -115,6 +115,10 @@ public class User extends Data {
         System.out.println("Level: " + getLevel());
         System.out.println("[" + box.repeat(progress*2) + empty.repeat(remaining*2) + "]" + " Progress: " + progress*10 + "%");
     }
+
+    public String getTag(){
+        return " [Level " + getLevel() + " - " + achievementTracker.getNumOfUserAchievements() + " Achievements]";
+    }
     /* public Roles getRole() {
         return role;
     }

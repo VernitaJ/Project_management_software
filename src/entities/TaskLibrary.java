@@ -299,6 +299,8 @@ public class TaskLibrary extends DataLibrary {
             double workedHours = input.getDouble("Please enter the amount of worked hours: ");
             WorkedHours newLog = new WorkedHours(currentUser,workedHours);
             currentTask.addWorkedHours(newLog);
+            int xp = (int)workedHours;
+            currentUser.addExp(xp);
             System.out.println(getAllWorkedHours(currentTask) + " hours spent on this task.");
         }else {
             System.out.println("You are not authorized to perform this action!");

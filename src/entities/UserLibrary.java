@@ -131,7 +131,7 @@ public class UserLibrary extends DataLibrary {
         System.out.println("Email: " + user.getEmail());
         System.out.println("Occupation: " + user.getOccupation());
         System.out.println("Company Name: " + user.getCompanyName());
-        System.out.println("User Level: TBA" );
+        user.getXpBar();
         if(user.achievementTracker.getUserAchievements().size() > 0){
             System.out.println("Achievements:" );
             user.achievementTracker.printUserAchievements();
@@ -246,6 +246,7 @@ public class UserLibrary extends DataLibrary {
         }
     }
 
+
     public void viewAllProfiles (){
         int count = 1;
         System.out.println("All users: ");
@@ -259,12 +260,7 @@ public class UserLibrary extends DataLibrary {
         int choice = Input.getInstance().getInt("Select the user whose profile you wish to view: ");
         if (choice >= 1 || choice < count) {
             try {
-                System.out.println("Username: " + allUsers.get(choice - 1).getUserName());
-                System.out.println("Email: " + allUsers.get(choice - 1).getEmail());
-                System.out.println("Occupation: " + allUsers.get(choice - 1).getOccupation());
-                System.out.println("Company Name: " + allUsers.get(choice - 1).getCompanyName() );
-                System.out.println("User Level: TBA" );
-                System.out.println("Achievements: TBA" );
+                viewMyProfile(allUsers.get(choice - 1));
             } catch (Exception e) {
                 System.out.println("Your input does not match the available choices. Please try again.");
             }
