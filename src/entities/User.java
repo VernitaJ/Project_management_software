@@ -88,6 +88,10 @@ public class User extends Data {
         this.userName = userName;
     }
 
+    public void seteMail(String eMail) {
+        this.eMail = eMail;
+    }
+
     public void setSalary(float salary) {
         this.salary = salary;
     }
