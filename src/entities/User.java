@@ -6,7 +6,6 @@ import java.util.ArrayList;
 
 public class User extends Data {
 
-    AchievementTracker achievementTracker;
     // private Roles role;
     private String userName;
     private int experience;
@@ -17,6 +16,7 @@ public class User extends Data {
     private float salary;
     private float workingHours;
     private ArrayList<Message> inbox;
+    public AchievementTracker achievementTracker;
 
     public User(String userName, String password, String eMail, String occupation, String companyName, float salary, float workingHours) {
         this.userName = userName;
