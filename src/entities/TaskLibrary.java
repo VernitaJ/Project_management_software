@@ -180,6 +180,22 @@ public class TaskLibrary extends DataLibrary {
         }
         currentTask.setStatus(newStatus);
     }
+    
+    public void updateName(Project currentProject, Task currentTask, User currentUser) {
+        if(!confirmAccess(currentProject.getTeam(), currentUser)) {
+            return;
+        }
+        String newName = input.getStr("Enter the name: ");
+        currentTask.setName(newName);
+    }
+    
+    public void updateDescription(Project currentProject, Task currentTask, User currentUser) {
+        if(!confirmAccess(currentProject.getTeam(), currentUser)) {
+            return;
+        }
+        String newDescription = input.getStr("Enter the description: ");
+        currentTask.setDescription(newDescription);
+    }
 
     public void addAssignee(Project currentProject, Task currentTask, User currentUser) {
         Team projectTeam = currentProject.getTeam();
