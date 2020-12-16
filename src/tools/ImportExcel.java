@@ -33,7 +33,7 @@ public class ImportExcel {
     User currentUser;
     RoleFactory roleFactory = new RoleFactory();
 
-    public ImportExcel(UserLibrary userLibrary, TeamLibrary teamLibrary, ProjectLibrary projectLibrary, User currentUser) {
+    public ImportExcel(UserLibrary userLibrary, ProjectLibrary projectLibrary, User currentUser) {
         this.projectLibrary = projectLibrary;
         this.userLibrary = userLibrary;
         this.currentUser = currentUser;
@@ -157,25 +157,32 @@ public class ImportExcel {
         if(user == null) {
             return;
         }
-        // Add User To Project Team
-        if(!currentProject.getTeam().isMember(user)) {
-            currentProject.getTeam().getMemberList().put(
-                    user.getUserName(),
-                            new TeamMember(
-                                    user,
-                                    roleFactory.createMaintainer()));
-        }
-        // Assign User To Task
-        if(!currentTask.getAssignees().toString().contains(user.getUserName())) {
-            currentTask.getAssignees().add(user);
-            System.out.println("Assigned " + user.getUserName() + " to " + currentTask.getDescription());
-        }
         currentTask.addWorkedHours(
                 new WorkedHours(
                         (User) userLibrary.findUserInList(row.getCell(18).toString().toLowerCase()),
                         parseDouble(row.getCell(13).toString())));
+        
+        addUserToProjectTeam(currentProject, user);
+        assignUserToTask(currentTask, user);
     }
 
+    private void addUserToProjectTeam(Project currentProject, User user) {
+        if (!currentProject.getTeam().isMember(user)) {
+            currentProject.getTeam().getMemberList().put(
+                    user.getUserName(),
+                    new TeamMember(
+                            user,
+                            roleFactory.createMaintainer()));
+        }
+    }
+    
+    private void assignUserToTask(Task currentTask, User user) {
+            if(!currentTask.getAssignees().toString().contains(user.getUserName())) {
+                currentTask.getAssignees().add(user);
+                System.out.println("Assigned " + user.getUserName() + " to " + currentTask.getDescription());
+            }
+    }
+    
     private void assignHeaders(XSSFSheet sheet, int cols) {
         this.headerList = new ArrayList<>();
         XSSFRow row = sheet.getRow(0);
