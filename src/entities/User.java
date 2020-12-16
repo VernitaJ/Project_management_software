@@ -109,7 +109,12 @@ public class User extends Data {
     {
         return experience/10;
     }
-
+    
+    @Override
+    public String toString() {
+        return getUserName();
+    }
+    
     public void getXpBar()
     {
         String box = "#";
