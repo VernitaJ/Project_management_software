@@ -25,49 +25,6 @@ public class TeamLibrary extends DataLibrary{
         }
     }
 
-   /*
-   public void createTeam(Project project) {
-        if (project.getTeam() != null) {
-            System.out.println("Project '" + project.getName() + "' already has a team.");
-        } else {
-            String option = input.getStr("Are you sure you want to create a team for project '"
-                    + project.getName() + "'?: Y/N ");
-            option = option.toLowerCase();
-            if (option.equals("y") || option.equals("yes")) {
-                String teamName = input.getStr("Enter new team name: ");
-                try {
-                    if (teamName.isBlank() || teamName.isEmpty() || teamName == null)
-                        throw new Exception("Invalid team name!");
-                    if (project.getProjectManager() == null)
-                        throw new Exception("Invalid team owner user specified for team '" + teamName + "'.");
-
-                    Team newTeam = new Team(project.getProjectManager());
-                    addToList(newTeam);
-                    project.setTeam(newTeam);
-                    System.out.println("Successfully created team '" + teamName + "'.");
-                        } catch (Exception e) {
-                        System.out.println((e.getMessage()));
-                }
-            }
-        }
-    }
-
-
-    public void editTeamName(Team team) {
-        if (team == null) {
-            System.out.println("Team does not exist.");
-        } else {
-            String newTeamName = input.getStr("Please enter the new team name: ");
-            if (newTeamName.isBlank() || newTeamName.isEmpty() || newTeamName == null) {
-                System.out.println("Invalid team name provided. Please retry again.");
-            } else {
-                team.setTeamName(newTeamName);
-                System.out.println("Successfully renamed team to '" + newTeamName + "'!");
-            }
-        }
-    }
-*/
-
     public void viewTeam(Team team) {
         if (team == null) {
             System.out.println("Team does not exist.");
@@ -113,31 +70,6 @@ public class TeamLibrary extends DataLibrary{
         }
     }
 
-    /*
-    public void removeTeam(Project currentProject, User currentUser) {
-        if (currentProject.getProjectManager().checkID(currentUser.getID())) {
-            if (currentProject.getTeam() == null) {
-                System.out.println("Project '" + currentProject.getName() + "' does not have a team.");
-            } else {
-                String option = input.getStr(
-                        "Are you sure you want to remove team '" +
-                                currentProject.getTeam().getTeamName() +
-                                "' from project '" +
-                                currentProject.getName() + "'?: Y/N ");
-                option = option.toLowerCase();
-                if (option.equals("y") || option.equals("yes") || option.equals("ye") || option.equals("yeah") || option.equals("yup")) {
-                    removeItFromList(currentProject.getTeam().getID());
-                    currentProject.setTeam(null);
-                    System.out.println("Team successfully removed from the project.");
-                } else {
-                    System.out.println("Team was not removed.");
-                }
-            }
-        } else {
-            System.out.println("Only the team owner can remove the team.");
-        }
-    }
-*/
     public void addTeamMember(Team team, User currentUser, String role) {
         if (team == null) {
             System.out.println("Team does not exist.");
@@ -193,14 +125,4 @@ public class TeamLibrary extends DataLibrary{
             }
         }
     }
-
-    // For sysadmin maybe?
-    /*
-    public List<Team> getAllTeams() {
-        List<Data> dataList = getDataList();
-        List<Team> teams = new ArrayList<>();
-        for(Data data: dataList) { teams.add((Team) data); }
-        return teams;
-    }
-     */
 }
