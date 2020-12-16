@@ -1,6 +1,7 @@
 package tools;
 
 
+import access_roles.RoleFactory;
 import entities.*;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -30,6 +31,8 @@ public class ImportExcel {
     ProjectLibrary projectLibrary;
     UserLibrary userLibrary;
     User currentUser;
+    //Project currentProject;
+    RoleFactory roleFactory = new RoleFactory();
 
     public ImportExcel(UserLibrary userLibrary, TeamLibrary teamLibrary, ProjectLibrary projectLibrary, User currentUser) {
         this.projectLibrary = projectLibrary;
@@ -187,20 +190,51 @@ public class ImportExcel {
         if(user == null) {
             return;
         }
-        System.out.println(taskName + "\n" + user.getUserName() + "\n" + parseDouble(row.getCell(13).toString()));
+        //addToTeam
+        if(!currentProject.getTeam().isMember(user)) {
+            currentProject.getTeam().getMemberList().put(
+                    user.getUserName(),
+                            new TeamMember(
+                                    user,
+                                    roleFactory.createMaintainer()));
+        }
+        //AssignToTask
+        if(!currentTask.getAssignees().toString().contains(user.getUserName())) {
+            currentTask.getAssignees().add(user);
+            System.out.println("Assigned " + user.getUserName() + " to " + currentTask.getDescription());
+        }
+        //importTeam(row);
         currentTask.addWorkedHours(
                 new WorkedHours(
                         (User) userLibrary.findUserInList(row.getCell(18).toString().toLowerCase()),
                         parseDouble(row.getCell(13).toString())));
-        
-        /*
-        1 = Project Description
-        7 = Task Description
-        12 = comment
-        13 = Hours
-        18 = User that adds time
-         */
     }
+ /*
+    private void importTeam(XSSFRow row) {
+        String projectName = row.getCell(1).toString();
+        Project currentProject = this.projectLibrary.projectNameExists(projectName);
+        TaskLibrary taskLibrary = currentProject.getTaskList();
+        String taskName = row.getCell(7).toString();
+        Task currentTask = currentProject.getTaskList().taskNameExists(taskLibrary, taskName);
+        User user = (User) this.userLibrary.findUserInList(row.getCell(18).toString().toLowerCase());
+        
+        if(currentProject.getTeam().isMember(user)) {
+            System.out.println("BBBBBBBBBBBBBBBBBB");
+            return;
+        } else {
+            System.out.println("AAAAAAAAAAAAAAAAAA");
+            currentProject.getTeam().getMemberList().put(currentUser.getUserName(),new TeamMember(currentUser, roleFactory.createMaintainer()));
+        }
+    }
+    */
+/*    private void importTeamMember(Project currentProject, User currentUser) {
+        if(currentProject.getTeam().isMember(currentUser)) {
+            return;
+        }
+        currentProject.getTeam().getMemberList().put(currentUser.getUserName(),new TeamMember(currentUser, roleFactory.createMaintainer()));
+        System.out.println("a" + currentProject.getTeam().getAllTeamUsers().toString());
+    }
+*/
 
     private void assignHeaders(XSSFSheet sheet, int cols) {
         this.headerList = new ArrayList<>();
