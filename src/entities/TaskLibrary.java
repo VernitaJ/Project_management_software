@@ -88,6 +88,8 @@ public class TaskLibrary extends DataLibrary {
         } while (deadline.isAfter(projectEndDate) || deadline.isBefore(startDate));
         currentProject.taskList.addToList(new Task(currentUser, name, description, startDate, deadline));
         System.out.println("Task created");
+        //achievement tracking
+        currentUser.achievementTracker.addPoints("createTask",1);
     }
 
     public void deleteTask(Project currentProject, User currentUser) {
@@ -178,6 +180,22 @@ public class TaskLibrary extends DataLibrary {
         }
         currentTask.setStatus(newStatus);
     }
+    
+    public void updateName(Project currentProject, Task currentTask, User currentUser) {
+        if(!confirmAccess(currentProject.getTeam(), currentUser)) {
+            return;
+        }
+        String newName = input.getStr("Enter the name: ");
+        currentTask.setName(newName);
+    }
+    
+    public void updateDescription(Project currentProject, Task currentTask, User currentUser) {
+        if(!confirmAccess(currentProject.getTeam(), currentUser)) {
+            return;
+        }
+        String newDescription = input.getStr("Enter the description: ");
+        currentTask.setDescription(newDescription);
+    }
 
     public void addAssignee(Project currentProject, Task currentTask, User currentUser) {
         Team projectTeam = currentProject.getTeam();
@@ -248,10 +266,12 @@ public class TaskLibrary extends DataLibrary {
                 }
                 ArrayList<User> assignees = projectTask.getAssignees();
                 System.out.println("Days to Deadline: " + displayedDays + "\n" + "Task: " + projectTask.getName() + "\n" +
-                        "Description: " + projectTask.getDescription() + "" + "\n" + "Team Members:");
+                        "Description: " + projectTask.getDescription() + "" + "\n" + "Team:");
                 for (User teamMember : assignees){
-                    System.out.println("UserName: " + teamMember.getUserName() + "\nOccupation: " + teamMember.getOccupation() + "\n");
+                    TeamMember member = currentProject.getTeam().findTeamMember(teamMember);
+                    System.out.println(teamMember.getUserName() + " - " + member.getRole().roleType() + "\n");
                 }
+                input.spacer();
             }
         }
     }
@@ -266,8 +286,10 @@ public class TaskLibrary extends DataLibrary {
                 System.out.println("Task Deadline" + projectTask.getDeadline() + "\n" + " Task: " + projectTask.getName() + "\n" +
                         "Description" + projectTask.getDescription() + "" + "\n" + "Team Members:");
                 for (User teamMember : assignees){
-                    System.out.println("UserName: " + teamMember.getUserName() + "\nOccupation: " + teamMember.getOccupation() + "\n");
+                    TeamMember member = currentProject.getTeam().findTeamMember(teamMember);
+                    System.out.println(teamMember.getUserName() + " - " + member.getRole().roleType() + "\n");
                 }
+                input.spacer();
             }
         }
     }
@@ -293,6 +315,8 @@ public class TaskLibrary extends DataLibrary {
             double workedHours = input.getDouble("Please enter the amount of worked hours: ");
             WorkedHours newLog = new WorkedHours(currentUser,workedHours);
             currentTask.addWorkedHours(newLog);
+            int xp = (int)workedHours;
+            currentUser.addExp(xp);
             System.out.println(getAllWorkedHours(currentTask) + " hours spent on this task.");
         }else {
             System.out.println("You are not authorized to perform this action!");

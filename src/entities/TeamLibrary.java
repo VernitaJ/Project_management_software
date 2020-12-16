@@ -80,13 +80,15 @@ public class TeamLibrary extends DataLibrary{
             customMembers.sort(Comparator.comparing(m->m.getRole().roleType()));
 
             System.out.println("============");
-            System.out.println(input.BLUE + "Owner: " + input.RESET + team.getOwner().getUser().getUserName());
+            System.out.print(input.BLUE + "Owner: " + input.RESET + team.getOwner().getUser().getUserName());
+            System.out.println(team.getOwner().getUser().getTag());
             input.spacer();
 
             System.out.println(input.BLUE + "Maintainers: " + input.RESET);
             int count = 1;
             for (User maintainer: maintainers) {
-                System.out.println(count + ". " + maintainer.getUserName());
+                System.out.print(count + ". " + maintainer.getUserName());
+                System.out.println(maintainer.getTag());
                 count ++;
             }
             input.spacer();
@@ -94,7 +96,8 @@ public class TeamLibrary extends DataLibrary{
             count = 1;
             System.out.println(input.BLUE + "Developers: " + input.RESET);
             for (User developer: developers) {
-                System.out.println(count + ". " + developer.getUserName());
+                System.out.print(count + ". " + developer.getUserName());
+                System.out.println(developer.getTag());
                 count ++;
             }
             input.spacer();
@@ -102,7 +105,8 @@ public class TeamLibrary extends DataLibrary{
             count = 1;
             System.out.println(input.BLUE + "Custom Roles: " + input.RESET);
             for (TeamMember customMember: customMembers) {
-                System.out.println(count + ". "+ customMember.getRole().roleType() +" - " + customMember.getUser().getUserName());
+                System.out.print(count + ". "+ customMember.getRole().roleType() +" - " + customMember.getUser().getUserName());
+                System.out.println(customMember.getUser().getTag());
                 count ++;
             }
             input.spacer();

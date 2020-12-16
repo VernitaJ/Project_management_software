@@ -48,6 +48,8 @@ public class ProjectLibrary extends DataLibrary{
         LocalDate endDate = input.getDate("Project end date (YYYY-MM-DD): ");
         if(confirmAction("Are you sure you want to create this project?")) {
             addToList(new Project(name, currentUser, description, startDate, endDate));
+            //achievement tracking
+            currentUser.achievementTracker.addPoints("createProject",1);
         }
     }
     
@@ -94,7 +96,7 @@ public class ProjectLibrary extends DataLibrary{
         } else {
             int choice;
             do{
-                choice = input.getInt("Enter project number or 0 to return to the previous menu: ");
+                choice = input.getInt("\nEnter project number or 0 to return to previous menu: ");
             } while(choice < 0 || choice > projectList.size());
             
             if (choice == 0){
@@ -162,6 +164,8 @@ public class ProjectLibrary extends DataLibrary{
                 if(removeItFromList(projectToDelete.getID())){
                     System.out.println("Project successfully deleted!");
                     System.out.println("Returning to main menu...");
+                    //achievement tracking
+                    currentUser.achievementTracker.addPoints("deleteProject",1);
                     return true;
                 } else {
                     System.out.println("Something went wrong");
@@ -252,7 +256,7 @@ public class ProjectLibrary extends DataLibrary{
                         getTotalCostProject(currentProject.taskList, false) -
                         iteratedCostRemainingDays;
         double iteratedMoneyToUsePerHour = (iteratedRemainingMoney /
-                getBudgetHoursRemaining(currentProject) / 24) / 8;
+                getBudgetHoursRemaining(currentProject)) ;
         iteratedRemainingMoney = new BigDecimal(iteratedRemainingMoney).
                 setScale(2, RoundingMode.HALF_UP).
                 doubleValue();

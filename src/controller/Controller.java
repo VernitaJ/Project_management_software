@@ -151,6 +151,7 @@ public class Controller {
         menu = new Menu("Main Menu", options);
         do
         {
+            currentUser.getXpBar();
             String choice = menu.printMenu();
             switch (choice)
             {
@@ -342,13 +343,14 @@ public class Controller {
                 {
                         "Add Task",
                         "View Tasks",
+                        "Remove Task",
                         "Completed Tasks",
                         "Countdown",
                         "Main Menu",
                         "Logout",
                         "Exit"
                 };
-        menu = new Menu(currentProject.getName() + "Tasks: " +  " Menu", options);
+        menu = new Menu(currentProject.getName() + ": Tasks" +  " Menu", options);
         do
         {
             String choice = menu.printMenu();
@@ -361,11 +363,12 @@ public class Controller {
                         currentTaskMenu(currentProject, currentTask, currentUser);
                     }
                 } // taskMenu
-                case "3" -> taskLibrary.completedTasks(currentProject);
-                case "4" -> taskLibrary.countdown(currentProject);
-                case "5" -> mainMenu();
-                case "6" -> logout();
-                case "7" -> exit();
+                case "3" -> taskLibrary.deleteTask(currentProject, currentUser);
+                case "4" -> taskLibrary.completedTasks(currentProject);
+                case "5" -> taskLibrary.countdown(currentProject);
+                case "6" -> mainMenu();
+                case "7" -> logout();
+                case "8" -> exit();
             }
         } while (true);
     }
@@ -444,9 +447,9 @@ public class Controller {
                         "Update Name",
                         "Update Description",
                         "Update Status",
-                        "Delete Task",
                         "Add Worked Hours",
                         "Total Worked Hours",
+                        "Project Menu",
                         "Main Menu",
                         "Logout",
                         "Exit"
@@ -460,12 +463,12 @@ public class Controller {
                 case "1" -> taskLibrary.viewTaskDetails(currentTask);
                 case "2" -> taskLibrary.addAssignee(currentProject, currentTask, currentUser);
                 case "3" -> taskLibrary.removeAssignee(currentProject.getTeam(), currentTask.getAssignees(), currentUser);
-                case "4" -> notImplemented();
-                case "5" -> notImplemented();
+                case "4" -> taskLibrary.updateName(currentProject, currentTask, currentUser);
+                case "5" -> taskLibrary.updateDescription(currentProject, currentTask, currentUser);
                 case "6" -> taskLibrary.updateStatus(currentProject, currentTask, currentUser);
-                case "7" -> taskLibrary.deleteTask(currentProject, currentUser);
-                case "8" -> taskLibrary.addWorkedHours(currentProject, currentTask, currentUser);
-                case "9" -> taskLibrary.printAllWorkedHours(currentTask);
+                case "7" -> taskLibrary.addWorkedHours(currentProject, currentTask, currentUser);
+                case "8" -> taskLibrary.printAllWorkedHours(currentTask);
+                case "9" -> currentProjectMenu();
                 case "10" -> mainMenu();
                 case "11" -> logout();
                 case "12" -> exit();
@@ -515,9 +518,9 @@ public class Controller {
             String choice = menu.printMenu();
             switch (choice)
             {
-            //    case "1" -> userLibrary.viewMyProfile(currentUser);
+                case "1" -> userLibrary.viewMyProfile(currentUser);
                 case "2" -> editProfileMenu();
-            //    case "3" -> userLibrary.viewAllProfiles();
+                case "3" -> userLibrary.viewAllProfiles();
                 case "4" -> mainMenu();
                 case "5" -> logout();
                 case "6" -> exit();
@@ -543,17 +546,18 @@ public class Controller {
             String choice = menu.printMenu();
             switch (choice)
             {
-                case "1" -> notImplemented();
-                case "2" -> notImplemented();
-                case "3" -> notImplemented();
-                case "4" -> notImplemented();
-                case "5" -> notImplemented();
+                case "1" -> userLibrary.changeUsername(currentUser);
+                case "2" -> userLibrary.changePassword(currentUser);
+                case "3" -> userLibrary.updateEmail(currentUser);
+                case "4" -> userLibrary.updateCompany(currentUser);
+                case "5" -> userLibrary.updateOccupation(currentUser);
                 case "6" -> mainMenu();
                 case "7" -> logout();
                 case "8" -> exit();
             }
         } while (true);
     }
+
 
     private void leaderboardMenu() {
         String[] options =

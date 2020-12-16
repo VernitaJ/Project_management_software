@@ -1,11 +1,14 @@
 package entities;
 
+import achievements.AchievementTracker;
+
 import java.util.ArrayList;
 
 public class User extends Data {
 
-   // private Roles role;
+    // private Roles role;
     private String userName;
+    private int experience;
     private String password;
     private String eMail;
     private String occupation;
@@ -13,6 +16,7 @@ public class User extends Data {
     private float salary;
     private float workingHours;
     private ArrayList<Message> inbox;
+    public AchievementTracker achievementTracker;
 
     public User(String userName, String password, String eMail, String occupation, String companyName, float salary, float workingHours) {
         this.userName = userName;
@@ -23,6 +27,8 @@ public class User extends Data {
         this.salary = salary;
         this.workingHours = workingHours;
         this.inbox = new ArrayList<>();
+        this.experience = 0;
+        this.achievementTracker = new AchievementTracker(this);
     }
 
 
@@ -94,6 +100,29 @@ public class User extends Data {
         this.workingHours = workingHours;
     }
 
+    public void addExp(int xp)
+    {
+        experience += xp;
+    }
+
+    public int getLevel()
+    {
+        return experience/10;
+    }
+
+    public void getXpBar()
+    {
+        String box = "#";
+        String empty = "_";
+        int progress = experience%10;
+        int remaining = 10-progress;
+        System.out.println("Level: " + getLevel());
+        System.out.println("[" + box.repeat(progress*2) + empty.repeat(remaining*2) + "]" + " Progress: " + progress*10 + "%");
+    }
+
+    public String getTag(){
+        return " [Level " + getLevel() + " - " + achievementTracker.getNumOfUserAchievements() + " Achievements]";
+    }
     /* public Roles getRole() {
         return role;
     }
