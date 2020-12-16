@@ -13,5 +13,6 @@
     <orderEntry type="library" name="commons-collections4-4" level="project" />
     <orderEntry type="library" name="commons-compress-1" level="project" />
     <orderEntry type="library" name="ooxml-lib" level="project" />
+    <orderEntry type="library" name="jackson" level="project" />
   </component>
 </module>

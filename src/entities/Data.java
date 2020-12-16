@@ -1,7 +1,7 @@
 package entities;
 import tools.UniqueID;
 
-abstract class Data {
+public abstract class Data {
     private String ID;
 
     Data(){
@@ -29,3 +29,5 @@ abstract class Data {
         return(null);
     }
 }
+
+
