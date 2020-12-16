@@ -208,5 +208,9 @@ public class Team extends Data {
         }
         return null;
     }
+    
+    public WeakHashMap<String, TeamMember> getMemberList() {
+        return memberList;
+    }
 }
 
