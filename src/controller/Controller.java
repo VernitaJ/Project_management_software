@@ -51,7 +51,7 @@ public class Controller {
         userLibrary.addUserToList(new User("boye", "1", "pog@pog.com", "Leet", "Ericsson", 400, 2));
         User boye = (User) userLibrary.findUserInList("boye");
         ImportExcel lego = new ImportExcel(userLibrary, teamLibrary, projectLibrary, boye);
-        readFile();
+        //readFile();
         loginMenu();
     }
     private void exit()
