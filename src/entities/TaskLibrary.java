@@ -328,8 +328,8 @@ public class TaskLibrary extends DataLibrary {
         }
     }
     
-    public Task taskNameExists(String stringToCheck) {
-        for(Data task : list){
+    public Task taskNameExists(TaskLibrary taskLibrary, String stringToCheck) {
+        for(Data task : taskLibrary.list){
             Task currentTask = ((Task) task);
             if(currentTask.getName().equalsIgnoreCase(stringToCheck)) {
                 return currentTask;

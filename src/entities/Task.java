@@ -21,7 +21,7 @@ public class Task extends Data{
         this.status = "Default";
         this.startDate = startDate;
         this.deadline = deadline;
-        this.assignees = new ArrayList<User>();
+        this.assignees = new ArrayList<>();
         this.workedHours = new ArrayList<>();
     }
     

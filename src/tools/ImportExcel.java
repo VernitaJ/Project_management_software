@@ -174,22 +174,23 @@ public class ImportExcel {
     private void importWorkLog(XSSFRow row) {
         String projectName = row.getCell(1).toString();
         Project currentProject = this.projectLibrary.projectNameExists(projectName);
+        TaskLibrary taskLibrary = currentProject.getTaskList();
         String taskName = row.getCell(7).toString();
-        Task currentTask = currentProject.getTaskList().taskNameExists(taskName);
+        Task currentTask = currentProject.getTaskList().taskNameExists(taskLibrary, taskName);
         User user = (User) this.userLibrary.findUserInList(row.getCell(18).toString().toLowerCase());
-        System.out.println(projectName + " " + taskName + " " + user.getUserName() + " " + parseDouble(row.getCell(13).toString()));
         if(currentProject == null) {
             return;
         }
-        if(taskName == null || taskName.equals("")) {
+        if(currentTask == null || taskName.equals("")) {
             return;
         }
         if(user == null) {
             return;
         }
+        System.out.println(taskName + "\n" + user.getUserName() + "\n" + parseDouble(row.getCell(13).toString()));
         currentTask.addWorkedHours(
                 new WorkedHours(
-                        (User) userLibrary.findUserInList(row.getCell(18).toString()),
+                        (User) userLibrary.findUserInList(row.getCell(18).toString().toLowerCase()),
                         parseDouble(row.getCell(13).toString())));
         
         /*
