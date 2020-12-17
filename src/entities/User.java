@@ -2,6 +2,7 @@ package entities;
 
 import achievements.AchievementTracker;
 
+
 import java.util.ArrayList;
 
 public class User extends Data {
@@ -17,6 +18,7 @@ public class User extends Data {
     private float workingHours;
     private ArrayList<Message> inbox;
     public AchievementTracker achievementTracker;
+
 
     public User(String userName, String password, String eMail, String occupation, String companyName, float salary, float workingHours) {
         this.userName = userName;
@@ -129,9 +131,6 @@ public class User extends Data {
         return " [Level " + getLevel() + " - " + achievementTracker.getNumOfUserAchievements() + " Achievements]";
     }
 
-    //public User getUser() {
-    //    return(this);
-    //}
     /* public Roles getRole() {
         return role;
     }
