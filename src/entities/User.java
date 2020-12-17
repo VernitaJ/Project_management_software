@@ -128,6 +128,10 @@ public class User extends Data {
     public String getTag(){
         return " [Level " + getLevel() + " - " + achievementTracker.getNumOfUserAchievements() + " Achievements]";
     }
+
+    //public User getUser() {
+    //    return(this);
+    //}
     /* public Roles getRole() {
         return role;
     }

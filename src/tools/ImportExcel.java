@@ -38,8 +38,8 @@ public class ImportExcel {
         this.userLibrary = userLibrary;
         this.currentUser = currentUser;
         loopExcel();
-        userLibrary.printAllUsers();
-        projectLibrary.printAllProjects();
+        //userLibrary.printAllUsers();
+        //projectLibrary.printAllProjects();
 
     }
 
@@ -56,7 +56,7 @@ public class ImportExcel {
             rows = sheet.getPhysicalNumberOfRows();
             int cols = 0;
             int tmp = 0;
-            
+
             for (int i = 0; i < 10 || i < rows; i++) {
                 row = sheet.getRow(i);
                 if (row != null) {
@@ -138,9 +138,9 @@ public class ImportExcel {
                 "",
                 LocalDate.parse(row.getCell(3).toString()),
                 LocalDate.parse(row.getCell(4).toString()));
-        System.out.println("Task added successfully.");
+
     }
-    
+
     private void importWorkLog(XSSFRow row) {
         String projectName = row.getCell(1).toString();
         Project currentProject = this.projectLibrary.projectNameExists(projectName);
@@ -148,20 +148,20 @@ public class ImportExcel {
         String taskName = row.getCell(7).toString();
         Task currentTask = currentProject.getTaskList().taskNameExists(taskLibrary, taskName);
         User user = (User) this.userLibrary.findUserInList(row.getCell(18).toString().toLowerCase());
-        if(currentProject == null) {
+        if (currentProject == null) {
             return;
         }
-        if(currentTask == null || taskName.equals("")) {
+        if (currentTask == null || taskName.equals("")) {
             return;
         }
-        if(user == null) {
+        if (user == null) {
             return;
         }
         currentTask.addWorkedHours(
                 new WorkedHours(
                         (User) userLibrary.findUserInList(row.getCell(18).toString().toLowerCase()),
                         parseDouble(row.getCell(13).toString())));
-        
+
         addUserToProjectTeam(currentProject, user);
         assignUserToTask(currentTask, user);
     }
@@ -175,14 +175,14 @@ public class ImportExcel {
                             roleFactory.createMaintainer()));
         }
     }
-    
+
     private void assignUserToTask(Task currentTask, User user) {
-            if(!currentTask.getAssignees().toString().contains(user.getUserName())) {
-                currentTask.getAssignees().add(user);
-                System.out.println("Assigned " + user.getUserName() + " to " + currentTask.getDescription());
-            }
+        if (!currentTask.getAssignees().toString().contains(user.getUserName())) {
+            currentTask.getAssignees().add(user);
+
+        }
     }
-    
+
     private void assignHeaders(XSSFSheet sheet, int cols) {
         this.headerList = new ArrayList<>();
         XSSFRow row = sheet.getRow(0);
