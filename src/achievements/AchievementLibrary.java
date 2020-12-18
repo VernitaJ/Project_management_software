@@ -32,7 +32,7 @@ public class AchievementLibrary {
     }
 
     public int getAchievementRequirement(String achievementName){
-        return achievements.get(achievementName).getRequiredPoints();
+        return getAchievement(achievementName).getRequiredPoints();
     }
     public int getAchievementMaxTier(String achievementName){
         return achievements.get(achievementName).getMaxTier();
@@ -65,7 +65,7 @@ public class AchievementLibrary {
         addNewAchievement("createProject",
                 "Good idea?",
                 "Create some projects to earn this achievement",
-                1,
+                5,
                 3);
 
         //Delete a project - Times: 3 - Max Tier: 3

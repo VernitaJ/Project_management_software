@@ -134,7 +134,7 @@ public class UserLibrary extends DataLibrary {
         user.getXpBar();
         if(user.achievementTracker.getUserAchievements().size() > 0){
             System.out.println("Achievements:" );
-            user.achievementTracker.printUserAchievements();
+            user.achievementTracker.printUserAchievementsWithDetails();
         }
 
     }
@@ -268,17 +268,58 @@ public class UserLibrary extends DataLibrary {
 
     }
 
-    public void leaderboard(){
-        List<User> allUsers = UserLibrary.getInstance().getAllUsers();
-        allUsers.sort(Comparator.comparing(User::getUserName));
-        allUsers.sort(Comparator.comparing(User::getNumOfAchievements));
-
-        for(User user : allUsers){
-            if(user.getNumOfAchievements() > 0 ){
-                user.achievementTracker.printUserAchievements();
-                //im not sure about status tho
+    //if user1 is greater than user 2 -> return true;
+    public boolean compareTwoUserAchievements(User user1, User user2){
+        if(user1.getNumOfAchievements() > user2.getNumOfAchievements()){
+            return false;
+        } else if(user1.getNumOfAchievements() < user2.getNumOfAchievements()){
+            return true;
+        } else {
+            //check the tiers
+            if(user1.achievementTracker.getTotalTiers() > user2.achievementTracker.getTotalTiers()){
+                return false;
+            } else if (user1.achievementTracker.getTotalTiers() < user2.achievementTracker.getTotalTiers()){
+                return true;
+            } else{
+                //tie breaker
+                if(user1.getUserName().compareToIgnoreCase(user2.getUserName()) > 0){
+                    return true;
+                }
+                else{
+                    return false;
+                }
             }
         }
+    }
+
+    public List<User> sortUsersByAchievements(){
+        List<User> allUsers = UserLibrary.getInstance().getAllUsers();
+        allUsers.sort(Comparator.comparing(User::getUserName));
+        Collections.reverse(allUsers);
+
+        for (int i = 0; i < allUsers.size(); i++){
+            for (int j = 0; j < allUsers.size()-i-1; j++){
+                if (compareTwoUserAchievements(allUsers.get(j), allUsers.get(j+1)))
+                {   // swap arr[j+1] and arr[j]
+                    Collections.swap(allUsers,j,j+1);
+                }
+            }
+
+        }
+
+        return allUsers;
+    }
+
+    public void leaderboard(){
+        List<User> allUsers = sortUsersByAchievements();
+        System.out.println("--------------------"+ Input.BLUE + "LEADERBOARD" + Input.RESET +"--------------------");
+        for(User user : allUsers){
+            if(user.getNumOfAchievements() > 0 ){
+                System.out.println(user.getUserName() + " - Total Achievements: " + user.getNumOfAchievements());
+                user.achievementTracker.printUserAchievements();
+            }
+        }
+
 
     }
 
