@@ -14,5 +14,14 @@
     <orderEntry type="library" name="commons-compress-1" level="project" />
     <orderEntry type="library" name="ooxml-lib" level="project" />
     <orderEntry type="library" name="jackson" level="project" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/jackson/jackson-datatype-jsr310-2.12.0.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>

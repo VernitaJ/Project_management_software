@@ -8,6 +8,7 @@ import java.util.ArrayList;
 public class User extends Data {
 
     // private Roles role;
+    private String type;
     private String userName;
     private int experience;
     private String password;
@@ -21,6 +22,7 @@ public class User extends Data {
 
 
     public User(String userName, String password, String eMail, String occupation, String companyName, float salary, float workingHours) {
+        this.type = "user";
         this.userName = userName;
         this.password = password;
         this.eMail = eMail;
@@ -40,6 +42,10 @@ public class User extends Data {
 
     public String getUserName() {
         return this.userName;
+    }
+
+    public String getType() {
+        return (this.type);
     }
 
     public String getPassword() {
