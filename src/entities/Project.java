@@ -12,10 +12,10 @@ public class Project extends Data {
     private LocalDate startDate;
     private LocalDate endDate;
     protected Budget budget;
-    protected TaskLibrary taskList;
     protected TeamLibrary teamLibrary = TeamLibrary.getInstance();
     private User projectManager;
     private Team team;
+    protected TaskLibrary taskList;
 
     public Project(String name, User projectManager, String description, LocalDate startDate, LocalDate endDate) {
         this.name = name;
@@ -28,6 +28,10 @@ public class Project extends Data {
         this.projectManager = projectManager;
         this.budget = new Budget();
         this.team = new Team(projectManager);
+    }
+
+    public Project() {
+
     }
 
     public void setStatus(String status) {
