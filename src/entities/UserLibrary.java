@@ -268,4 +268,18 @@ public class UserLibrary extends DataLibrary {
 
     }
 
+    public void leaderboard(){
+        List<User> allUsers = UserLibrary.getInstance().getAllUsers();
+        allUsers.sort(Comparator.comparing(User::getUserName));
+        allUsers.sort(Comparator.comparing(User::getNumOfAchievements));
+
+        for(User user : allUsers){
+            if(user.getNumOfAchievements() > 0 ){
+                user.achievementTracker.printUserAchievements();
+                //im not sure about status tho
+            }
+        }
+
+    }
+
 }
