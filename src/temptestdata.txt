@@ -2,7 +2,7 @@ User,drake,drake,who has Emails,who Working for a Living, I dont have a job dude
 User,karl,karl,something@something.com,programmer,SEM,30.0f,8.0f
 User,vernita,vernita,something@something.com,programmer,SEM,40.0f,8.0f
 User,anna,pumpkinpie,something@something.com,programmer,SEM,50.0f,8.0f
-User,axel,axel,something@something.com,programmer,SEM,50.0f,8.0f
+User,axel,axel,something@something.com,seniorprogrammer,SEM,50.0f,8.0f
 User,numan,numan,something@something.com,programmer,SEM,10.0f,8.0f
 User,1,1,something@something.com,programmer,SEM,10.0f,8.0f
 User,jens,jens,something@something.com,programmer,SEM,100.0f,8.0f

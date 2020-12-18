@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Function;
 
 import static entities.Message.sortByName;
 
@@ -319,7 +320,53 @@ public class UserLibrary extends DataLibrary {
                 user.achievementTracker.printUserAchievements();
             }
         }
+    }
 
+    public List<User> searchByUsername(String userName){
+        List<User> searchResult = new ArrayList<>();
+        User user = (User)findUserInList(userName);
+        if(user!=null){
+            searchResult.add(user);
+        }
+         return searchResult;
+    }
+    public List<User> searchByCompany(String company){
+        List<User> searchResult = new ArrayList<>();
+        for(Data user : list){
+            User currentUser = (User)user;
+            if(currentUser.getCompanyName().equalsIgnoreCase(company)){
+                searchResult.add(currentUser);
+            }
+        }
+        return searchResult;
+    }
+    public List<User> searchByOccupation(String occupation){
+        List<User> searchResult = new ArrayList<>();
+        for(Data user : list){
+            User currentUser = (User)user;
+            if(currentUser.getOccupation().equalsIgnoreCase(occupation)){
+                searchResult.add(currentUser);
+            }
+        }
+        return searchResult;
+    }
+
+    public void printSearchResults(Function<String, List<User>> searchMethod){
+        String dataToSearch = this.input.getStr("Enter search term: ");
+        List<User> searchResult = searchMethod.apply(dataToSearch);
+        searchResult.sort(Comparator.comparing(User::getUserName));
+        if(searchResult.size()==0){
+            System.out.println("No result found!");
+        } else{
+            System.out.println("----------------------------");
+            for(User user : searchResult){
+                System.out.println("Name: " + user.getUserName());
+                System.out.println("Occupation: " + user.getOccupation());
+                System.out.println("Company: " + user.getCompanyName());
+                System.out.println("Email: " + user.getEmail());
+                System.out.println("----------------------------");
+            }
+        }
 
     }
 

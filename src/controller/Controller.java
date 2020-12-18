@@ -146,6 +146,7 @@ public class Controller {
                         "Leaderboard",
                         "Projects",
                         "Profiles",
+                        "Search",
                         "Messaging",
                         "Logout",
                         "Exit"
@@ -160,9 +161,10 @@ public class Controller {
                 case "1" -> leaderboardMenu();
                 case "2" -> projectMenu();
                 case "3" -> profileMenu();
-                case "4" -> messageMenu();
-                case "5" -> logout();
-                case "6" -> exit();
+                case "4" -> searchMenu();
+                case "5" -> messageMenu();
+                case "6" -> logout();
+                case "7" -> exit();
             }
         } while (true);
     }
@@ -474,6 +476,32 @@ public class Controller {
                 case "10" -> mainMenu();
                 case "11" -> logout();
                 case "12" -> exit();
+            }
+        } while (true);
+    }
+
+    private void searchMenu() {
+        String[] options =
+                {
+                        "Search by Username",
+                        "Search by Company",
+                        "Search by Occupation",
+                        "Main Menu",
+                        "Logout",
+                        "Exit"
+                };
+        menu = new Menu("Project Menu", options);
+        do
+        {
+            String choice = menu.printMenu();
+            switch (choice)
+            {
+                case "1" -> userLibrary.printSearchResults(userLibrary::searchByUsername);
+                case "2" -> userLibrary.printSearchResults(userLibrary::searchByCompany);
+                case "3" -> userLibrary.printSearchResults(userLibrary::searchByOccupation);
+                case "4" -> mainMenu();
+                case "5" -> logout();
+                case "6" -> exit();
             }
         } while (true);
     }
