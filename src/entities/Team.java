@@ -5,6 +5,7 @@ import access_roles.CustomRoles;
 import access_roles.Owner;
 import access_roles.RoleFactory;
 import tools.Input;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.WeakHashMap;
@@ -13,9 +14,9 @@ public class Team extends Data {
     private Input input = Input.getInstance();
     private RoleFactory roleFactory = new RoleFactory();
     private String ownerUserName;
-
+    
     private WeakHashMap<String, TeamMember> memberList;
-
+    
     /*
         Create a team with 1 team member: the team's owner.
      */
@@ -184,7 +185,7 @@ public class Team extends Data {
     private boolean hasAdminAccess(User currentUser) {
         TeamMember currentMember = findTeamMember(currentUser);
         if (currentMember != null && currentMember.getRole().adminAccess()) {
-
+            
             return true;
         }
         return false;

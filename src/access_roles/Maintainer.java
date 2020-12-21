@@ -1,15 +1,18 @@
 package access_roles;
 
-public class Maintainer implements Roles {
-
-
+public class Maintainer extends Role {
+    
+    public Maintainer() {
+        super("Maintainer");
+    }
+    
+    @Override
+    public Maintainer getRole() {
+        return this;
+    }
 
     public boolean changeProjectStatus(){
         return true;
-    }
-
-    public String roleType() {
-        return "Maintainer";
     }
 
     public boolean canCreateTask() {
@@ -19,7 +22,7 @@ public class Maintainer implements Roles {
     public boolean canDelete(){
         return false;
     }
-    //maintainer shouldn't be able to delete, think about
+
     public boolean adminAccess() {
         return true;
     }

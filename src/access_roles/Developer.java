@@ -1,14 +1,16 @@
 package access_roles;
 
-public class Developer implements Roles {
-
-
-
-
-    public String roleType() {
-      return "Developer";
+public class Developer extends Role {
+    
+    public Developer() {
+        super("Developer");
     }
-
+    
+    @Override
+    public Developer getRole() {
+        return this;
+    }
+    
     public boolean canCreateTask() {
         return true;
     }

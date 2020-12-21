@@ -1,9 +1,15 @@
 package access_roles;
 
-public class Owner implements Roles
-{
+public class Owner extends Role {
 
-
+public Owner() {
+    super("Owner");
+}
+    
+    @Override
+    public Owner getRole() {
+        return this;
+    }
 
     public boolean canRemoveMember(){
 
@@ -16,10 +22,6 @@ public class Owner implements Roles
 
     public boolean assignRole(){
         return true;
-    }
-
-    public String roleType() {
-        return "Owner";
     }
 
     public boolean canCreateTask() {

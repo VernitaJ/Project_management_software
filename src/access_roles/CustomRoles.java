@@ -1,22 +1,19 @@
 package access_roles;
 
-import entities.User;
-
-//WIP
-public class CustomRoles implements Roles{
-
-    private String roleType;
+public class CustomRoles extends Role {
+    
     private boolean canCreateTask;
     private boolean adminAccess;
 
     public CustomRoles(String roleType, boolean canCreateTask, boolean adminAccess){
-        this.roleType = roleType;
+        super(roleType);
         this.canCreateTask = canCreateTask;
         this.adminAccess = adminAccess;
     }
-    public String roleType()
-    {
-        return this.roleType;
+    
+    @Override
+    public CustomRoles getRole() {
+        return this;
     }
 
     public boolean canCreateTask()
@@ -28,6 +25,5 @@ public class CustomRoles implements Roles{
     {
         return this.adminAccess;
     }
-
-    //TODO
+    
 }

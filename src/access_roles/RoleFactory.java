@@ -1,19 +1,18 @@
 package access_roles;
 
-import entities.User;
-
 public class RoleFactory {
-    public Roles createOwner()
+    
+    public Role createOwner()
     {
         return new Owner();
     }
 
-    public Roles createMaintainer()
+    public Role createMaintainer()
     {
         return new Maintainer();
     }
 
-    public Roles createDeveloper()
+    public Role createDeveloper()
     {
         return new Developer();
     }
