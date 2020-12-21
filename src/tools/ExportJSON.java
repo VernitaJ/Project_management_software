@@ -1,5 +1,9 @@
 package tools;
 
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -42,13 +46,17 @@ public class ExportJSON {
         this.projectFileName = System.getProperty("user.home") + "/project.json";
         this.listOfProjectsFileName = System.getProperty("user.home") + "/projects.json";
         this.teamFileName = System.getProperty("user.home") + "/team.json";
+
         //    collectData();
         writeJsonUsers();
+        JsonParser jsonParser = new JsonFactory().createParser(new File(userFileName));
+        parseUserJSON(jsonParser);
+        /*
         readJsonUsers();
         writeJsonTeam();
         writeJsonProjects();
         readJsonProjects();
-        
+        */
         
     }
     
@@ -106,15 +114,51 @@ public class ExportJSON {
         Project project = (Project) stuff;
         MAPPER.writerWithDefaultPrettyPrinter().writeValue(Paths.get(this.teamFileName).toFile(), project.getTeam());
     }
-    
-/*    public void writeJSONUser() throws IOException {
-        MAPPER.writerWithDefaultPrettyPrinter().writeValue(Paths.get(this.path).toFile(), this.userLibrary.getDataList().get(0));
-        // MAPPER.writerWithDefaultPrettyPrinter().writeValue(Paths.get(this.userPath).toFile(), userLibrary.getDataList());
-        
-    }*/
-    
-/*    public void readJSONUser() throws IOException {
-        User readUser = MAPPER.readValue(new File(this.path), User.class);
-        userLibrary.getDataList().add(readUser);
-    }*/
+
+    private void parseUserJSON(JsonParser jsonParser) throws JsonParseException, IOException {
+        User user = new User();
+
+        //loop through the JsonTokens
+        while(jsonParser.nextToken() != JsonToken.END_OBJECT){
+            String name = jsonParser.getCurrentName();
+            if("userName".equals(name)){
+                jsonParser.nextToken();
+                user.setName(jsonParser.getText());
+            }else if("password".equals(name)){
+                jsonParser.nextToken();
+                user.setPassword(jsonParser.getText());
+            }else if("eMail".equals(name)){
+                jsonParser.nextToken();
+                user.setEmail(jsonParser.getText());
+            }else if("occupation".equals(name)){
+                jsonParser.nextToken();
+                user.setOccupation(jsonParser.getText());
+            }else if("companyName".equals(name)){
+                jsonParser.nextToken();
+                user.setCompanyName(jsonParser.getText());
+            }else if("salary".equals(name)){
+                jsonParser.nextToken();
+                user.setSalary(jsonParser.getFloatValue());
+            }else if("workingHours".equals(name)){
+                jsonParser.nextToken();
+                user.setWorkingHours(jsonParser.getFloatValue());
+            }else if("inbox".equals(name)){
+                jsonParser.nextToken();
+                //while (jsonParser.nextToken() != JsonToken.END_ARRAY) {
+                //    user.setInbox(user.getInbox().add( (Message) jsonParser.getText())); // ??
+                //}
+            }else if("achievementTracker".equals(name)){
+                jsonParser.nextToken();
+                // user.setAchievementTracker(); // ??
+            }else if("experience".equals(name)){
+                jsonParser.nextToken();
+                user.setExperience(jsonParser.getIntValue());
+            }else if("id".equals(name)){
+                jsonParser.nextToken();
+                user.setID(jsonParser.getText());
+            }
+        }
+        System.out.println(user.getInfo());
+    }
+
 }

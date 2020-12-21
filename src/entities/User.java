@@ -36,7 +36,11 @@ public class User extends Data {
     public User() {
     
     }
-    
+
+    public void setName(String currentName) {
+        this.userName = currentName;
+    }
+
     public ArrayList<Message> getInbox() {
         return inbox;
     }
@@ -133,6 +137,10 @@ public class User extends Data {
     @Override
     public String toString() {
         return getUserName();
+    }
+
+    public String getInfo() {
+        return getUserName() + ", " + getOccupation() + ", " + geteMail() + ".";
     }
     
     public void printXpBar()
