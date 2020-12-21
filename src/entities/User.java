@@ -2,15 +2,11 @@ package entities;
 
 import achievements.AchievementTracker;
 
-
 import java.util.ArrayList;
 
 public class User extends Data {
 
-    // private Roles role;
-    private String type;
     private String userName;
-    private int experience;
     private String password;
     private String eMail;
     private String occupation;
@@ -19,10 +15,10 @@ public class User extends Data {
     private float workingHours;
     private ArrayList<Message> inbox;
     public AchievementTracker achievementTracker;
+    private int experience;
 
 
     public User(String userName, String password, String eMail, String occupation, String companyName, float salary, float workingHours) {
-        this.type = "user";
         this.userName = userName;
         this.password = password;
         this.eMail = eMail;
@@ -34,18 +30,17 @@ public class User extends Data {
         this.experience = 0;
         this.achievementTracker = new AchievementTracker(this);
     }
-
-
+    
+    public User() {
+    
+    }
+    
     public ArrayList<Message> getInbox() {
         return inbox;
     }
 
     public String getUserName() {
         return this.userName;
-    }
-
-    public String getType() {
-        return (this.type);
     }
 
     public String getPassword() {
@@ -107,15 +102,30 @@ public class User extends Data {
     public void setWorkingHours(float workingHours) {
         this.workingHours = workingHours;
     }
-
+    
+    public void setExperience(int experience) {
+        this.experience = experience;
+    }
+    
+    public void setAchievementTracker(AchievementTracker achievementTracker) {
+        this.achievementTracker = achievementTracker;
+    }
+    
+    public void setInbox(ArrayList<Message> inbox) {
+        this.inbox = inbox;
+    }
+    
     public void addExp(int xp)
     {
         experience += xp;
     }
-
-    public int getLevel()
-    {
-        return experience/10;
+    
+    public int getExperience() {
+        return experience;
+    }
+    
+    public void setID(String ID) {
+        super.setID(ID);
     }
     
     @Override
@@ -123,27 +133,18 @@ public class User extends Data {
         return getUserName();
     }
     
-    public void getXpBar()
+    public void printXpBar()
     {
         String box = "#";
         String empty = "_";
         int progress = experience%10;
         int remaining = 10-progress;
-        System.out.println("Level: " + getLevel());
+        System.out.println("Level: " + getExperience()/10);
         System.out.println("[" + box.repeat(progress*2) + empty.repeat(remaining*2) + "]" + " Progress: " + progress*10 + "%");
     }
 
-    public String getTag(){
-        return " [Level " + getLevel() + " - " + achievementTracker.getNumOfUserAchievements() + " Achievements]";
+    public String printTag(){
+        return " [Level " + getExperience()/10 + " - " + achievementTracker.printNumOfUserAchievements() + " Achievements]";
     }
-
-    /* public Roles getRole() {
-        return role;
-    }
-
-    */
-
-  //  public void setRole(Roles role) {
-    //    this.role = role; }
 
 }

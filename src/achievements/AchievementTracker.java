@@ -15,6 +15,10 @@ public class AchievementTracker {
         tracker = new HashMap<>();
         this.user = user;
     }
+    
+    public AchievementTracker() {
+        tracker = new HashMap<>();
+    }
 
     public int addPoints(String achievementName, int point){
         int total = tracker.containsKey(achievementName) ? tracker.get(achievementName) : 0;
@@ -53,10 +57,10 @@ public class AchievementTracker {
         return accomplishedOnes;
     }
 
-    public int getNumOfUserAchievements(){
+    // public int getNumOfUserAchivements() {
+    public int printNumOfUserAchievements(){
         int totalAchievements=0;
         for(String achievementName : tracker.keySet()){
-
             //if user have enough points to have this achievement, add name to return list;
             if(tracker.get(achievementName) >= library.getAchievementRequirement(achievementName)){
                 totalAchievements++;
@@ -64,8 +68,6 @@ public class AchievementTracker {
         }
         return totalAchievements;
     }
-
-
 
     private String getAchievementStatus(String achievementName){
         if(!tracker.containsKey(achievementName)){

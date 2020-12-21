@@ -2,13 +2,14 @@ package entities;
 
 
 import access_roles.CustomRoles;
+import access_roles.Owner;
 import access_roles.RoleFactory;
 import tools.Input;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.WeakHashMap;
 public class Team extends Data {
-
+    
     private Input input = Input.getInstance();
     private RoleFactory roleFactory = new RoleFactory();
     private String ownerUserName;
@@ -23,27 +24,27 @@ public class Team extends Data {
         this.ownerUserName = teamOwner.getUserName();
         this.memberList.put(teamOwner.getUserName(), new TeamMember(teamOwner, roleFactory.createOwner()));
     }
-
+    
     public Team() {
         this.memberList = new WeakHashMap<>();
     }
-
-    public TeamMember getOwner() {
+    
+    public TeamMember findOwner() {
         return memberList.get(ownerUserName);
     }
-
+    
     // If owner needs to be set (owner wants to remove self?)
     /* public void setOwner(User owner) {
         this.memberList.remove(ownerID);
-        this.memberList.put(getOwner().getUserName(), owner);
+        this.memberList.put(findOwner().getUserName(), owner);
         this.ownerID = owner.getID();
     }
      */
-
+    
     public TeamMember findTeamMember(User toFind){
         return this.memberList.get(toFind.getUserName());
     }
-
+    
     public CustomRoles addMemberWithCustomRole(User user)
     {
         if (hasAdminAccess(user)){
@@ -64,11 +65,11 @@ public class Team extends Data {
             return null;
         }
     }
-
+    
     public boolean isMember(User user) {
         return memberList.containsKey(user.getUserName());
     }
-
+    
     public void addMember(User newMember, User currentUser, String role) {
         TeamMember currentMember = findTeamMember(currentUser);
         if (currentMember != null && currentMember.getRole().adminAccess()){
@@ -103,7 +104,7 @@ public class Team extends Data {
             System.out.println("You do not have the required access level.");
         }
     }
-
+    
     public List<TeamMember> getAllTeamMembers(){
         List<TeamMember> teamMembers = new ArrayList<>();
         memberList.values().forEach( teamMember -> {
@@ -111,7 +112,7 @@ public class Team extends Data {
         });
         return teamMembers;
     }
-
+    
     public List<User> getAllTeamUsers(){
         List<User> teamUsers = new ArrayList<>();
         memberList.values().forEach( teamMember -> {
@@ -119,7 +120,7 @@ public class Team extends Data {
         });
         return teamUsers;
     }
-
+    
     public User getTeamMember(User user) throws Exception {
         if (memberList.containsKey(user.getUserName())) {
             return this.memberList.get(user.getUserName()).getUser();
@@ -127,7 +128,7 @@ public class Team extends Data {
             throw new Exception(user.getUserName() + " is not part of the team.");
         }
     }
-
+    
     public void removeTeamMember(User teamMember, User teamOwnerUser) throws Exception {
         TeamMember currentMember = findTeamMember(teamOwnerUser);
         // The target team member cannot be null
@@ -137,49 +138,49 @@ public class Team extends Data {
         if (currentMember == null)
             throw new Exception(teamOwnerUser.getUserName() + " is not part of the team.");
         // Only team leader can remove others from the team
-        if (teamOwnerUser.getUserName().equals(getOwner().getUser().getUserName()) == false)
+        if (teamOwnerUser.getUserName().equals(findOwner().getUser().getUserName()) == false)
             throw new Exception(teamOwnerUser.getUserName() + " is not the team leader of the team.");
         // Team leader should not be able to remove self from the team
         if (teamOwnerUser.getUserName().equals(teamMember.getUserName()))
             throw new Exception("The team leader " + teamOwnerUser.getUserName() + " cannot remove themself from the team.");
-
+        
         if (memberList.containsKey(teamMember.getUserName())){
             this.memberList.remove(teamMember.getUserName());
         } else {
             throw new Exception("Cannot remove " + teamMember.getUserName() + ". The user is not part of this team.");
         }
     }
-
+    
     public List<User> getMaintainers() {
         List<User> users = new ArrayList<>();
         for (TeamMember member: memberList.values()) {
-            if (member.getRole().roleType().equals("Maintainer"))
+            if (member.getRole().getType().equals("Maintainer"))
                 users.add(member.getUser());
         }
         return users;
     }
-
+    
     public List<User> getDevelopers() {
         List<User> users = new ArrayList<>();
         for (TeamMember member: memberList.values()) {
-            if (member.getRole().roleType().equals("Developer"))
+            if (member.getRole().getType().equals("Developer"))
                 users.add(member.getUser());
         }
         return users;
     }
-
+    
     public List<TeamMember> getCustomMembers() {
         List<TeamMember> users = new ArrayList<>();
         for (TeamMember member: memberList.values()) {
-            if (!member.getRole().roleType().equals("Owner") &&
-                    !member.getRole().roleType().equals("Developer") &&
-                    !member.getRole().roleType().equals("Maintainer"))
+            if (!member.getRole().getType().equals("Owner") &&
+                    !member.getRole().getType().equals("Developer") &&
+                    !member.getRole().getType().equals("Maintainer"))
                 users.add(member);
         }
         return users;
     }
-
-
+    
+    
     private boolean hasAdminAccess(User currentUser) {
         TeamMember currentMember = findTeamMember(currentUser);
         if (currentMember != null && currentMember.getRole().adminAccess()) {
@@ -188,7 +189,7 @@ public class Team extends Data {
         }
         return false;
     }
-
+    
     public TeamMember roleChange(User currentUser) {
         TeamMember currentMember = findTeamMember(currentUser);
         if (currentMember != null && currentMember.getRole().adminAccess()) {
@@ -197,7 +198,9 @@ public class Team extends Data {
             }
             String memberToChange = input.getStr("Team Member whose role you would like to modify: ");
             try {
-                if (memberList.containsKey(memberToChange) && !memberList.get(memberToChange).getRoleType().equals(getOwner().getRoleType())) {
+                if (memberList.containsKey(memberToChange) &&
+                        !(memberList.get(memberToChange).getRole() instanceof Owner)
+                ) {
                     return memberList.get(memberToChange);
                 } else {
                     System.out.println("User selected has an access level that denies modification.");

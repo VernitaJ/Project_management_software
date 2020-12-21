@@ -34,18 +34,18 @@ public class TeamLibrary extends DataLibrary{
             List<User> developers = team.getDevelopers();
             developers.sort(Comparator.comparing(User::getUserName));
             List<TeamMember> customMembers = team.getCustomMembers();
-            customMembers.sort(Comparator.comparing(m->m.getRole().roleType()));
+            customMembers.sort(Comparator.comparing(m->m.getRole().getType()));
 
             System.out.println("============");
-            System.out.print(input.BLUE + "Owner: " + input.RESET + team.getOwner().getUser().getUserName());
-            System.out.println(team.getOwner().getUser().getTag());
+            System.out.print(input.BLUE + "Owner: " + input.RESET + team.findOwner().getUser().getUserName());
+            System.out.println(team.findOwner().getUser().printTag());
             input.spacer();
 
             System.out.println(input.BLUE + "Maintainers: " + input.RESET);
             int count = 1;
             for (User maintainer: maintainers) {
                 System.out.print(count + ". " + maintainer.getUserName());
-                System.out.println(maintainer.getTag());
+                System.out.println(maintainer.printTag());
                 count ++;
             }
             input.spacer();
@@ -54,7 +54,7 @@ public class TeamLibrary extends DataLibrary{
             System.out.println(input.BLUE + "Developers: " + input.RESET);
             for (User developer: developers) {
                 System.out.print(count + ". " + developer.getUserName());
-                System.out.println(developer.getTag());
+                System.out.println(developer.printTag());
                 count ++;
             }
             input.spacer();
@@ -62,8 +62,8 @@ public class TeamLibrary extends DataLibrary{
             count = 1;
             System.out.println(input.BLUE + "Custom Roles: " + input.RESET);
             for (TeamMember customMember: customMembers) {
-                System.out.print(count + ". "+ customMember.getRole().roleType() +" - " + customMember.getUser().getUserName());
-                System.out.println(customMember.getUser().getTag());
+                System.out.print(count + ". "+ customMember.getRole().getType() +" - " + customMember.getUser().getUserName());
+                System.out.println(customMember.getUser().printTag());
                 count ++;
             }
             input.spacer();
@@ -110,7 +110,7 @@ public class TeamLibrary extends DataLibrary{
                 int count = 1;
 
                 for (int i = 0; i < members.size(); i++) {
-                    System.out.println(count + ". (" + members.get(i).getRole().roleType() + ")\t\t" + members.get(i).getUser().getUserName());
+                    System.out.println(count + ". (" + members.get(i).getRole().getType() + ")\t\t" + members.get(i).getUser().getUserName());
                     count ++;
                 }
 

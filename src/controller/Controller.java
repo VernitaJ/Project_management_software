@@ -4,10 +4,7 @@ import access_roles.Developer;
 import access_roles.Maintainer;
 import components.Login;
 import entities.*;
-import tools.ExportJSON;
-import tools.ImportExcel;
-import tools.Input;
-import tools.Menu;
+import tools.*;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -52,7 +49,6 @@ public class Controller {
         userLibrary.addUserToList(new User("boye", "1", "pog@pog.com", "Leet", "Ericsson", 400, 2));
         User boye = (User) userLibrary.findUserInList("boye");
         ImportExcel lego = new ImportExcel(userLibrary, projectLibrary, boye);
-
         try {
             ExportJSON exportJSON = new ExportJSON(projectLibrary, taskLibrary, userLibrary);
         } catch (IOException e) {
@@ -158,7 +154,7 @@ public class Controller {
         menu = new Menu("Main Menu", options);
         do
         {
-            currentUser.getXpBar();
+            currentUser.printXpBar();
             String choice = menu.printMenu();
             switch (choice)
             {

@@ -12,6 +12,10 @@ public abstract class Data {
         return ID;
     }
 
+    protected void setID(String ID) {
+        this.ID = ID;
+    }
+    
     Boolean checkID(String ID){
         if(this.ID.equals(ID)){
             return true;

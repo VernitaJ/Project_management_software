@@ -269,7 +269,7 @@ public class TaskLibrary extends DataLibrary {
                         "Description: " + projectTask.getDescription() + "" + "\n" + "Team:");
                 for (User teamMember : assignees){
                     TeamMember member = currentProject.getTeam().findTeamMember(teamMember);
-                    System.out.println(teamMember.getUserName() + " - " + member.getRole().roleType() + "\n");
+                    System.out.println(teamMember.getUserName() + " - " + member.getRole().getType() + "\n");
                 }
                 input.spacer();
             }
@@ -287,7 +287,7 @@ public class TaskLibrary extends DataLibrary {
                         "Description" + projectTask.getDescription() + "" + "\n" + "Team Members:");
                 for (User teamMember : assignees){
                     TeamMember member = currentProject.getTeam().findTeamMember(teamMember);
-                    System.out.println(teamMember.getUserName() + " - " + member.getRole().roleType() + "\n");
+                    System.out.println(teamMember.getUserName() + " - " + member.getRole().getType() + "\n");
                 }
                 input.spacer();
             }

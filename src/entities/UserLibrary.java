@@ -131,7 +131,7 @@ public class UserLibrary extends DataLibrary {
         System.out.println("Email: " + user.getEmail());
         System.out.println("Occupation: " + user.getOccupation());
         System.out.println("Company Name: " + user.getCompanyName());
-        user.getXpBar();
+        user.printXpBar();
         if(user.achievementTracker.getUserAchievements().size() > 0){
             System.out.println("Achievements:" );
             user.achievementTracker.printUserAchievements();
