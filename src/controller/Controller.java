@@ -15,6 +15,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 import static java.lang.Double.parseDouble;
+import static java.lang.Integer.parseInt;
 
 public class Controller {
     private Input input = Input.getInstance();
@@ -69,7 +70,7 @@ public class Controller {
                     case "user" -> userLibrary.addUserToList(new User(token[1],token[2],token[3], token[4],token[5], Float.parseFloat(token[6]), Float.parseFloat(token[7])));
                     case "project" -> {
                         this.currentUser = (User) userLibrary.findUserInList(token[2]);
-                        projectLibrary.addProjectToList(new Project(token[1], currentUser, token[3], LocalDate.of(Integer.parseInt(token[4]), Integer.parseInt(token[5]), Integer.parseInt(token[6])), LocalDate.of(Integer.parseInt(token[7]), Integer.parseInt(token[8]), Integer.parseInt(token[9]))));
+                        projectLibrary.addProjectToList(new Project(token[1], currentUser, token[3], LocalDate.of(parseInt(token[4]), parseInt(token[5]), parseInt(token[6])), LocalDate.of(parseInt(token[7]), parseInt(token[8]), parseInt(token[9]))));
                         this.currentUser = null;
                     }
                     case "task" -> {
@@ -89,6 +90,11 @@ public class Controller {
                         currentUser = (User) userLibrary.findUserInList(token[1]);
                         currentProject = projectLibrary.listUsersProjects(currentUser, false).get(0);
                         projectLibrary.addBudgetToList(currentProject,parseDouble(token[2]),parseDouble(token[3]));
+                    }
+                    case "achievementprogress" -> {
+                        currentUser = (User) userLibrary.findUserInList(token[1]);
+                        //idk what happens when achievement doesnt exist in the library??
+                        currentUser.achievementTracker.addPoints(token[2],parseInt(token[3]));
                     }
                 }
             }
@@ -140,6 +146,7 @@ public class Controller {
                         "Leaderboard",
                         "Projects",
                         "Profiles",
+                        "Search",
                         "Messaging",
                         "Logout",
                         "Exit"
@@ -154,9 +161,10 @@ public class Controller {
                 case "1" -> leaderboardMenu();
                 case "2" -> projectMenu();
                 case "3" -> profileMenu();
-                case "4" -> messageMenu();
-                case "5" -> logout();
-                case "6" -> exit();
+                case "4" -> searchMenu();
+                case "5" -> messageMenu();
+                case "6" -> logout();
+                case "7" -> exit();
             }
         } while (true);
     }
@@ -472,6 +480,32 @@ public class Controller {
         } while (true);
     }
 
+    private void searchMenu() {
+        String[] options =
+                {
+                        "Search by Username",
+                        "Search by Company",
+                        "Search by Occupation",
+                        "Main Menu",
+                        "Logout",
+                        "Exit"
+                };
+        menu = new Menu("Project Menu", options);
+        do
+        {
+            String choice = menu.printMenu();
+            switch (choice)
+            {
+                case "1" -> userLibrary.printSearchResults(userLibrary::searchByUsername);
+                case "2" -> userLibrary.printSearchResults(userLibrary::searchByCompany);
+                case "3" -> userLibrary.printSearchResults(userLibrary::searchByOccupation);
+                case "4" -> mainMenu();
+                case "5" -> logout();
+                case "6" -> exit();
+            }
+        } while (true);
+    }
+
     private void messageMenu() {
         String[] options =
                 {
@@ -569,7 +603,7 @@ public class Controller {
             String choice = menu.printMenu();
             switch (choice)
             {
-                case "1" -> notImplemented();
+                case "1" -> userLibrary.leaderboard();
                 case "2" -> mainMenu();
                 case "3" -> logout();
                 case "4" -> exit();
