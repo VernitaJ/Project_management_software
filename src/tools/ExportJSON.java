@@ -1,15 +1,17 @@
 package tools;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import entities.*;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import java.util.List;
 
+import static com.fasterxml.jackson.databind.SerializationFeature.WRAP_ROOT_VALUE;
 
 
 public class ExportJSON {
@@ -17,8 +19,11 @@ public class ExportJSON {
     private final TaskLibrary taskLibrary;
     private final UserLibrary userLibrary;
     private final ObjectMapper MAPPER;
-    private String path;
-
+    private String userFileName;
+    private String listOfUsersFileName;
+    private String projectFileName;
+    private String listOfProjectsFileName;
+    
     public ExportJSON(ProjectLibrary projectLibrary, TaskLibrary taskLibrary, UserLibrary userLibrary) throws IOException {
         this.projectLibrary = projectLibrary;
         this.taskLibrary = taskLibrary;
@@ -27,70 +32,71 @@ public class ExportJSON {
         this.MAPPER.registerModule(new JavaTimeModule());
         this.MAPPER.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
         this.MAPPER.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-        this.path = System.getProperty("user.home") + "/simpledirection.json";
-
-        collectData();
-        writeJSON();
-        readJSON();
+        this.MAPPER.configure(WRAP_ROOT_VALUE, false);
+        this.userFileName = System.getProperty("user.home") + "/user.json";
+        this.listOfUsersFileName = System.getProperty("user.home") + "/users.json";
+        this.projectFileName = System.getProperty("user.home") + "/project.json";
+        this.listOfProjectsFileName = System.getProperty("user.home") + "/projects.json";
+        //    collectData();
+        writeJsonUsers();
+        readJsonUsers();
+        
+        writeJsonProjects();
+        readJsonProjects();
+        
+        
     }
-
-    public void writeJSON() throws IOException {
-        MAPPER.writerWithDefaultPrettyPrinter().writeValue(Paths.get(this.path).toFile(), this.projectLibrary.getDataList());
+    
+    public void writeJsonUsers() throws IOException {
+        MAPPER.writerWithDefaultPrettyPrinter().writeValue(Paths.get(this.userFileName).toFile(), this.userLibrary.getDataList().get(0));
+        MAPPER.writerWithDefaultPrettyPrinter().writeValue(Paths.get(this.listOfUsersFileName).toFile(), userLibrary.getDataList());
+        
     }
-
-    public void readJSON() throws IOException {
-        //ArrayList<String> pogger = MAPPER.readValue(new File(this.path), ArrayList.class);
-        // project = MAPPER.readValue(new File(this.path), Project.class);
-        this.projectLibrary.addProjectToList(MAPPER.readValue(new File(this.path), Project.class));
-        //System.out.println(project.toString());
-        //for(int i = 0; i < pogger.size(); i++) {
-
-        //}
-        //System.out.println(pogger.toString());
+    
+    public void readJsonUsers() throws IOException {
+        User readUser = MAPPER.readValue(new File(this.userFileName), User.class);
+        userLibrary.getDataList().add(readUser);
+    
+        List<User> newLibrary = MAPPER.readValue(new File(this.listOfUsersFileName), new TypeReference<List<User>>(){});
+        for (User user : newLibrary) {
+           if(userLibrary.findUserInList(user.getUserName()) != null) {
+               System.out.println("User already exist in system");
+           } else {
+               userLibrary.addUserToList(user);
+           }
+        }
+        userLibrary.printAllUsers();
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    private void collectData() {
-
-        Object myItem = new Object();
-        // for() {
-        // User
-        // userinfo (name, email etc.)
-        // Project
-        // Projectinfo (name, description etc.
-        // Task
-        // Taskinfo (name, description, assignees etc.)
-        // Worklog
-        // User + Workedhours
-        // }
-            
-          /*  try {
-                String serialized = new ObjectMapper().writeValueAsString(myItem);
-            } catch (JsonProcessingException e) {
-                e.printStackTrace();
-            } */
+    
+    public void writeJsonProjects() throws IOException {
+        MAPPER.writerWithDefaultPrettyPrinter().writeValue(Paths.get(this.projectFileName).toFile(), this.projectLibrary.getDataList().get(0));
+        MAPPER.writerWithDefaultPrettyPrinter().writeValue(Paths.get(this.listOfProjectsFileName).toFile(), projectLibrary.getDataList());
+        
     }
-
-    // User
-    // userinfo (name, email etc.)
-    // Project
-    // Projectinfo (name, description etc.
-    // Task
-    // Taskinfo (name, description, assignees etc.)
-    // Worklog
-    // User + Workedhours
-
+    
+    public void readJsonProjects() throws IOException {
+        Project readProject = MAPPER.readValue(new File(this.projectFileName), Project.class);
+        userLibrary.getDataList().add(readProject);
+        
+        List<Project> newLibrary = MAPPER.readValue(new File(this.listOfProjectsFileName), new TypeReference<List<Project>>(){});
+        for (Project project : newLibrary) {
+            if(projectLibrary.findItInList(project.getID()) != null) {
+                System.out.println("Project already exist in system");
+            } else {
+                projectLibrary.addProjectToList(project);
+            }
+        }
+        projectLibrary.printAllProjects();
+    }
+    
+/*    public void writeJSONUser() throws IOException {
+        MAPPER.writerWithDefaultPrettyPrinter().writeValue(Paths.get(this.path).toFile(), this.userLibrary.getDataList().get(0));
+        // MAPPER.writerWithDefaultPrettyPrinter().writeValue(Paths.get(this.userPath).toFile(), userLibrary.getDataList());
+        
+    }*/
+    
+/*    public void readJSONUser() throws IOException {
+        User readUser = MAPPER.readValue(new File(this.path), User.class);
+        userLibrary.getDataList().add(readUser);
+    }*/
 }
