@@ -10,11 +10,7 @@ public class CustomRoles extends Role {
         this.canCreateTask = canCreateTask;
         this.adminAccess = adminAccess;
     }
-    
-    @Override
-    public CustomRoles getRole() {
-        return this;
-    }
+
 
     public boolean canCreateTask()
     {

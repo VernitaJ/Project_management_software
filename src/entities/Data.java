@@ -1,6 +1,9 @@
 package entities;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import tools.DataDeserializer;
 import tools.UniqueID;
 
+@JsonDeserialize(using = DataDeserializer.class)
 public abstract class Data {
     private String ID;
 

@@ -4,11 +4,14 @@ package entities;
 import access_roles.CustomRoles;
 import access_roles.Owner;
 import access_roles.RoleFactory;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import tools.Input;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.WeakHashMap;
+
+@JsonDeserialize(as = Team.class)
 public class Team extends Data {
     
     private Input input = Input.getInstance();

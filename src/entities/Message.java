@@ -1,10 +1,12 @@
 package entities;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import tools.UniqueID;
 
 import java.time.LocalDate;
 import java.util.Comparator;
 
+@JsonDeserialize(as = Message.class)
 public class Message extends Data {
     private String sender;
     private String receiver;

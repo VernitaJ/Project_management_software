@@ -5,11 +5,7 @@ public class Maintainer extends Role {
     public Maintainer() {
         super("Maintainer");
     }
-    
-    @Override
-    public Maintainer getRole() {
-        return this;
-    }
+
 
     public boolean changeProjectStatus(){
         return true;

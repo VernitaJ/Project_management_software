@@ -1,10 +1,14 @@
 package entities;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 
-public class Task extends Data{
+
+@JsonDeserialize(as = Task.class)
+public class Task extends Data {
     private User createdBy;
     private String name;
     private String description;

@@ -9,8 +9,10 @@ import entities.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
+import static com.fasterxml.jackson.databind.SerializationFeature.CLOSE_CLOSEABLE;
 import static com.fasterxml.jackson.databind.SerializationFeature.WRAP_ROOT_VALUE;
 
 
@@ -23,6 +25,7 @@ public class ExportJSON {
     private String listOfUsersFileName;
     private String projectFileName;
     private String listOfProjectsFileName;
+    private String teamFileName;
     
     public ExportJSON(ProjectLibrary projectLibrary, TaskLibrary taskLibrary, UserLibrary userLibrary) throws IOException {
         this.projectLibrary = projectLibrary;
@@ -30,6 +33,7 @@ public class ExportJSON {
         this.userLibrary = userLibrary;
         this.MAPPER = new ObjectMapper();
         this.MAPPER.registerModule(new JavaTimeModule());
+        this.MAPPER.configure(CLOSE_CLOSEABLE, false);
         this.MAPPER.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
         this.MAPPER.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
         this.MAPPER.configure(WRAP_ROOT_VALUE, false);
@@ -37,10 +41,11 @@ public class ExportJSON {
         this.listOfUsersFileName = System.getProperty("user.home") + "/users.json";
         this.projectFileName = System.getProperty("user.home") + "/project.json";
         this.listOfProjectsFileName = System.getProperty("user.home") + "/projects.json";
+        this.teamFileName = System.getProperty("user.home") + "/team.json";
         //    collectData();
         writeJsonUsers();
         readJsonUsers();
-        
+        writeJsonTeam();
         writeJsonProjects();
         readJsonProjects();
         
@@ -48,23 +53,30 @@ public class ExportJSON {
     }
     
     public void writeJsonUsers() throws IOException {
-        MAPPER.writerWithDefaultPrettyPrinter().writeValue(Paths.get(this.userFileName).toFile(), this.userLibrary.getDataList().get(0));
-        MAPPER.writerWithDefaultPrettyPrinter().writeValue(Paths.get(this.listOfUsersFileName).toFile(), userLibrary.getDataList());
-        
+        List<Data> userList = this.userLibrary.getDataList();
+
+
+        for (int i = 0; i < userList.size(); i++) {
+            this.MAPPER.writerWithDefaultPrettyPrinter().writeValue(Paths.get(this.userFileName).toFile(), this.userLibrary.getDataList().get(i));
+        }
+
+        //this.MAPPER.writerWithDefaultPrettyPrinter().writeValue(Paths.get(this.listOfUsersFileName).toFile(), userLibrary.getDataList());
     }
     
     public void readJsonUsers() throws IOException {
         User readUser = MAPPER.readValue(new File(this.userFileName), User.class);
         userLibrary.getDataList().add(readUser);
-    
-        List<User> newLibrary = MAPPER.readValue(new File(this.listOfUsersFileName), new TypeReference<List<User>>(){});
+
+
+        ArrayList<User> newLibrary = MAPPER.readValue(new File(this.listOfUsersFileName), new TypeReference<>(){});
         for (User user : newLibrary) {
-           if(userLibrary.findUserInList(user.getUserName()) != null) {
-               System.out.println("User already exist in system");
-           } else {
-               userLibrary.addUserToList(user);
-           }
+            if(userLibrary.findUserInList(user.getUserName()) != null) {
+                System.out.println("User already exist in system");
+            } else {
+                userLibrary.addUserToList(user);
+            }
         }
+
         userLibrary.printAllUsers();
     }
     
@@ -87,6 +99,12 @@ public class ExportJSON {
             }
         }
         projectLibrary.printAllProjects();
+    }
+
+    public void writeJsonTeam() throws IOException {
+        Data stuff = this.projectLibrary.getDataList().get(0);
+        Project project = (Project) stuff;
+        MAPPER.writerWithDefaultPrettyPrinter().writeValue(Paths.get(this.teamFileName).toFile(), project.getTeam());
     }
     
 /*    public void writeJSONUser() throws IOException {

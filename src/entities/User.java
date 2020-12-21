@@ -1,9 +1,11 @@
 package entities;
 
 import achievements.AchievementTracker;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import java.util.ArrayList;
 
+@JsonDeserialize(as = User.class)
 public class User extends Data {
 
     private String userName;

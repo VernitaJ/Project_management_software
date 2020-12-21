@@ -19,7 +19,7 @@ public class TeamMember {
     }
 
     public Role getRole() {
-        return this.role.getRole();
+        return this.role;
     }
     
     public void setRole(Role newRole) {

@@ -1,9 +1,13 @@
 package entities;
 import budget.Budget;
+import com.fasterxml.jackson.annotation.JsonIgnoreType;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
+
+@JsonDeserialize(as = Project.class)
 public class Project extends Data {
     private String name;
     private String description;

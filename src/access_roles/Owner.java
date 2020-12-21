@@ -5,11 +5,6 @@ public class Owner extends Role {
 public Owner() {
     super("Owner");
 }
-    
-    @Override
-    public Owner getRole() {
-        return this;
-    }
 
     public boolean canRemoveMember(){
 
