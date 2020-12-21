@@ -33,11 +33,13 @@ public class Note
         }
     }
 
-    public String getUsername() {
+    public String getUsername()
+    {
         return username;
     }
 
-    public LocalDate getDate() {
+    public LocalDate getDate()
+    {
         return date;
     }
 
