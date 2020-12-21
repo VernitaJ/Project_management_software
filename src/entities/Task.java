@@ -13,6 +13,7 @@ public class Task extends Data{
     private LocalDate deadline;
     private ArrayList<User> assignees;
     private ArrayList<WorkedHours> workedHours;
+    private ArrayList<Note> notes;
     
     public Task(User createdBy, String name, String description, LocalDate startDate, LocalDate deadline){
         this.createdBy = createdBy;
@@ -23,6 +24,7 @@ public class Task extends Data{
         this.deadline = deadline;
         this.assignees = new ArrayList<User>();
         this.workedHours = new ArrayList<>();
+        this.notes = new ArrayList<>();
     }
     
     public String getName() {
@@ -97,6 +99,26 @@ public class Task extends Data{
 
     public void addWorkedHours(WorkedHours log){
         this.workedHours.add(log);
+    }
+
+    public void viewNotes(User currentUser)
+    {
+        int i = 1;
+        for (Note note : notes)
+        {
+            if (note.getUsername().equals(currentUser.getUserName())){
+                System.out.println(i + ")" + note.toString());
+                i++;
+            }
+        }
+    }
+    public void createNote()
+    {
+
+    }
+    public void deleteNote()
+    {
+
     }
 
 @Override
