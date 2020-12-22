@@ -3,15 +3,7 @@ package access_roles;
 public class Developer extends Role {
     
     public Developer() {
-        super("Developer");
+        super("Developer", true, false);
     }
 
-    
-    public boolean canCreateTask() {
-        return true;
-    }
-
-    public boolean adminAccess() {
-        return false;
-    }
 }

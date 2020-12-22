@@ -1,5 +1,6 @@
 package tools;
 
+import access_roles.*;
 import budget.Budget;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParseException;
@@ -162,11 +163,60 @@ public class ExportJSON {
                 User projectManager = parseUserJson(jsonParser);
                 project.setProjectManager(projectManager);
             } else if("team".equals(field)){
+                parseTeamJson(jsonParser, project);
 
             }
 
         }
     }
+
+    private void parseTeamJson(JsonParser jsonParser, Project project) throws IOException {
+        // 1:
+        String field = jsonParser.getCurrentName();
+
+        while(jsonParser.nextToken() != JsonToken.END_OBJECT) {
+            if ("memberList".equals(field)) {
+                while(jsonParser.nextToken() != JsonToken.END_OBJECT) {
+                    while(jsonParser.nextToken() != JsonToken.END_OBJECT) {
+                        parseTeamMember(jsonParser);
+                    }
+                }
+
+
+                jsonParser.nextToken();
+                parseUserJson(jsonParser);
+                parseTeamMember(jsonParser);
+            }
+
+        }
+    }
+
+    private Role parseRoleJson(JsonParser jsonParser, User user) throws IOException {
+        Role tempRole;
+        while (jsonParser.nextToken() != JsonToken.END_OBJECT) {
+            String field = jsonParser.getCurrentName();
+            if ("type".equals(field)) {
+                jsonParser.nextToken();
+
+                if("Owner".equals(field)) {
+                    tempRole = new Owner();
+                } else if ("Maintainer".equals(field)) {
+                    tempRole = new Maintainer();
+                } else if ("Developer".equals(field)) {
+                    tempRole = new Developer();
+                } else {
+                    tempRole = new CustomRoles(jsonParser.getText());
+                    tempRole.
+                }
+
+
+
+            }
+
+            return (tempRole);
+        }
+    }
+
     
     private Project parseBudgetJson(JsonParser jsonParser, Project project) throws IOException {
         Budget budget = new Budget();
@@ -187,7 +237,8 @@ public class ExportJSON {
     }
 
     private TeamMember parseTeamMember(JsonParser jsonParser) throws JsonParseException, IOException {
-        User user = parseUserJson(jsonParser);
+        User tempUser = parseUserJson(jsonParser);
+        Role tempRole = parseRoleJson(jsonParser);
         TeamMember member = new TeamMember();
 
 
