@@ -161,12 +161,8 @@ public class ExportJSON {
             } else if("projectManager".equals(field)) {
                 User projectManager = parseUserJson(jsonParser);
                 project.setProjectManager(projectManager);
-                System.out.println(project.getProjectManager().getUserName());
-                System.out.println(project.getProjectManager().getEmail());
-                System.out.println(jsonParser.getText());
-                System.out.println(jsonParser.getText());
             } else if("team".equals(field)){
-                System.out.println("Team");
+                System.out.println("in the Team");
                 parseTeamJson(jsonParser, project);
 
             }
@@ -193,26 +189,25 @@ public class ExportJSON {
     
     private void parseTeamJson(JsonParser jsonParser, Project project) throws IOException {
         // 1:
-        String field = jsonParser.getCurrentName();
+
         TeamMember tempMember = null;
         System.out.println("Before memberList");
+        jsonParser.nextToken();
         System.out.println(jsonParser.getText());
-        while(jsonParser.nextToken() != JsonToken.END_OBJECT) {
+        jsonParser.nextToken();
+        System.out.println(jsonParser.getText());
+        String field = jsonParser.getCurrentName();
             if ("memberList".equals(field)) {
-                System.out.println(jsonParser.getText());
-                jsonParser.nextToken();
-                System.out.println(jsonParser.getText());
-                System.out.println("After memberList");
+                System.out.println("in the memberList");
                 while(jsonParser.nextToken() != JsonToken.END_OBJECT) {
-                    jsonParser.nextToken();
+                    field = jsonParser.getCurrentName();
+                    //jsonParser.nextToken();
                     System.out.println("parseTeamJson -> parseTeamMember");
                         tempMember = parseTeamMember(jsonParser);
                     }
                     project.getTeam().getMemberList().put(tempMember.getUser().getUserName(),tempMember);
-                    jsonParser.nextToken();
                 }
-                jsonParser.nextToken();
-            }
+
         System.out.println(project.getTeam().getAllTeamUsers());
     }
     
@@ -220,7 +215,12 @@ public class ExportJSON {
         TeamMember member = null;
         System.out.println("parseTeamMember");
         while(jsonParser.nextToken() != JsonToken.END_OBJECT) {
+            String field = jsonParser.getCurrentName();
+            System.out.println("-----------------");
+            System.out.println(jsonParser.getText());
             User tempUser = parseUserJson(jsonParser);
+            System.out.println("parse Team member method");
+            System.out.println(tempUser.toString());
             Role tempRole = parseRoleJson(jsonParser);
             member = new TeamMember(tempUser, tempRole);
             System.out.println("parsedMember");
@@ -243,9 +243,9 @@ public class ExportJSON {
                 } else {
                     tempRole = new CustomRoles(jsonParser.getText());
                     jsonParser.nextToken();
-                    tempRole.setCanCreateTask(jsonParser.getBooleanValue());
+                    tempRole.setCanCreateTask(jsonParser.getValueAsBoolean());
                     jsonParser.nextToken();
-                    tempRole.setAdminAccess(jsonParser.getBooleanValue());
+                    tempRole.setAdminAccess(jsonParser.getValueAsBoolean());
                 }
             }
         }
@@ -288,9 +288,11 @@ public class ExportJSON {
                 while(jsonParser.nextToken() != JsonToken.END_OBJECT) {
                     // user.setAchievementTracker(); // ??
                 }
+                System.out.println("EO tracker");
+                System.out.println(jsonParser.getText());
             }else if("experience".equals(field)){
                 jsonParser.nextToken();
-                user.setExperience(jsonParser.getIntValue());
+                user.setExperience(jsonParser.getValueAsInt());
             }else if("id".equals(field)){
                 jsonParser.nextToken();
                 user.setID(jsonParser.getText());
