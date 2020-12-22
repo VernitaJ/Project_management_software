@@ -46,9 +46,13 @@ public class Controller {
 
     public void run()
     {
-        userLibrary.addUserToList(new User("boye", "1", "pog@pog.com", "Leet", "Ericsson", 400, 2));
-        User boye = (User) userLibrary.findUserInList("boye");
-        ImportExcel lego = new ImportExcel(userLibrary, projectLibrary, boye);
+        //userLibrary.addUserToList(new User("boye", "1", "pog@pog.com", "Leet", "Ericsson", 400, 2));
+        //User boye = (User) userLibrary.findUserInList("boye");
+        //boye.achievementTracker.addPoints("createProject",25);
+        //ImportExcel lego = new ImportExcel(userLibrary, projectLibrary, boye);
+        //boye.getInbox().add(new Message("Jens", "Boye", "Problem?"));
+        //boye.getInbox().add(new Message("Kalle", "Boye", "Blä"));
+        //boye.getInbox().add(new Message("Pog", "Boye", "Kek"));
         try {
             ExportJSON exportJSON = new ExportJSON(projectLibrary, taskLibrary, userLibrary);
         } catch (IOException e) {

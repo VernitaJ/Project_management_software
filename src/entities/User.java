@@ -34,7 +34,7 @@ public class User extends Data {
     }
     
     public User() {
-    
+        this.inbox = new ArrayList<>();
     }
 
     public void setName(String currentName) {

@@ -89,6 +89,7 @@ public class UserLibrary extends DataLibrary {
     }
 
     public Data findUserInList(String userName) {
+
         for (Data user : this.list) {
                 if (((User) user).getUserName().equals(userName)){
                     return user;
@@ -121,7 +122,7 @@ public class UserLibrary extends DataLibrary {
         if (inbox.size()>0){
             for (Message message: inbox){
                 System.out.println(message.toString() + "\n");
-                message.setStatus(true);
+                message.setRead(true);
             }
         } else System.out.println("Inbox is Empty");
     }

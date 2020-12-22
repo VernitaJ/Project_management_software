@@ -17,6 +17,30 @@ public class Achievement {
         this.maxTier=maxTier;
     }
 
+    public Achievement(){
+
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setRequiredPoints(int requiredPoints) {
+        this.requiredPoints = requiredPoints;
+    }
+
+    public void setMaxTier(int maxTier) {
+        this.maxTier = maxTier;
+    }
+
     public int getRequiredPoints() {
         return requiredPoints;
     }

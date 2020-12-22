@@ -1,6 +1,7 @@
 package tools;
 
 import access_roles.*;
+import achievements.Achievement;
 import budget.Budget;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParseException;
@@ -33,7 +34,7 @@ public class ExportJSON {
     private String projectFileName;
     private String listOfProjectsFileName;
     private String teamFileName;
-    
+
     public ExportJSON(ProjectLibrary projectLibrary, TaskLibrary taskLibrary, UserLibrary userLibrary) throws IOException {
         this.projectLibrary = projectLibrary;
         this.taskLibrary = taskLibrary;
@@ -49,34 +50,34 @@ public class ExportJSON {
         this.projectFileName = System.getProperty("user.home") + "/project.json";
         this.listOfProjectsFileName = System.getProperty("user.home") + "/projects.json";
         this.teamFileName = System.getProperty("user.home") + "/team.json";
-        
+
         //    collectData();
-        writeJsonUsers();
-        writeJsonProjects();
+        //writeJsonUsers();
+        //writeJsonProjects();
         parseJson();
-        
+
         // readJsonUsers();
         // writeJsonTeam();
 
         // readJsonProjects();
-        
-        
+
+
     }
-    
+
     public void writeJsonUsers() throws IOException {
         List<Data> userList = this.userLibrary.getDataList();
-        
-        
+
+
         for (int i = 0; i < userList.size(); i++) {
             this.MAPPER.writerWithDefaultPrettyPrinter().writeValue(Paths.get(this.userFileName).toFile(), this.userLibrary.getDataList().get(i));
         }
         //this.MAPPER.writerWithDefaultPrettyPrinter().writeValue(Paths.get(this.listOfUsersFileName).toFile(), userLibrary.getDataList());
     }
-    
+
     public void readJsonUsers() throws IOException {
         User readUser = MAPPER.readValue(new File(this.userFileName), User.class);
         userLibrary.getDataList().add(readUser);
-        
+
         ArrayList<User> newLibrary = MAPPER.readValue(new File(this.listOfUsersFileName), new TypeReference<>(){});
         for (User user : newLibrary) {
             if(userLibrary.findUserInList(user.getUserName()) != null) {
@@ -87,16 +88,16 @@ public class ExportJSON {
         }
         userLibrary.printAllUsers();
     }
-    
+
     public void writeJsonProjects() throws IOException {
         MAPPER.writerWithDefaultPrettyPrinter().writeValue(Paths.get(this.projectFileName).toFile(), this.projectLibrary.getDataList().get(0));
         MAPPER.writerWithDefaultPrettyPrinter().writeValue(Paths.get(this.listOfProjectsFileName).toFile(), projectLibrary.getDataList());
     }
-    
+
     public void readJsonProjects() throws IOException {
         Project readProject = MAPPER.readValue(new File(this.projectFileName), Project.class);
         userLibrary.getDataList().add(readProject);
-        
+
         List<Project> newLibrary = MAPPER.readValue(new File(this.listOfProjectsFileName), new TypeReference<List<Project>>(){});
         for (Project project : newLibrary) {
             if(projectLibrary.findItInList(project.getID()) != null) {
@@ -107,35 +108,35 @@ public class ExportJSON {
         }
         projectLibrary.printAllProjects();
     }
-    
+
     public void writeJsonTeam() throws IOException {
         Data stuff = this.projectLibrary.getDataList().get(0);
         Project project = (Project) stuff;
         MAPPER.writerWithDefaultPrettyPrinter().writeValue(Paths.get(this.teamFileName).toFile(), project.getTeam());
     }
-    
+
     // Parse Project
     // Project info
     // ProjectManager (Check if it's you or deny import, Parameter etc.)
-    
+
     // Team
     // memberList (User, Role) -> Has to create the users and fill list of team-member in team.
-    
+
     // TaskList
     // Task, assignees
-    
+
     // workedHoursLog
     // workedHours in Task (if user assigned exists)
-    
+
     private void parseJson() throws IOException {
         JsonParser jsonParser = new JsonFactory().createParser(new File(this.projectFileName));
-     //   parseUserJson(jsonParser);
+        //   parseUserJson(jsonParser);
         parseProjectJson(jsonParser);
     }
-    
+
     private void parseProjectJson(JsonParser jsonParser) throws IOException {
         Project project = new Project();
-        
+
         while(jsonParser.nextToken() != JsonToken.END_OBJECT) {
             String field = jsonParser.getCurrentName();
             if ("name".equals(field)) {
@@ -162,14 +163,16 @@ public class ExportJSON {
                 User projectManager = parseUserJson(jsonParser);
                 project.setProjectManager(projectManager);
             } else if("team".equals(field)){
-                System.out.println("in the Team");
+
                 parseTeamJson(jsonParser, project);
 
             }
 
         }
+
+        this.projectLibrary.addProjectToList(project);
     }
-    
+
     private Project parseBudgetJson(JsonParser jsonParser, Project project) throws IOException {
         Budget budget = new Budget();
         String field = jsonParser.getCurrentName();
@@ -177,7 +180,7 @@ public class ExportJSON {
         while(jsonParser.nextToken() != JsonToken.END_OBJECT) {
             if ("money".equals(field)) {
                 jsonParser.nextToken();
-               budget.setMoney(jsonParser.getDoubleValue());
+                budget.setMoney(jsonParser.getDoubleValue());
             } else if ("hours".equals(field)) {
                 jsonParser.nextToken();
                 budget.setMoney(jsonParser.getDoubleValue());
@@ -186,48 +189,46 @@ public class ExportJSON {
         project.setBudget(budget);
         return project;
     }
-    
+
     private void parseTeamJson(JsonParser jsonParser, Project project) throws IOException {
-        // 1:
 
         TeamMember tempMember = null;
-        System.out.println("Before memberList");
+
         jsonParser.nextToken();
-        System.out.println(jsonParser.getText());
+
         jsonParser.nextToken();
-        System.out.println(jsonParser.getText());
+
+
+
         String field = jsonParser.getCurrentName();
-            if ("memberList".equals(field)) {
-                System.out.println("in the memberList");
-                while(jsonParser.nextToken() != JsonToken.END_OBJECT) {
-                    field = jsonParser.getCurrentName();
-                    //jsonParser.nextToken();
-                    System.out.println("parseTeamJson -> parseTeamMember");
-                        tempMember = parseTeamMember(jsonParser);
-                    }
+        if ("memberList".equals(field)) {
+            while(jsonParser.nextToken() != JsonToken.END_OBJECT) {
+                //jsonParser.nextToken();
+                tempMember = parseTeamMember(jsonParser);
+                if(tempMember != null) {
                     project.getTeam().getMemberList().put(tempMember.getUser().getUserName(),tempMember);
                 }
+            }
 
-        System.out.println(project.getTeam().getAllTeamUsers());
+        }
+
     }
-    
+
     private TeamMember parseTeamMember(JsonParser jsonParser) throws JsonParseException, IOException {
         TeamMember member = null;
-        System.out.println("parseTeamMember");
+
         while(jsonParser.nextToken() != JsonToken.END_OBJECT) {
             String field = jsonParser.getCurrentName();
-            System.out.println("-----------------");
-            System.out.println(jsonParser.getText());
-            User tempUser = parseUserJson(jsonParser);
-            System.out.println("parse Team member method");
-            System.out.println(tempUser.toString());
-            Role tempRole = parseRoleJson(jsonParser);
-            member = new TeamMember(tempUser, tempRole);
-            System.out.println("parsedMember");
+            if("user".equals(field)) {
+                User tempUser = parseUserJson(jsonParser);
+                Role tempRole = parseRoleJson(jsonParser);
+                member = new TeamMember(tempUser, tempRole);
+            }
+
         }
         return member;
     }
-    
+
     private Role parseRoleJson(JsonParser jsonParser) throws IOException {
         Role tempRole = null;
         while (jsonParser.nextToken() != JsonToken.END_OBJECT) {
@@ -254,7 +255,7 @@ public class ExportJSON {
 
     private User parseUserJson(JsonParser jsonParser) throws JsonParseException, IOException {
         User user = new User();
-        System.out.println(jsonParser.getText());
+
         //loop through the JsonTokens
         while(jsonParser.nextToken() != JsonToken.END_OBJECT){
             String field = jsonParser.getCurrentName();
@@ -281,15 +282,13 @@ public class ExportJSON {
                 user.setWorkingHours(jsonParser.getFloatValue());
             }else if("inbox".equals(field)){
                 jsonParser.nextToken();
-                //while (jsonParser.nextToken() != JsonToken.END_ARRAY) {
-                //    user.setInbox(user.getInbox().add( (Message) jsonParser.getText())); // ??
-                //}
+                while (jsonParser.nextToken() != JsonToken.END_ARRAY) {
+                    user.getInbox().add(parseMessage(jsonParser));
+                }
             }else if("achievementTracker".equals(field)){
                 while(jsonParser.nextToken() != JsonToken.END_OBJECT) {
-                    // user.setAchievementTracker(); // ??
+                    parseAchievements(jsonParser);
                 }
-                System.out.println("EO tracker");
-                System.out.println(jsonParser.getText());
             }else if("experience".equals(field)){
                 jsonParser.nextToken();
                 user.setExperience(jsonParser.getValueAsInt());
@@ -298,12 +297,60 @@ public class ExportJSON {
                 user.setID(jsonParser.getText());
             }
         }
+        System.out.println(user.toString());
         if(userLibrary.findUserInList(user.getUserName()) == null){
             userLibrary.addUserToList(user);
         }
         return user;
     }
 
+    private Message parseMessage(JsonParser jsonParser) throws IOException {
+        Message tempMessage = new Message();
+        while (jsonParser.nextToken() != JsonToken.END_OBJECT) {
+            String field = jsonParser.getCurrentName();
+            if("sender".equals(field)) {
+                jsonParser.nextToken();
+                tempMessage.setSender(jsonParser.getText());
+            } else if("receiver".equals(field)) {
+                jsonParser.nextToken();
+                tempMessage.setReceiver(jsonParser.getText());
+            } else if("content".equals(field)) {
+                jsonParser.nextToken();
+                tempMessage.setContent(jsonParser.getText());
+            } else if("dateSent".equals(field)) {
+                jsonParser.nextToken();
+                tempMessage.setDateSent(LocalDate.parse(jsonParser.getText()));
+            } else if("status".equals(field)) {
+                jsonParser.nextToken();
+                tempMessage.setRead(jsonParser.getValueAsBoolean());
+            }
+        }
+        return(tempMessage);
+    }
 
-    
+    private Achievement parseAchievements(JsonParser jsonParser) throws IOException {
+        Achievement tempAchievement = new Achievement();
+        /*while (jsonParser.nextToken() != JsonToken.END_OBJECT) {
+            String field = jsonParser.getCurrentName();
+            if("sender".equals(field)) {
+                jsonParser.nextToken();
+                tempMessage.setSender(jsonParser.getText());
+            } else if("receiver".equals(field)) {
+                jsonParser.nextToken();
+                tempMessage.setReceiver(jsonParser.getText());
+            } else if("content".equals(field)) {
+                jsonParser.nextToken();
+                tempMessage.setContent(jsonParser.getText());
+            } else if("dateSent".equals(field)) {
+                jsonParser.nextToken();
+                tempMessage.setDateSent(LocalDate.parse(jsonParser.getText()));
+            } else if("status".equals(field)) {
+                jsonParser.nextToken();
+                tempMessage.setRead(jsonParser.getValueAsBoolean());
+            }
+        }*/
+        return(tempAchievement);
+    }
+
+
 }
