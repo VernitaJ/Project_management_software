@@ -138,7 +138,6 @@ public class ImportExcel {
                 "",
                 LocalDate.parse(row.getCell(3).toString()),
                 LocalDate.parse(row.getCell(4).toString()));
-
     }
 
     private void importWorkLog(XSSFRow row) {

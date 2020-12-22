@@ -4,6 +4,7 @@ package entities;
 import access_roles.CustomRoles;
 import access_roles.Owner;
 import access_roles.RoleFactory;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import tools.Input;
 
@@ -117,6 +118,7 @@ public class Team extends Data {
         return teamMembers;
     }
     
+    @JsonIgnoreProperties
     public List<User> getAllTeamUsers(){
         List<User> teamUsers = new ArrayList<>();
         memberList.values().forEach( teamMember -> {
@@ -124,6 +126,7 @@ public class Team extends Data {
         });
         return teamUsers;
     }
+    
     
     public User getTeamMember(User user) throws Exception {
         if (memberList.containsKey(user.getUserName())) {
@@ -173,6 +176,7 @@ public class Team extends Data {
         return users;
     }
     
+    @JsonIgnoreProperties
     public List<TeamMember> getCustomMembers() {
         List<TeamMember> users = new ArrayList<>();
         for (TeamMember member: memberList.values()) {

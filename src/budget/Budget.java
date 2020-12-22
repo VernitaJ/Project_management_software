@@ -1,9 +1,12 @@
 package budget;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 public class Budget
 {
     private double money;
     private double hours;
+    @JsonIgnoreProperties
     public final String CURRENCY = "SEK";
     
     public Budget(){

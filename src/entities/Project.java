@@ -1,6 +1,5 @@
 package entities;
 import budget.Budget;
-import com.fasterxml.jackson.annotation.JsonIgnoreType;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import java.time.LocalDate;
@@ -52,6 +51,18 @@ public class Project extends Data {
 
     public void setTeam(Team team) { this.team = team; }
 
+    public void setCreatedDate(LocalDate createdDate) {
+        this.createdDate = createdDate;
+    }
+    
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+    
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
+    }
+    
     public String getName() {
         return name;
     }
@@ -82,6 +93,10 @@ public class Project extends Data {
 
     public Budget getBudget() {
         return budget;
+    }
+    
+    public void setBudget(Budget budget) {
+        this.budget = budget;
     }
     
     public TaskLibrary getTaskList() {

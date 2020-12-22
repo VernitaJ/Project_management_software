@@ -126,7 +126,7 @@ public class TaskLibrary extends DataLibrary {
             Task currentTask = ((Task) task);
             tempList.add(currentTask);
         }
-        if (print){
+        if (print) {
             if (tempList.size() == 0) {
                 System.out.println("This task does not exist!");
             } else {

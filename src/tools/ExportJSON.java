@@ -1,5 +1,6 @@
 package tools;
 
+import budget.Budget;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
@@ -13,6 +14,7 @@ import entities.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,36 +48,33 @@ public class ExportJSON {
         this.projectFileName = System.getProperty("user.home") + "/project.json";
         this.listOfProjectsFileName = System.getProperty("user.home") + "/projects.json";
         this.teamFileName = System.getProperty("user.home") + "/team.json";
-
+        
         //    collectData();
         writeJsonUsers();
-        JsonParser jsonParser = new JsonFactory().createParser(new File(userFileName));
-        parseUserJSON(jsonParser);
-        /*
-        readJsonUsers();
-        writeJsonTeam();
+        parseJson();
+        
+        // readJsonUsers();
+        // writeJsonTeam();
         writeJsonProjects();
-        readJsonProjects();
-        */
+        // readJsonProjects();
+        
         
     }
     
     public void writeJsonUsers() throws IOException {
         List<Data> userList = this.userLibrary.getDataList();
-
-
+        
+        
         for (int i = 0; i < userList.size(); i++) {
             this.MAPPER.writerWithDefaultPrettyPrinter().writeValue(Paths.get(this.userFileName).toFile(), this.userLibrary.getDataList().get(i));
         }
-
         //this.MAPPER.writerWithDefaultPrettyPrinter().writeValue(Paths.get(this.listOfUsersFileName).toFile(), userLibrary.getDataList());
     }
     
     public void readJsonUsers() throws IOException {
         User readUser = MAPPER.readValue(new File(this.userFileName), User.class);
         userLibrary.getDataList().add(readUser);
-
-
+        
         ArrayList<User> newLibrary = MAPPER.readValue(new File(this.listOfUsersFileName), new TypeReference<>(){});
         for (User user : newLibrary) {
             if(userLibrary.findUserInList(user.getUserName()) != null) {
@@ -84,14 +83,12 @@ public class ExportJSON {
                 userLibrary.addUserToList(user);
             }
         }
-
         userLibrary.printAllUsers();
     }
     
     public void writeJsonProjects() throws IOException {
         MAPPER.writerWithDefaultPrettyPrinter().writeValue(Paths.get(this.projectFileName).toFile(), this.projectLibrary.getDataList().get(0));
         MAPPER.writerWithDefaultPrettyPrinter().writeValue(Paths.get(this.listOfProjectsFileName).toFile(), projectLibrary.getDataList());
-        
     }
     
     public void readJsonProjects() throws IOException {
@@ -108,57 +105,128 @@ public class ExportJSON {
         }
         projectLibrary.printAllProjects();
     }
-
+    
     public void writeJsonTeam() throws IOException {
         Data stuff = this.projectLibrary.getDataList().get(0);
         Project project = (Project) stuff;
         MAPPER.writerWithDefaultPrettyPrinter().writeValue(Paths.get(this.teamFileName).toFile(), project.getTeam());
     }
-
-    private void parseUserJSON(JsonParser jsonParser) throws JsonParseException, IOException {
+    
+    // Parse Project
+    // Project info
+    // ProjectManager (Check if it's you or deny import, Parameter etc.)
+    
+    // Team
+    // memberList (User, Role) -> Has to create the users and fill list of team-member in team.
+    
+    // TaskList
+    // Task, assignees
+    
+    // workedHoursLog
+    // workedHours in Task (if user assigned exists)
+    
+    private void parseJson() throws IOException {
+        JsonParser jsonParser = new JsonFactory().createParser(new File(this.projectFileName));
+     //   parseUserJson(jsonParser);
+        parseProjectJson(jsonParser);
+    }
+    
+    private void parseProjectJson(JsonParser jsonParser) throws IOException {
+        Project project = new Project();
+        
+        while(jsonParser.nextToken() != JsonToken.END_OBJECT) {
+            String field = jsonParser.getCurrentName();
+            if ("name".equals(field)) {
+                jsonParser.nextToken();
+                project.setName(jsonParser.getText());
+            } else if("description".equals(field)) {
+                jsonParser.nextToken();
+                project.setDescription(field);
+            } else if("status".equals(field)) {
+                jsonParser.nextToken();
+                project.setStatus(field);
+            } else if("createdDate".equals(field)) {
+                jsonParser.nextToken();
+                project.setCreatedDate(LocalDate.parse(jsonParser.getText()));
+            } else if("startDate".equals(field)) {
+                jsonParser.nextToken();
+                project.setStartDate(LocalDate.parse(field));
+            } else if("endDate".equals(field)) {
+                jsonParser.nextToken();
+                project.setEndDate(LocalDate.parse(field));
+            } else if("budget".equals(field)) {
+                System.out.println(field);
+                System.out.println("MONKEY");
+                project = parseBudgetJson(jsonParser, project);
+            } else if("projectManager".equals(field)) {
+            
+            }
+        }
+    }
+    
+    private Project parseBudgetJson(JsonParser jsonParser, Project project) throws IOException {
+        Budget budget = new Budget();
+        String field = jsonParser.getCurrentName();
+        
+        while(jsonParser.nextToken() != JsonToken.END_OBJECT) {
+            if ("money".equals(field)) {
+                jsonParser.nextToken();
+                System.out.println(field);
+               budget.setMoney(jsonParser.getDoubleValue());
+            } else if ("hours".equals(field)) {
+                jsonParser.nextToken();
+                System.out.println(field);
+                budget.setMoney(jsonParser.getDoubleValue());
+            }
+        }
+        project.setBudget(budget);
+        return project;
+    }
+    
+    private void parseUserJson(JsonParser jsonParser) throws JsonParseException, IOException {
         User user = new User();
-
+        
         //loop through the JsonTokens
         while(jsonParser.nextToken() != JsonToken.END_OBJECT){
-            String name = jsonParser.getCurrentName();
-            if("userName".equals(name)){
+            String field = jsonParser.getCurrentName();
+            if("userName".equals(field)){
                 jsonParser.nextToken();
                 user.setName(jsonParser.getText());
-            }else if("password".equals(name)){
+            }else if("password".equals(field)){
                 jsonParser.nextToken();
                 user.setPassword(jsonParser.getText());
-            }else if("eMail".equals(name)){
+            }else if("eMail".equals(field)){
                 jsonParser.nextToken();
                 user.setEmail(jsonParser.getText());
-            }else if("occupation".equals(name)){
+            }else if("occupation".equals(field)){
                 jsonParser.nextToken();
                 user.setOccupation(jsonParser.getText());
-            }else if("companyName".equals(name)){
+            }else if("companyName".equals(field)){
                 jsonParser.nextToken();
                 user.setCompanyName(jsonParser.getText());
-            }else if("salary".equals(name)){
+            }else if("salary".equals(field)){
                 jsonParser.nextToken();
                 user.setSalary(jsonParser.getFloatValue());
-            }else if("workingHours".equals(name)){
+            }else if("workingHours".equals(field)){
                 jsonParser.nextToken();
                 user.setWorkingHours(jsonParser.getFloatValue());
-            }else if("inbox".equals(name)){
+            }else if("inbox".equals(field)){
                 jsonParser.nextToken();
                 //while (jsonParser.nextToken() != JsonToken.END_ARRAY) {
                 //    user.setInbox(user.getInbox().add( (Message) jsonParser.getText())); // ??
                 //}
-            }else if("achievementTracker".equals(name)){
+            }else if("achievementTracker".equals(field)){
                 jsonParser.nextToken();
                 // user.setAchievementTracker(); // ??
-            }else if("experience".equals(name)){
+            }else if("experience".equals(field)){
                 jsonParser.nextToken();
                 user.setExperience(jsonParser.getIntValue());
-            }else if("id".equals(name)){
+            }else if("id".equals(field)){
                 jsonParser.nextToken();
                 user.setID(jsonParser.getText());
             }
         }
         System.out.println(user.getInfo());
     }
-
+    
 }
