@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import entities.*;
+import org.apache.poi.ss.formula.functions.T;
 
 import java.io.File;
 import java.io.IOException;
@@ -51,11 +52,12 @@ public class ExportJSON {
         
         //    collectData();
         writeJsonUsers();
+        writeJsonProjects();
         parseJson();
         
         // readJsonUsers();
         // writeJsonTeam();
-        writeJsonProjects();
+
         // readJsonProjects();
         
         
@@ -150,40 +152,49 @@ public class ExportJSON {
                 project.setCreatedDate(LocalDate.parse(jsonParser.getText()));
             } else if("startDate".equals(field)) {
                 jsonParser.nextToken();
-                project.setStartDate(LocalDate.parse(field));
+                project.setStartDate(LocalDate.parse(jsonParser.getText()));
             } else if("endDate".equals(field)) {
                 jsonParser.nextToken();
-                project.setEndDate(LocalDate.parse(field));
+                project.setEndDate(LocalDate.parse(jsonParser.getText()));
             } else if("budget".equals(field)) {
-                System.out.println(field);
-                System.out.println("MONKEY");
                 project = parseBudgetJson(jsonParser, project);
             } else if("projectManager".equals(field)) {
-            
+                User projectManager = parseUserJson(jsonParser);
+                project.setProjectManager(projectManager);
+            } else if("team".equals(field)){
+
             }
+
         }
     }
     
     private Project parseBudgetJson(JsonParser jsonParser, Project project) throws IOException {
         Budget budget = new Budget();
         String field = jsonParser.getCurrentName();
-        
+
         while(jsonParser.nextToken() != JsonToken.END_OBJECT) {
             if ("money".equals(field)) {
                 jsonParser.nextToken();
-                System.out.println(field);
                budget.setMoney(jsonParser.getDoubleValue());
             } else if ("hours".equals(field)) {
                 jsonParser.nextToken();
-                System.out.println(field);
                 budget.setMoney(jsonParser.getDoubleValue());
             }
         }
+
         project.setBudget(budget);
         return project;
     }
-    
-    private void parseUserJson(JsonParser jsonParser) throws JsonParseException, IOException {
+
+    private TeamMember parseTeamMember(JsonParser jsonParser) throws JsonParseException, IOException {
+        User user = parseUserJson(jsonParser);
+        TeamMember member = new TeamMember();
+
+
+        return member;
+    }
+
+    private User parseUserJson(JsonParser jsonParser) throws JsonParseException, IOException {
         User user = new User();
         
         //loop through the JsonTokens
@@ -226,7 +237,13 @@ public class ExportJSON {
                 user.setID(jsonParser.getText());
             }
         }
-        System.out.println(user.getInfo());
+        //System.out.println(user.getInfo());
+        if(userLibrary.findUserInList(user.getUserName()) == null){
+            userLibrary.addUserToList(user);
+        }
+        return user;
     }
+
+
     
 }

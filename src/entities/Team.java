@@ -45,7 +45,17 @@ public class Team extends Data {
         this.ownerID = owner.getID();
     }
      */
-    
+
+    private void setOwnerUserName(String ownerUserName) {
+        this.ownerUserName = ownerUserName;
+    }
+    public void setOwner(User user){
+        if(ownerUserName == null){
+            setOwnerUserName(user.getUserName());
+            this.memberList.put(user.getUserName(), new TeamMember(user, roleFactory.createOwner()));
+        }
+    }
+
     public TeamMember findTeamMember(User toFind){
         return this.memberList.get(toFind.getUserName());
     }

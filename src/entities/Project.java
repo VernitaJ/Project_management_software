@@ -34,7 +34,12 @@ public class Project extends Data {
     }
 
     public Project() {
+        this.team = new Team();
+    }
 
+    public void setProjectManager(User projectManager) {
+        this.projectManager = projectManager;
+        team.setOwner(projectManager);
     }
 
     public void setStatus(String status) {
