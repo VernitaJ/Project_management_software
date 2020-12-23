@@ -46,21 +46,33 @@ public class Controller {
 
     public void run()
     {
-        //userLibrary.addUserToList(new User("boye", "1", "pog@pog.com", "Leet", "Ericsson", 400, 2));
-        //User boye = (User) userLibrary.findUserInList("boye");
-        //boye.achievementTracker.addPoints("createProject",25);
-        //ImportExcel lego = new ImportExcel(userLibrary, projectLibrary, boye);
-        //boye.getInbox().add(new Message("Jens", "Boye", "Problem?"));
-        //boye.getInbox().add(new Message("Kalle", "Boye", "Blä"));
-        //boye.getInbox().add(new Message("Pog", "Boye", "Kek"));
+      //  testData();
+
         try {
-            ExportJSON exportJSON = new ExportJSON(projectLibrary, taskLibrary, userLibrary);
+            ExportJson exportJSON = new ExportJson(projectLibrary, taskLibrary, userLibrary);
+            ImportJson importJson = new ImportJson(projectLibrary, taskLibrary, userLibrary);
         } catch (IOException e) {
             e.printStackTrace();
         }
+    
         //readFile();
         loginMenu();
     }
+    
+    public void testData() {
+        userLibrary.addUserToList(new User("boye", "1", "pog@pog.com", "Leet", "Ericsson", 400, 2));
+        User boye = (User) userLibrary.findUserInList("boye");
+        boye.achievementTracker.addPoints("createProject",25);
+        boye.achievementTracker.addPoints("deleteProject", 50);
+        boye.getInbox().add(new Message("Jens", "Boye", "Problem?"));
+        boye.getInbox().add(new Message("Kalle", "Boye", "Blä"));
+        boye.getInbox().add(new Message("Pog", "Boye", "Kek"));
+        
+        ImportExcel lego = new ImportExcel(userLibrary, projectLibrary, boye);
+
+        
+    }
+    
     private void exit()
     {
         input.teardown();

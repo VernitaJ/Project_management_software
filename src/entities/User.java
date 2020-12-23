@@ -1,6 +1,7 @@
 package entities;
 
 import achievements.AchievementTracker;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import java.util.ArrayList;
@@ -35,6 +36,7 @@ public class User extends Data {
     
     public User() {
         this.inbox = new ArrayList<>();
+        this.achievementTracker = new AchievementTracker(this);
     }
 
     public void setName(String currentName) {
@@ -65,6 +67,7 @@ public class User extends Data {
         return this.companyName;
     }
 
+    @JsonIgnoreProperties
     public String geteMail() {
         return eMail;
     }
@@ -138,9 +141,10 @@ public class User extends Data {
     public String toString() {
         return getUserName();
     }
-
+    
+    @JsonIgnoreProperties
     public String getInfo() {
-        return getUserName() + ", " + getOccupation() + ", " + geteMail() + ".";
+        return getUserName() + ", " + getOccupation() + ", " + getEmail() + ".";
     }
     
     public void printXpBar()
