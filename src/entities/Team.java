@@ -120,7 +120,7 @@ public class Team extends Data {
         }
     }
     
-    public List<TeamMember> getAllTeamMembers(){
+    public List<TeamMember> listAllTeamMembers(){
         List<TeamMember> teamMembers = new ArrayList<>();
         memberList.values().forEach( teamMember -> {
             teamMembers.add(teamMember);
@@ -129,7 +129,7 @@ public class Team extends Data {
     }
     
     @JsonIgnoreProperties
-    public List<User> getAllTeamUsers(){
+    public List<User> listAllTeamUsers(){
         List<User> teamUsers = new ArrayList<>();
         memberList.values().forEach( teamMember -> {
             teamUsers.add(teamMember.getUser());
@@ -168,7 +168,7 @@ public class Team extends Data {
         }
     }
     
-    public List<User> getMaintainers() {
+    public List<User> listMaintainers() {
         List<User> users = new ArrayList<>();
         for (TeamMember member: memberList.values()) {
             if (member.getRole().getType().equals("Maintainer"))
@@ -177,7 +177,7 @@ public class Team extends Data {
         return users;
     }
     
-    public List<User> getDevelopers() {
+    public List<User> listDevelopers() {
         List<User> users = new ArrayList<>();
         for (TeamMember member: memberList.values()) {
             if (member.getRole().getType().equals("Developer"))
@@ -187,7 +187,7 @@ public class Team extends Data {
     }
     
     @JsonIgnoreProperties
-    public List<TeamMember> getCustomMembers() {
+    public List<TeamMember> listCustomMembers() {
         List<TeamMember> users = new ArrayList<>();
         for (TeamMember member: memberList.values()) {
             if (!member.getRole().getType().equals("Owner") &&

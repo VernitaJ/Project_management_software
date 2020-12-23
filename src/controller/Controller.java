@@ -2,6 +2,7 @@ package controller;
 
 import access_roles.Developer;
 import access_roles.Maintainer;
+import achievements.AchievementLibrary;
 import components.Login;
 import entities.*;
 import tools.*;
@@ -23,6 +24,7 @@ public class Controller {
     private TeamLibrary teamLibrary = TeamLibrary.getInstance();
     private ProjectLibrary projectLibrary = ProjectLibrary.getInstance();
     private TaskLibrary taskLibrary = TaskLibrary.getInstance();
+    private AchievementLibrary achievementLibrary = AchievementLibrary.getInstance();
     private static Controller instance = null;
     private User currentUser = null;
     private Project currentProject = null;
@@ -46,7 +48,7 @@ public class Controller {
 
     public void run()
     {
-       // testData();
+      //  testData();
 
         try {
             ImportJson importJson = new ImportJson(projectLibrary, taskLibrary, userLibrary);
@@ -61,12 +63,12 @@ public class Controller {
     public void testData() {
         userLibrary.addUserToList(new User("boye", "1", "pog@pog.com", "Leet", "Ericsson", 400, 2));
         User boye = (User) userLibrary.findUserInList("boye");
-        boye.achievementTracker.addPoints("createProject",25, boye);
-        boye.achievementTracker.addPoints("deleteProject", 50, boye);
+        boye.achievementTracker.addPoints("createProject",5, boye);
+        boye.achievementTracker.addPoints("deleteProject", 3, boye);
         boye.achievementTracker.setExperience(15);
-        boye.getInbox().add(new Message("Jens", "Boye", "Problem?"));
-        boye.getInbox().add(new Message("Kalle", "Boye", "Blä"));
-        boye.getInbox().add(new Message("Pog", "Boye", "Kek"));
+        boye.getInbox().add(new Message("TestDataSender", "Boye", "Problem?"));
+        boye.getInbox().add(new Message("TestDataSender", "Boye", "Blä"));
+        boye.getInbox().add(new Message("TestDataSender", "Boye", "Kek"));
         
         ImportExcel lego = new ImportExcel(userLibrary, projectLibrary, boye);
     

@@ -33,7 +33,7 @@ public class ExportJson {
         this.MAPPER.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
         this.MAPPER.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
         this.MAPPER.configure(WRAP_ROOT_VALUE, false);
-        this.projectFileName = System.getProperty("user.home") + "/project.json";
+        this.projectFileName = "project.json";
         
         writeJsonProject();
        // readJsonProject();

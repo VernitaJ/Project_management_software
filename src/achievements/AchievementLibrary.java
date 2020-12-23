@@ -26,7 +26,7 @@ public class AchievementLibrary {
 
 
 
-    public Achievement getAchievement(String achievementName){
+    public Achievement getAchievement(String achievementName) {
         return achievements.get(achievementName);
     }
 

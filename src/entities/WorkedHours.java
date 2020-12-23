@@ -12,6 +12,8 @@ public class WorkedHours {
         this.workedHours=workedHours;
         this.user = user;
     }
+    
+    public WorkedHours() {}
 
     public User getUser() {
         return user;
@@ -23,5 +25,17 @@ public class WorkedHours {
 
     public LocalDate getLogTime() {
         return logTime;
+    }
+    
+    public void setLogTime(LocalDate logTime) {
+        this.logTime = logTime;
+    }
+    
+    public void setUser(User user) {
+        this.user = user;
+    }
+    
+    public void setWorkedHours(double workedHours) {
+        this.workedHours = workedHours;
     }
 }

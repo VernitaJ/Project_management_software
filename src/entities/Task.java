@@ -38,6 +38,21 @@ public class Task extends Data {
         this.workedHours = new ArrayList<>();
     }
     
+    public Task() {
+    }
+    
+    public void setAssignees(ArrayList<User> assignees) {
+        this.assignees = assignees;
+    }
+    
+    public void setWorkedHours(ArrayList<WorkedHours> workedHours) {
+        this.workedHours = workedHours;
+    }
+    
+    public void setCreatedBy(User createdBy){
+        this.createdBy=createdBy;
+    }
+    
     public String getName() {
         return name;
     }

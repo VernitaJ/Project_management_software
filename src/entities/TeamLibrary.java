@@ -29,11 +29,11 @@ public class TeamLibrary extends DataLibrary{
         if (team == null) {
             System.out.println("Team does not exist.");
         } else {
-            List<User> maintainers = team.getMaintainers();
+            List<User> maintainers = team.listMaintainers();
             maintainers.sort(Comparator.comparing(User::getUserName));
-            List<User> developers = team.getDevelopers();
+            List<User> developers = team.listDevelopers();
             developers.sort(Comparator.comparing(User::getUserName));
-            List<TeamMember> customMembers = team.getCustomMembers();
+            List<TeamMember> customMembers = team.listCustomMembers();
             customMembers.sort(Comparator.comparing(m->m.getRole().getType()));
 
             System.out.println("============");
@@ -102,7 +102,7 @@ public class TeamLibrary extends DataLibrary{
         if (team == null) {
             System.out.println("Team does not exist");
         } else {
-            List<TeamMember> members = team.getAllTeamMembers();
+            List<TeamMember> members = team.listAllTeamMembers();
             if (members.size() == 0) {
                 System.out.println("This project has no removable team members.");
             } else {

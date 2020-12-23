@@ -16,20 +16,26 @@ public class AchievementTracker {
         this.experience = 0;
     }
     
+    public HashMap<String, Integer> getTracker() {
+        return tracker;
+    }
+    
+    public void setTracker(HashMap<String, Integer> tracker) {
+        this.tracker = tracker;
+    }
+    
     public int addPoints(String achievementName, int point, User user){
         int total = tracker.containsKey(achievementName) ? tracker.get(achievementName) : 0;
         total += point;
         tracker.put(achievementName, total);
         //send a message if user earned an achievement
-        int progress = tracker.get(achievementName) - (getCurrentTier(achievementName)* library.getAchievementRequirement(achievementName));
+        int progress = tracker.get(achievementName) - (listCurrentTier(achievementName) * library.getAchievementRequirement(achievementName));
         int required = library.getAchievementRequirement(achievementName)-progress;
-
         if(required == library.getAchievementRequirement(achievementName) &&
-            getCurrentTier(achievementName) <= library.getAchievementMaxTier(achievementName) ){
+            listCurrentTier(achievementName) <= library.getAchievementMaxTier(achievementName) ){
             sendCongratsMessage(achievementName, user);
             addExp(library.getAchievementRequirement(achievementName));
         }
-
         return total;
     }
     
@@ -60,13 +66,13 @@ public class AchievementTracker {
         this.experience = experience;
     }
     
-    private int getCurrentTier(String achievement){
+    private int listCurrentTier(String achievement){
         int currentPoints = tracker.get(achievement);
         int requiredPoints = library.getAchievement(achievement).getRequiredPoints();
         return currentPoints/requiredPoints;
     }
-
-    public ArrayList<String> getUserAchievements(){
+    
+    public ArrayList<String> listUserAchievements(){
         ArrayList<String> accomplishedOnes = new ArrayList<>();
         for(String achievementName : tracker.keySet()){
 
@@ -94,7 +100,7 @@ public class AchievementTracker {
         if(!tracker.containsKey(achievementName)){
             return "";
         }
-        int currentTier = getCurrentTier(achievementName);
+        int currentTier = listCurrentTier(achievementName);
         String tier;
         if(currentTier >= library.getAchievementMaxTier(achievementName)){
             tier = "Tier Max";
@@ -118,7 +124,7 @@ public class AchievementTracker {
     }
 
     public void printUserAchievements(){
-        ArrayList<String> accomplishedOnes = getUserAchievements();
+        ArrayList<String> accomplishedOnes = listUserAchievements();
         for(String achievement : accomplishedOnes){
             System.out.println(getAchievementStatus(achievement));
 

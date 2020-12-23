@@ -133,7 +133,7 @@ public class UserLibrary extends DataLibrary {
         System.out.println("Occupation: " + user.getOccupation());
         System.out.println("Company Name: " + user.getCompanyName());
         user.achievementTracker.printXpBar();
-        if(user.achievementTracker.getUserAchievements().size() > 0){
+        if(user.achievementTracker.listUserAchievements().size() > 0){
             System.out.println("Achievements:" );
             user.achievementTracker.printUserAchievements();
         }
