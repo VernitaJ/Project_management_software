@@ -38,14 +38,14 @@ public class TeamLibrary extends DataLibrary{
 
             System.out.println("============");
             System.out.print(input.BLUE + "Owner: " + input.RESET + team.findOwner().getUser().getUserName());
-            System.out.println(team.findOwner().getUser().printTag());
+            System.out.println(team.findOwner().getUser().achievementTracker.printTag());
             input.spacer();
 
             System.out.println(input.BLUE + "Maintainers: " + input.RESET);
             int count = 1;
             for (User maintainer: maintainers) {
                 System.out.print(count + ". " + maintainer.getUserName());
-                System.out.println(maintainer.printTag());
+                System.out.println(maintainer.achievementTracker.printTag());
                 count ++;
             }
             input.spacer();
@@ -54,7 +54,7 @@ public class TeamLibrary extends DataLibrary{
             System.out.println(input.BLUE + "Developers: " + input.RESET);
             for (User developer: developers) {
                 System.out.print(count + ". " + developer.getUserName());
-                System.out.println(developer.printTag());
+                System.out.println(developer.achievementTracker.printTag());
                 count ++;
             }
             input.spacer();
@@ -63,7 +63,7 @@ public class TeamLibrary extends DataLibrary{
             System.out.println(input.BLUE + "Custom Roles: " + input.RESET);
             for (TeamMember customMember: customMembers) {
                 System.out.print(count + ". "+ customMember.getRole().getType() +" - " + customMember.getUser().getUserName());
-                System.out.println(customMember.getUser().printTag());
+                System.out.println(customMember.getUser().achievementTracker.printTag());
                 count ++;
             }
             input.spacer();

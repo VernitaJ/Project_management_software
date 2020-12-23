@@ -89,7 +89,7 @@ public class TaskLibrary extends DataLibrary {
         currentProject.taskList.addToList(new Task(currentUser, name, description, startDate, deadline));
         System.out.println("Task created");
         //achievement tracking
-        currentUser.achievementTracker.addPoints("createTask",1);
+        currentUser.achievementTracker.addPoints("createTask",1, currentUser);
     }
 
     public void deleteTask(Project currentProject, User currentUser) {
@@ -316,7 +316,7 @@ public class TaskLibrary extends DataLibrary {
             WorkedHours newLog = new WorkedHours(currentUser,workedHours);
             currentTask.addWorkedHours(newLog);
             int xp = (int)workedHours;
-            currentUser.addExp(xp);
+            currentUser.achievementTracker.addExp(xp);
             System.out.println(getAllWorkedHours(currentTask) + " hours spent on this task.");
         }else {
             System.out.println("You are not authorized to perform this action!");

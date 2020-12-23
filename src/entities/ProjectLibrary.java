@@ -49,7 +49,7 @@ public class ProjectLibrary extends DataLibrary{
         if(confirmAction("Are you sure you want to create this project?")) {
             addToList(new Project(name, currentUser, description, startDate, endDate));
             //achievement tracking
-            currentUser.achievementTracker.addPoints("createProject",1);
+            currentUser.achievementTracker.addPoints("createProject",1, currentUser);
         }
     }
     
@@ -165,7 +165,7 @@ public class ProjectLibrary extends DataLibrary{
                     System.out.println("Project successfully deleted!");
                     System.out.println("Returning to main menu...");
                     //achievement tracking
-                    currentUser.achievementTracker.addPoints("deleteProject",1);
+                    currentUser.achievementTracker.addPoints("deleteProject",1, currentUser);
                     return true;
                 } else {
                     System.out.println("Something went wrong");

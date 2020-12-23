@@ -110,7 +110,7 @@ public class UserLibrary extends DataLibrary {
                 userToSendTo.getInbox().add(new Message(senderUserName,receiver,content));
                 System.out.println("Message sent.");
                 //achievement tracking
-                sender.achievementTracker.addPoints("sendMessage",1);
+                sender.achievementTracker.addPoints("sendMessage",1, sender);
             }
         } else System.out.println("That user doesn't exist.");
     }
@@ -132,7 +132,7 @@ public class UserLibrary extends DataLibrary {
         System.out.println("Email: " + user.getEmail());
         System.out.println("Occupation: " + user.getOccupation());
         System.out.println("Company Name: " + user.getCompanyName());
-        user.printXpBar();
+        user.achievementTracker.printXpBar();
         if(user.achievementTracker.getUserAchievements().size() > 0){
             System.out.println("Achievements:" );
             user.achievementTracker.printUserAchievements();

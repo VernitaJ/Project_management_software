@@ -9,18 +9,14 @@ import java.util.HashMap;
 public class AchievementTracker {
     private AchievementLibrary library = AchievementLibrary.getInstance();
     private HashMap<String, Integer> tracker;
-    private User user;
-
-    public AchievementTracker(User user){
+    private int experience;
+    
+    public AchievementTracker(){
         tracker = new HashMap<>();
-        this.user = user;
+        this.experience = 0;
     }
     
-    public AchievementTracker() {
-        tracker = new HashMap<>();
-    }
-
-    public int addPoints(String achievementName, int point){
+    public int addPoints(String achievementName, int point, User user){
         int total = tracker.containsKey(achievementName) ? tracker.get(achievementName) : 0;
         total += point;
         tracker.put(achievementName, total);
@@ -29,16 +25,41 @@ public class AchievementTracker {
         int required = library.getAchievementRequirement(achievementName)-progress;
 
         if(required == library.getAchievementRequirement(achievementName) &&
-           getCurrentTier(achievementName) <= library.getAchievementMaxTier(achievementName) ){
-            sendCongratsMessage(achievementName);
-            user.addExp(library.getAchievementRequirement(achievementName));
+            getCurrentTier(achievementName) <= library.getAchievementMaxTier(achievementName) ){
+            sendCongratsMessage(achievementName, user);
+            addExp(library.getAchievementRequirement(achievementName));
         }
-
 
         return total;
     }
-
-
+    
+    public void printXpBar()
+    {
+        String box = "#";
+        String empty = "_";
+        int progress = experience%10;
+        int remaining = 10-progress;
+        System.out.println("Level: " + getExperience()/10);
+        System.out.println("[" + box.repeat(progress*2) + empty.repeat(remaining*2) + "]" + " Progress: " + progress*10 + "%");
+    }
+    
+    public String printTag(){
+        return " [Level " + getExperience()/10 + " - " + printNumOfUserAchievements() + " Achievements]";
+    }
+    
+    public void addExp(int xp)
+    {
+        experience += xp;
+    }
+    
+    public int getExperience() {
+        return experience;
+    }
+    
+    public void setExperience(int experience) {
+        this.experience = experience;
+    }
+    
     private int getCurrentTier(String achievement){
         int currentPoints = tracker.get(achievement);
         int requiredPoints = library.getAchievement(achievement).getRequiredPoints();
@@ -59,7 +80,7 @@ public class AchievementTracker {
 
     // public int getNumOfUserAchivements() {
     public int printNumOfUserAchievements(){
-        int totalAchievements=0;
+        int totalAchievements = 0;
         for(String achievementName : tracker.keySet()){
             //if user have enough points to have this achievement, add name to return list;
             if(tracker.get(achievementName) >= library.getAchievementRequirement(achievementName)){
@@ -107,7 +128,7 @@ public class AchievementTracker {
         userToNotify.getInbox().add(new Message("System", userToNotify.getUserName(), message));
     }
 
-    private void sendCongratsMessage(String achievementName){
+    private void sendCongratsMessage(String achievementName, User user){
         StringBuilder builder = new StringBuilder();
         builder.append("Congratulations");
         builder.append(System.getProperty("line.separator"));
@@ -116,7 +137,7 @@ public class AchievementTracker {
         builder.append("We are happy to report that you have earned a new achievement.");
         builder.append(System.getProperty("line.separator"));
         builder.append(getAchievementStatus(achievementName));
-        sendNotification(this.user, builder.toString());
+        sendNotification(user, builder.toString());
     }
 
 

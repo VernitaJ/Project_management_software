@@ -46,10 +46,9 @@ public class Controller {
 
     public void run()
     {
-      //  testData();
+       // testData();
 
         try {
-            ExportJson exportJSON = new ExportJson(projectLibrary, taskLibrary, userLibrary);
             ImportJson importJson = new ImportJson(projectLibrary, taskLibrary, userLibrary);
         } catch (IOException e) {
             e.printStackTrace();
@@ -62,15 +61,20 @@ public class Controller {
     public void testData() {
         userLibrary.addUserToList(new User("boye", "1", "pog@pog.com", "Leet", "Ericsson", 400, 2));
         User boye = (User) userLibrary.findUserInList("boye");
-        boye.achievementTracker.addPoints("createProject",25);
-        boye.achievementTracker.addPoints("deleteProject", 50);
+        boye.achievementTracker.addPoints("createProject",25, boye);
+        boye.achievementTracker.addPoints("deleteProject", 50, boye);
+        boye.achievementTracker.setExperience(15);
         boye.getInbox().add(new Message("Jens", "Boye", "Problem?"));
         boye.getInbox().add(new Message("Kalle", "Boye", "Blä"));
         boye.getInbox().add(new Message("Pog", "Boye", "Kek"));
         
         ImportExcel lego = new ImportExcel(userLibrary, projectLibrary, boye);
-
-        
+    
+        try {
+            ExportJson exportJSON = new ExportJson(projectLibrary, taskLibrary, userLibrary);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
     
     private void exit()
@@ -170,7 +174,7 @@ public class Controller {
         menu = new Menu("Main Menu", options);
         do
         {
-            currentUser.printXpBar();
+            currentUser.achievementTracker.printXpBar();
             String choice = menu.printMenu();
             switch (choice)
             {

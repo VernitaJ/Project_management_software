@@ -27,6 +27,7 @@ public class ImportJson {
         this.projectFileName = System.getProperty("user.home") + "/project.json";
         
         parseJson();
+        System.out.println("End");
     }
     
     private void parseJson() throws IOException {
@@ -64,7 +65,6 @@ public class ImportJson {
                 User projectManager = parseUserJson(jsonParser);
                 project.setProjectManager(projectManager);
             } else if("team".equals(field)){
-                
                 parseTeamJson(jsonParser, project);
                 
             }
@@ -188,12 +188,9 @@ public class ImportJson {
                 }
             }else if("achievementTracker".equals(field)){
                 jsonParser.nextToken();
-              //  while(jsonParser.nextToken() != JsonToken.END_OBJECT) {
-              //      parseAchievements(jsonParser);
-              //  }
-            }else if("experience".equals(field)){
-                jsonParser.nextToken();
-                user.setExperience(jsonParser.getValueAsInt());
+                while(jsonParser.nextToken() != JsonToken.END_OBJECT) {
+                    parseAchievements(jsonParser, user);
+                }
             }else if("id".equals(field)){
                 jsonParser.nextToken();
                 user.setID(jsonParser.getText());
@@ -229,27 +226,18 @@ public class ImportJson {
         return(tempMessage);
     }
     
-    private Achievement parseAchievements(JsonParser jsonParser) throws IOException {
-        Achievement tempAchievement = new Achievement();
-        /*while (jsonParser.nextToken() != JsonToken.END_OBJECT) {
-            String field = jsonParser.getCurrentName();
-            if("sender".equals(field)) {
+    private void parseAchievements(JsonParser jsonParser, User user) throws IOException {
+        String field = jsonParser.getCurrentName();
+        if("experience".equals(field)) {
+            jsonParser.nextToken();
+            user.achievementTracker.setExperience(jsonParser.getValueAsInt());
+        } else if("userAchievements".equals(field)) {
+            while (jsonParser.nextToken() != JsonToken.END_ARRAY) {
                 jsonParser.nextToken();
-                tempMessage.setSender(jsonParser.getText());
-            } else if("receiver".equals(field)) {
-                jsonParser.nextToken();
-                tempMessage.setReceiver(jsonParser.getText());
-            } else if("content".equals(field)) {
-                jsonParser.nextToken();
-                tempMessage.setContent(jsonParser.getText());
-            } else if("dateSent".equals(field)) {
-                jsonParser.nextToken();
-                tempMessage.setDateSent(LocalDate.parse(jsonParser.getText()));
-            } else if("status".equals(field)) {
-                jsonParser.nextToken();
-                tempMessage.setRead(jsonParser.getValueAsBoolean());
+                Achievement tempAchievement = new Achievement(jsonParser.getText());
             }
-        }*/
-        return(tempAchievement);
+        }
+        
+        }
     }
-}
+

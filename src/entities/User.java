@@ -1,42 +1,39 @@
 package entities;
 
 import achievements.AchievementTracker;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-
 import java.util.ArrayList;
 
 @JsonDeserialize(as = User.class)
+@JsonPropertyOrder({ "userName", "password", "email", "occupation", "companyName", "salary", "workingHours", "inbox", "achievementTracker" })
 public class User extends Data {
 
     private String userName;
     private String password;
-    private String eMail;
+    private String email;
     private String occupation;
     private String companyName;
     private float salary;
     private float workingHours;
     private ArrayList<Message> inbox;
     public AchievementTracker achievementTracker;
-    private int experience;
 
-
-    public User(String userName, String password, String eMail, String occupation, String companyName, float salary, float workingHours) {
+    public User(String userName, String password, String email, String occupation, String companyName, float salary, float workingHours) {
         this.userName = userName;
         this.password = password;
-        this.eMail = eMail;
+        this.email = email;
         this.occupation = occupation;
         this.companyName = companyName;
         this.salary = salary;
         this.workingHours = workingHours;
         this.inbox = new ArrayList<>();
-        this.experience = 0;
-        this.achievementTracker = new AchievementTracker(this);
+        this.achievementTracker = new AchievementTracker();
     }
     
     public User() {
         this.inbox = new ArrayList<>();
-        this.achievementTracker = new AchievementTracker(this);
+        this.achievementTracker = new AchievementTracker();
     }
 
     public void setName(String currentName) {
@@ -56,7 +53,7 @@ public class User extends Data {
     }
 
     public String getEmail() {
-        return this.eMail;
+        return this.email;
     }
 
     public String getOccupation() {
@@ -65,11 +62,6 @@ public class User extends Data {
 
     public String getCompanyName() {
         return this.companyName;
-    }
-
-    @JsonIgnoreProperties
-    public String geteMail() {
-        return eMail;
     }
 
     public float getSalary() {
@@ -84,8 +76,8 @@ public class User extends Data {
         this.password = password;
     }
 
-    public void setEmail(String eMail) {
-        this.eMail = eMail;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public void setOccupation(String occupation) {
@@ -100,20 +92,12 @@ public class User extends Data {
         this.userName = userName;
     }
 
-    public void seteMail(String eMail) {
-        this.eMail = eMail;
-    }
-
     public void setSalary(float salary) {
         this.salary = salary;
     }
 
     public void setWorkingHours(float workingHours) {
         this.workingHours = workingHours;
-    }
-    
-    public void setExperience(int experience) {
-        this.experience = experience;
     }
     
     public void setAchievementTracker(AchievementTracker achievementTracker) {
@@ -124,15 +108,6 @@ public class User extends Data {
         this.inbox = inbox;
     }
     
-    public void addExp(int xp)
-    {
-        experience += xp;
-    }
-    
-    public int getExperience() {
-        return experience;
-    }
-    
     public void setID(String ID) {
         super.setID(ID);
     }
@@ -140,25 +115,6 @@ public class User extends Data {
     @Override
     public String toString() {
         return getUserName();
-    }
-    
-    @JsonIgnoreProperties
-    public String getInfo() {
-        return getUserName() + ", " + getOccupation() + ", " + getEmail() + ".";
-    }
-    
-    public void printXpBar()
-    {
-        String box = "#";
-        String empty = "_";
-        int progress = experience%10;
-        int remaining = 10-progress;
-        System.out.println("Level: " + getExperience()/10);
-        System.out.println("[" + box.repeat(progress*2) + empty.repeat(remaining*2) + "]" + " Progress: " + progress*10 + "%");
-    }
-
-    public String printTag(){
-        return " [Level " + getExperience()/10 + " - " + achievementTracker.printNumOfUserAchievements() + " Achievements]";
     }
 
 }
