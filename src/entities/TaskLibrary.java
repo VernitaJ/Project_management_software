@@ -357,7 +357,7 @@ public class TaskLibrary extends DataLibrary {
         ArrayList<Data> tasks = currentProject.taskList.list;
         double totalToInvoice = 0;
         if(tasks.size() == 0){
-            System.out.println("There are no billable hours");
+            System.out.println("There are no billable hours for this project.");
             return;
         } else {
             for (Data task : tasks) {
