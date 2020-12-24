@@ -17,47 +17,36 @@ public class Login {
             return instance;
         }
     }
-    private boolean checkAdminUsername()
-    {
-        if (SystemAdmin.getInstance().getUsername().equals(input.getStr("Username: ")))
-        {
+
+    private boolean checkAdminUsername() {
+        if (SystemAdmin.getInstance().getUsername().equals(input.getStr("Username: "))) {
             return true;
         }
-        else
-        {
+        else {
             return false;
         }
     }
-    private boolean checkAdminPassword()
-    {
-        if (SystemAdmin.getInstance().getPassword().equals(input.getStr("Password: ")))
-        {
+
+    private boolean checkAdminPassword() {
+        if (SystemAdmin.getInstance().getPassword().equals(input.getStr("Password: "))) {
             return true;
         }
-        else
-        {
+        else {
             return false;
         }
     }
 
 
-    public boolean authorizeAdmin()
-    {
-        if (checkAdminUsername())
-        {
-            if(checkAdminPassword())
-            {
+    public boolean authorizeAdmin() {
+        if (checkAdminUsername()){
+            if(checkAdminPassword()){
                 return true;
             }
-            else
-            {
+            else {
                 return false;
-            }
-        }
-        else
-        {
+            }}
+        else {
             return false;
         }
     }
-
 }

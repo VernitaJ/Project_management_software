@@ -2,6 +2,7 @@ package entities;
 
 import tools.Input;
 
+import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -283,8 +284,8 @@ public class TaskLibrary extends DataLibrary {
             Task projectTask = (Task) task;
             if (projectTask.getStatus().equalsIgnoreCase("completed")) {
                 ArrayList<User> assignees = projectTask.getAssignees();
-                System.out.println("Task Deadline" + projectTask.getDeadline() + "\n" + " Task: " + projectTask.getName() + "\n" +
-                        "Description" + projectTask.getDescription() + "" + "\n" + "Team Members:");
+                System.out.println("Task Deadline - " + projectTask.getDeadline() + "\n" + "Task: " + projectTask.getName() + "\n" +
+                        "Description: " + projectTask.getDescription() + "" + "\n" + "Team Members: \n");
                 for (User teamMember : assignees){
                     TeamMember member = currentProject.getTeam().findTeamMember(teamMember);
                     System.out.println(teamMember.getUserName() + " - " + member.getRole().roleType() + "\n");
@@ -350,6 +351,28 @@ public class TaskLibrary extends DataLibrary {
             }
             System.out.println("Total time worked on project tasks: " + allTasksHours + ".");
         }
+    }
+
+    public void billableTask(Project currentProject){
+        ArrayList<Data> tasks = currentProject.taskList.list;
+        double totalToInvoice = 0;
+        if(tasks.size() == 0){
+            System.out.println("There are no billable hours");
+            return;
+        } else {
+            for (Data task : tasks) {
+               Task currentTask = (Task) task;
+               ArrayList<WorkedHours> workedHours = currentTask.getWorkedHours();
+               if (workedHours.size() > 0) {
+                   System.out.println(currentTask.getName() + "\n");
+                       for (WorkedHours worked : workedHours){
+                           double payment = worked.getUser().getSalary()*worked.getWorkedHours();
+                           System.out.println("Contributor: " + worked.getUser().getUserName() + "\nHours logged: " + worked.getWorkedHours() + "\nWage: " + worked.getUser().getSalary() + " SEK\nInvoice: " + payment + " SEK\n");
+                           totalToInvoice += payment;
+                       }
+                   }
+               }
+            } System.out.println("\nTotal amount to invoice: " + totalToInvoice + " SEK\n");
     }
 }
 
