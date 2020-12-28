@@ -272,9 +272,9 @@ public class UserLibrary extends DataLibrary {
 
     //if user1 is greater than user 2 -> return true;
     public boolean compareTwoUserAchievements(User user1, User user2){
-        if(user1.getNumOfAchievements() > user2.getNumOfAchievements()){
+        if(user1.achievementTracker.printNumOfUserAchievements() > user2.achievementTracker.printNumOfUserAchievements()){
             return false;
-        } else if(user1.getNumOfAchievements() < user2.getNumOfAchievements()){
+        } else if(user1.achievementTracker.printNumOfUserAchievements() < user2.achievementTracker.printNumOfUserAchievements()){
             return true;
         } else {
             //check the tiers
@@ -316,8 +316,8 @@ public class UserLibrary extends DataLibrary {
         List<User> allUsers = sortUsersByAchievements();
         System.out.println("--------------------"+ Input.BLUE + "LEADERBOARD" + Input.RESET +"--------------------");
         for(User user : allUsers){
-            if(user.getNumOfAchievements() > 0 ){
-                System.out.println(user.getUserName() + " - Total Achievements: " + user.getNumOfAchievements());
+            if(user.achievementTracker.printNumOfUserAchievements() > 0 ){
+                System.out.println(user.getUserName() + " - Total Achievements: " + user.achievementTracker.printNumOfUserAchievements());
                 user.achievementTracker.printUserAchievements();
             }
         }

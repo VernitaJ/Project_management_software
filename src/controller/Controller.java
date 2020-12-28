@@ -50,22 +50,17 @@ public class Controller {
     
     public void run() throws IOException {
         userLibrary.addUserToList(new User("boye", "1", "pog@pog.com", "Leet", "Ericsson", 400, 2));
+        User boye = (User) userLibrary.findUserInList("boye");
+        boye.achievementTracker.addPoints("createProject",5, boye);
+        boye.achievementTracker.addPoints("deleteProject", 3, boye);
+        // readFile();
         //  testData();
         
-      //  try {
-      //      ImportJson importJson = new ImportJson(projectLibrary, userLibrary, "project.json");
-      //  } catch (IOException e) {
-       //     e.printStackTrace();
-      // }
-        
-        //readFile();
         loginMenu();
     }
     
     public void testData() {
         User boye = (User) userLibrary.findUserInList("boye");
-        boye.achievementTracker.addPoints("createProject",5, boye);
-        boye.achievementTracker.addPoints("deleteProject", 3, boye);
         boye.achievementTracker.setExperience(15);
         boye.getInbox().add(new Message("TestDataSender", "Boye", "Problem?"));
         boye.getInbox().add(new Message("TestDataSender", "Boye", "Blä"));
@@ -123,7 +118,7 @@ public class Controller {
                     case "achievementprogress" -> {
                         currentUser = (User) userLibrary.findUserInList(token[1]);
                         //idk what happens when achievement doesnt exist in the library??
-                        currentUser.achievementTracker.addPoints(token[2],parseInt(token[3]));
+                        currentUser.achievementTracker.addPoints(token[2],parseInt(token[3]), currentUser);
                     }
                 }
             }
@@ -511,7 +506,7 @@ public class Controller {
         } while (true);
     }
     
-    private void searchMenu() {
+    private void searchMenu() throws IOException {
         String[] options =
                 {
                         "Search by Username",
