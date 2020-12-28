@@ -35,6 +35,7 @@ public class Project extends Data {
 
     public Project() {
         this.team = new Team();
+        this.taskList = new TaskLibrary();
     }
 
     public void setProjectManager(User projectManager) {
