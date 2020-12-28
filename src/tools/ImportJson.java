@@ -19,7 +19,6 @@ public class ImportJson {
     private final UserLibrary userLibrary;
     private String projectFileName;
     
-    
     public ImportJson(ProjectLibrary projectLibrary, TaskLibrary taskLibrary, UserLibrary userLibrary) throws IOException {
         this.projectLibrary = projectLibrary;
         this.taskLibrary = taskLibrary;
@@ -31,13 +30,6 @@ public class ImportJson {
     private void parseJson() throws IOException {
         JsonParser jsonParser = new JsonFactory().createParser(new File(this.projectFileName));
         parseProjectJson(jsonParser);
-    }
-    
-    private boolean emptyArray(JsonParser jsonParser) throws IOException {
-        if(jsonParser.getText() == "[ ]") {
-            return true;
-        }
-        return false;
     }
     
     private void parseProjectJson(JsonParser jsonParser) throws IOException {
