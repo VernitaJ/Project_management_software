@@ -31,7 +31,7 @@ public class AchievementLibrary {
     }
 
     public int getAchievementRequirement(String achievementName){
-        return achievements.get(achievementName).getRequiredPoints();
+        return getAchievement(achievementName).getRequiredPoints();
     }
     public int getAchievementMaxTier(String achievementName){
         return achievements.get(achievementName).getMaxTier();

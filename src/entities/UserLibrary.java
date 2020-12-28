@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Function;
 
 import static entities.Message.sortByName;
 
@@ -135,7 +136,7 @@ public class UserLibrary extends DataLibrary {
         user.achievementTracker.printXpBar();
         if(user.achievementTracker.listUserAchievements().size() > 0){
             System.out.println("Achievements:" );
-            user.achievementTracker.printUserAchievements();
+            user.achievementTracker.printUserAchievementsWithDetails();
         }
 
     }
@@ -264,6 +265,107 @@ public class UserLibrary extends DataLibrary {
                 viewMyProfile(allUsers.get(choice - 1));
             } catch (Exception e) {
                 System.out.println("Your input does not match the available choices. Please try again.");
+            }
+        }
+
+    }
+
+    //if user1 is greater than user 2 -> return true;
+    public boolean compareTwoUserAchievements(User user1, User user2){
+        if(user1.getNumOfAchievements() > user2.getNumOfAchievements()){
+            return false;
+        } else if(user1.getNumOfAchievements() < user2.getNumOfAchievements()){
+            return true;
+        } else {
+            //check the tiers
+            if(user1.achievementTracker.getTotalTiers() > user2.achievementTracker.getTotalTiers()){
+                return false;
+            } else if (user1.achievementTracker.getTotalTiers() < user2.achievementTracker.getTotalTiers()){
+                return true;
+            } else{
+                //tie breaker
+                if(user1.getUserName().compareToIgnoreCase(user2.getUserName()) > 0){
+                    return true;
+                }
+                else{
+                    return false;
+                }
+            }
+        }
+    }
+
+    public List<User> sortUsersByAchievements(){
+        List<User> allUsers = UserLibrary.getInstance().getAllUsers();
+        allUsers.sort(Comparator.comparing(User::getUserName));
+        Collections.reverse(allUsers);
+
+        for (int i = 0; i < allUsers.size(); i++){
+            for (int j = 0; j < allUsers.size()-i-1; j++){
+                if (compareTwoUserAchievements(allUsers.get(j), allUsers.get(j+1)))
+                {   // swap arr[j+1] and arr[j]
+                    Collections.swap(allUsers,j,j+1);
+                }
+            }
+
+        }
+
+        return allUsers;
+    }
+
+    public void leaderboard(){
+        List<User> allUsers = sortUsersByAchievements();
+        System.out.println("--------------------"+ Input.BLUE + "LEADERBOARD" + Input.RESET +"--------------------");
+        for(User user : allUsers){
+            if(user.getNumOfAchievements() > 0 ){
+                System.out.println(user.getUserName() + " - Total Achievements: " + user.getNumOfAchievements());
+                user.achievementTracker.printUserAchievements();
+            }
+        }
+    }
+
+    public List<User> searchByUsername(String userName){
+        List<User> searchResult = new ArrayList<>();
+        User user = (User)findUserInList(userName);
+        if(user!=null){
+            searchResult.add(user);
+        }
+         return searchResult;
+    }
+    public List<User> searchByCompany(String company){
+        List<User> searchResult = new ArrayList<>();
+        for(Data user : list){
+            User currentUser = (User)user;
+            if(currentUser.getCompanyName().equalsIgnoreCase(company)){
+                searchResult.add(currentUser);
+            }
+        }
+        return searchResult;
+    }
+    public List<User> searchByOccupation(String occupation){
+        List<User> searchResult = new ArrayList<>();
+        for(Data user : list){
+            User currentUser = (User)user;
+            if(currentUser.getOccupation().equalsIgnoreCase(occupation)){
+                searchResult.add(currentUser);
+            }
+        }
+        return searchResult;
+    }
+
+    public void printSearchResults(Function<String, List<User>> searchMethod){
+        String dataToSearch = this.input.getStr("Enter search term: ");
+        List<User> searchResult = searchMethod.apply(dataToSearch);
+        searchResult.sort(Comparator.comparing(User::getUserName));
+        if(searchResult.size()==0){
+            System.out.println("No result found!");
+        } else{
+            System.out.println("----------------------------");
+            for(User user : searchResult){
+                System.out.println("Name: " + user.getUserName());
+                System.out.println("Occupation: " + user.getOccupation());
+                System.out.println("Company: " + user.getCompanyName());
+                System.out.println("Email: " + user.getEmail());
+                System.out.println("----------------------------");
             }
         }
 

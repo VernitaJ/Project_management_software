@@ -83,8 +83,16 @@ public class AchievementTracker {
         }
         return accomplishedOnes;
     }
-
-    // public int getNumOfUserAchivements() {
+    
+    public int getTotalTiers(){
+        int total = 0;
+        ArrayList<String> accomplishedOnes = listUserAchievements();
+        for(String achievement : accomplishedOnes){
+            total += listCurrentTier(achievement);
+        }
+        return total;
+    }
+    
     public int printNumOfUserAchievements(){
         int totalAchievements = 0;
         for(String achievementName : tracker.keySet()){
@@ -123,13 +131,31 @@ public class AchievementTracker {
 
     }
 
-    public void printUserAchievements(){
+    public void printUserAchievementsWithDetails(){
         ArrayList<String> accomplishedOnes = listUserAchievements();
         for(String achievement : accomplishedOnes){
             System.out.println(getAchievementStatus(achievement));
 
         }
     }
+
+    public void printUserAchievements(){
+        ArrayList<String> accomplishedOnes = listUserAchievements();
+
+
+        for(String achievement : accomplishedOnes){
+            int currentTier = listCurrentTier(achievement);
+            String tier;
+            if(currentTier >= library.getAchievementMaxTier(achievement)){
+                tier = "Tier Max";
+            } else {
+                tier = "Tier " + currentTier;
+            }
+            System.out.println(library.getAchievementTitle(achievement)+ " - " + tier);
+        }
+        System.out.println("---------------------------------------------------");
+    }
+
     private void sendNotification(User userToNotify, String message) {
         userToNotify.getInbox().add(new Message("System", userToNotify.getUserName(), message));
     }
