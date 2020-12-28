@@ -34,6 +34,6 @@ public class ExportJson {
         String timeStamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
         projectFileName = "export" + timeStamp +".json";
         MAPPER.writerWithDefaultPrettyPrinter().writeValue(Paths.get(projectFileName).toFile(), currentProject);
-        System.out.println("The file: " + projectFileName);
+        System.out.println("The file " + projectFileName + " has been created.");
     }
 }

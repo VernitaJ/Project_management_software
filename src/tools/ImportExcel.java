@@ -16,17 +16,6 @@ import static java.lang.Float.parseFloat;
 
 
 public class ImportExcel {
-    /*
-                - ROW
-                | COL
-                 */
-    
-    /*
-        1. Set numbers for all the headers.
-        2. Match numbers with keywords from the software.
-        3. Loop over the rest of the data.
-        4. Add the cell data into the appropriate software data slot.
-     */
     ArrayList<String> headerList;
     ProjectLibrary projectLibrary;
     UserLibrary userLibrary;
