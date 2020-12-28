@@ -15,20 +15,19 @@ import java.util.ArrayList;
 
 public class ImportJson {
     private final ProjectLibrary projectLibrary;
-    private final TaskLibrary taskLibrary;
     private final UserLibrary userLibrary;
     private String projectFileName;
     
-    public ImportJson(ProjectLibrary projectLibrary, TaskLibrary taskLibrary, UserLibrary userLibrary) throws IOException {
+    public ImportJson(ProjectLibrary projectLibrary, UserLibrary userLibrary) throws IOException {
         this.projectLibrary = projectLibrary;
-        this.taskLibrary = taskLibrary;
         this.userLibrary = userLibrary;
-        this.projectFileName = "project.json";
-        parseJson();
     }
     
-    private void parseJson() throws IOException {
-        JsonParser jsonParser = new JsonFactory().createParser(new File(this.projectFileName));
+    public void parseJson() throws IOException {
+        Input input = Input.getInstance();
+        String filePath = input.getStr("Write the file location \n");
+        JsonParser jsonParser = new JsonFactory().createParser(new File(filePath));
+        //   JsonParser jsonParser = new JsonFactory().createParser(new File(this.projectFileName));
         parseProjectJson(jsonParser);
     }
     
@@ -65,9 +64,9 @@ public class ImportJson {
             }else if("taskList".equals(field)) {
                 parseTaskListJson(jsonParser, project);
             }
-            
         }
         this.projectLibrary.addProjectToList(project);
+        System.out.println("Successfully imported the project.");
     }
     
     private void parseTaskListJson(JsonParser jsonParser, Project project) throws IOException {
@@ -145,7 +144,7 @@ public class ImportJson {
     private ArrayList<User> parseAssignees(JsonParser jsonParser) throws IOException {
         ArrayList<User> assignees = new ArrayList<>();
         while(jsonParser.nextToken() != JsonToken.END_ARRAY) {
-                assignees.add(parseUserJson(jsonParser));
+            assignees.add(parseUserJson(jsonParser));
         }
         return assignees;
     }
