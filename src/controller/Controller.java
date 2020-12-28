@@ -53,6 +53,7 @@ public class Controller {
         User boye = (User) userLibrary.findUserInList("boye");
         boye.achievementTracker.addPoints("createProject",5, boye);
         boye.achievementTracker.addPoints("deleteProject", 3, boye);
+        ImportExcel lego = new ImportExcel(userLibrary, projectLibrary, boye);
         // readFile();
         //  testData();
         
@@ -65,8 +66,6 @@ public class Controller {
         boye.getInbox().add(new Message("TestDataSender", "Boye", "Problem?"));
         boye.getInbox().add(new Message("TestDataSender", "Boye", "Blä"));
         boye.getInbox().add(new Message("TestDataSender", "Boye", "Kek"));
-        
-        ImportExcel lego = new ImportExcel(userLibrary, projectLibrary, boye);
         
         try {
             ExportJson exportJSON = new ExportJson(projectLibrary);

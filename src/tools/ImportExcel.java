@@ -32,7 +32,7 @@ public class ImportExcel {
     private void loopExcel() {
         try {
             //POIFSFileSystem fs = new POIFSFileSystem(new FileInputStream(System.getProperty("user.home") + "/ProjectData.xlsx"));
-            XSSFWorkbook wb = new XSSFWorkbook(System.getProperty("user.home") + "/ProjectData.xlsx");
+            XSSFWorkbook wb = new XSSFWorkbook("projectexcel.xlsx");
             XSSFSheet sheet = wb.getSheetAt(0);
             XSSFRow row;
             XSSFCell cell;
@@ -87,7 +87,6 @@ public class ImportExcel {
                         row.getCell(2).toString(),
                         LocalDate.parse(row.getCell(3).toString()),
                         LocalDate.parse(row.getCell(4).toString())));
-        this.projectLibrary.printAllProjects();
     }
     
     private void importUser(XSSFRow row) {
