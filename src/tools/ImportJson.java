@@ -26,12 +26,10 @@ public class ImportJson {
         this.userLibrary = userLibrary;
         this.projectFileName = "project.json";
         parseJson();
-        System.out.println("End");
     }
     
     private void parseJson() throws IOException {
         JsonParser jsonParser = new JsonFactory().createParser(new File(this.projectFileName));
-        //   parseUserJson(jsonParser);
         parseProjectJson(jsonParser);
     }
     
@@ -83,8 +81,6 @@ public class ImportJson {
     private void parseTaskListJson(JsonParser jsonParser, Project project) throws IOException {
         String field = jsonParser.getCurrentName();
         
-        System.out.println("parseTaskList");
-        System.out.println(jsonParser.getText());
         while (jsonParser.nextToken() != JsonToken.END_OBJECT) {
             field = jsonParser.getCurrentName();
             if ("taskList".equals(field)) {
@@ -94,7 +90,7 @@ public class ImportJson {
                         while (jsonParser.nextToken() != JsonToken.END_ARRAY) {
                             project.getTaskList().addToList(parseTaskJson(jsonParser, project));
                         }
-                        return; // Probably needs some tweaks.
+                        return;
                     }
                 }
             }
@@ -108,7 +104,6 @@ public class ImportJson {
             if ("createdBy".equals(field)) {
                 task.setCreatedBy(parseUserJson(jsonParser));
             } else if("name".equals(field)) {
-                
                 task.setName(jsonParser.getText());
             } else if("description".equals(field)) {
                 jsonParser.nextToken();
@@ -136,8 +131,6 @@ public class ImportJson {
         WorkedHours tempWorkedHours = new WorkedHours();
         String field = jsonParser.getCurrentName();
         
-        //  "workedHours" : [ {
-        
         if ("workedHours".equals(field)) {
             while (jsonParser.nextToken() != JsonToken.END_ARRAY) {
                 field = jsonParser.getCurrentName();
@@ -164,47 +157,6 @@ public class ImportJson {
         }
         return assignees;
     }
-
-        /*
-        "taskList" : {
-            "dataList" : [ {
-                "createdBy" : {
-                    "userName" : "boye",
-                    "password" : "1",
-                    "email" : "pog@pog.com",
-                    "occupation" : "Leet",
-                    "companyName" : "Ericsson",
-                    "salary" : 400.0,
-                    "workingHours" : 2.0,
-                        "inbox" : [ {
-                          "sender" : "System",
-                          "receiver" : "boye",
-                          "content" : "Congratulations\r\nDear boye,\r\nWe are happy to report that you have earned a new achievement.\r\nGood idea? - Tier 1\r\nCreate some projects to earn this achievement\r\n5 more points required to achieve next tier\r\n",
-                          "dateSent" : "2020-12-23",
-                          "read" : false,
-                          "id" : "df3a0675-da58-4c46-be1f-5ed70a625176"
-                        },
-                        "name" : "Lecture",
-                        "description" : "",
-                        "status" : "Default",
-                        "startDate" : "2020-11-02",
-                        "deadline" : "2021-01-08",
-                        "assignees" : [ {
-                            "userName" : "jens",
-                            "password" : "jens",
-                            "email" : "gussjodije@student.gu.se",
-                            "occupation" : "Student",
-                            "companyName" : "Simple Direction",
-                            "salary" : 100.0,
-                            "workingHours" : 8.0,
-                            "inbox" : [ ],
-                                "achievementTracker" : {
-                                  "tracker" : { },
-                                  "experience" : 0
-                                },
-                            "id" : "7effda0a-2931-4c74-962b-2755b819dcf5"
-                        }
-         */
     
     private Project parseBudgetJson(JsonParser jsonParser, Project project) throws IOException {
         Budget budget = new Budget();
@@ -278,7 +230,6 @@ public class ImportJson {
     
     private User parseUserJson(JsonParser jsonParser) throws JsonParseException, IOException {
         User user = new User();
-        //loop through the JsonTokens
         while(jsonParser.nextToken() != JsonToken.END_OBJECT){
             String field = jsonParser.getCurrentName();
             if("userName".equals(field)){
@@ -364,27 +315,4 @@ public class ImportJson {
             user.achievementTracker.setExperience(jsonParser.getValueAsInt());
         }
     }
-/*
-        Exception in thread "main" java.lang.NullPointerException: Cannot invoke "achievements.Achievement.getRequiredPoints()" because the return value of "achievements.AchievementLibrary.getAchievement(String)" is null
-        at achievements.AchievementTracker.getCurrentTier(AchievementTracker.java:73)
-        at achievements.AchievementTracker.addPoints(AchievementTracker.java:32)
-        at tools.ImportJson.parseAchievements(ImportJson.java:241)
-        at tools.ImportJson.parseUserJson(ImportJson.java:191)
-        at tools.ImportJson.parseProjectJson(ImportJson.java:64)
-        at tools.ImportJson.parseJson(ImportJson.java:35)
-        at tools.ImportJson.<init>(ImportJson.java:28)
-        at controller.Controller.run(Controller.java:52)
-        at Main.main(Main.java:8)
-*/
-        
-        /*
-        "achievementTracker" : {
-              "tracker" : {
-                "deleteProject" : 50,
-                "createProject" : 25
-              },
-              "experience" : 15
-            },
-        */
-    
 }
