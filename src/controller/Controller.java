@@ -30,38 +30,38 @@ public class Controller {
     private Project currentProject = null;
     private Task currentTask = null;
     private File testFile = new File("src/temptestdata.txt");
-
-    private Controller(){}
-
-    public static Controller getInstance()
-    {
+    private ImportJson importJson = new ImportJson(projectLibrary, userLibrary);
+    private ExportJson exportJson = new ExportJson(projectLibrary);
+    
+    private Controller() throws IOException {}
+    
+    public static Controller getInstance() throws IOException {
         if (instance == null) {
             instance = new Controller();
         }
         return instance;
     }
-
+    
     public void teardown()
     {
         instance = null;
     }
-
-    public void run()
-    {
-      //  testData();
-
-        try {
-            ImportJson importJson = new ImportJson(projectLibrary, taskLibrary, userLibrary);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     
+    public void run() throws IOException {
+        userLibrary.addUserToList(new User("boye", "1", "pog@pog.com", "Leet", "Ericsson", 400, 2));
+        //  testData();
+        
+      //  try {
+      //      ImportJson importJson = new ImportJson(projectLibrary, userLibrary, "project.json");
+      //  } catch (IOException e) {
+       //     e.printStackTrace();
+      // }
+        
         //readFile();
         loginMenu();
     }
     
     public void testData() {
-        userLibrary.addUserToList(new User("boye", "1", "pog@pog.com", "Leet", "Ericsson", 400, 2));
         User boye = (User) userLibrary.findUserInList("boye");
         boye.achievementTracker.addPoints("createProject",5, boye);
         boye.achievementTracker.addPoints("deleteProject", 3, boye);
@@ -71,9 +71,9 @@ public class Controller {
         boye.getInbox().add(new Message("TestDataSender", "Boye", "Kek"));
         
         ImportExcel lego = new ImportExcel(userLibrary, projectLibrary, boye);
-    
+        
         try {
-            ExportJson exportJSON = new ExportJson(projectLibrary, taskLibrary, userLibrary);
+            ExportJson exportJSON = new ExportJson(projectLibrary);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -85,7 +85,7 @@ public class Controller {
         teardown();
         System.exit(0);
     }
-
+    
     private void readFile() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         BufferedReader br;
@@ -126,13 +126,13 @@ public class Controller {
             e.printStackTrace();
         }
     }
-
+    
     // method just to say that a menu item has not been implemented. (temporary)
     private void notImplemented() {
         System.out.println(Input.RED + "This Feature Has Not been Implemented" + Input.RESET);
     }
-
-    private void loginMenu() {
+    
+    private void loginMenu() throws IOException {
         String[] options =
                 {
                         "Create Account",
@@ -162,8 +162,8 @@ public class Controller {
             }
         } while (true);
     }
-
-    private void mainMenu() {
+    
+    private void mainMenu() throws IOException {
         String[] options =
                 {
                         "Leaderboard",
@@ -189,8 +189,8 @@ public class Controller {
             }
         } while (true);
     }
-
-    private void sysAdminMenu() {
+    
+    private void sysAdminMenu() throws IOException {
         String[] options =
                 {
                         "Import (test) Data",
@@ -215,13 +215,13 @@ public class Controller {
             }
         } while (true);
     }
-
-    private void projectMenu() {
+    
+    private void projectMenu() throws IOException {
         String[] options =
                 {
                         "View Projects",
                         "Create Project",
-                        "Remove Project",
+                        "Import Project",
                         "Main Menu",
                         "Logout",
                         "Exit"
@@ -234,12 +234,12 @@ public class Controller {
             {
                 case "1" -> {
                     currentProject = projectLibrary.navigateBetweenProjects(currentUser);
-                        if(currentProject != null) {
-                            currentProjectMenu();
-                        }
+                    if(currentProject != null) {
+                        currentProjectMenu();
+                    }
                 }
                 case "2" -> createProject();
-                case "3" -> notImplemented();
+                case "3" -> importJson.parseJson();
                 case "4" -> mainMenu();
                 case "5" -> logout();
                 case "6" -> exit();
@@ -247,7 +247,7 @@ public class Controller {
         } while (true);
     }
     
-    private void currentProjectMenu() {
+    private void currentProjectMenu() throws IOException {
         String[] options =
                 {
                         "View Project Details",
@@ -256,6 +256,7 @@ public class Controller {
                         "Team Menu",
                         "Gantt Chart",
                         "Update Status",
+                        "Export Project",
                         "Delete Project",
                         "Main Menu",
                         "Logout",
@@ -263,7 +264,7 @@ public class Controller {
                 };
         menu = new Menu("Project: '" + currentProject.getName() + "' Menu", options);
         do
-            {
+        {
             String choice = menu.printMenu();
             switch (choice)
             {
@@ -273,20 +274,21 @@ public class Controller {
                 case "4" -> teamMenu();
                 case "5" -> projectLibrary.ganttChart(currentProject);
                 case "6" -> projectLibrary.updateStatus(currentProject, currentUser);
-                case "7" -> {
+                case "7" -> exportJson.writeJsonProject(currentProject);
+                case "8" -> {
                     Boolean isSuccessful = projectLibrary.deleteProject(currentProject, currentUser);
                     if(isSuccessful){
                         mainMenu();
                     }
                 }
-                case "8" -> mainMenu();
-                case "9" -> logout();
-                case "10" -> exit();
+                case "9" -> mainMenu();
+                case "10" -> logout();
+                case "11" -> exit();
             }
         } while (true);
     }
-
-    private void financeMenu(Project currentProject, User currentUser) {
+    
+    private void financeMenu(Project currentProject, User currentUser) throws IOException {
         String[] options =
                 {
                         "View Project Budget",
@@ -317,7 +319,7 @@ public class Controller {
         } while (true);
     }
     
-    private void addBudgetMenu(Project currentProject, User currentUser) {
+    private void addBudgetMenu(Project currentProject, User currentUser) throws IOException {
         String[] options =
                 {
                         "Add Budget (SEK)",
@@ -340,7 +342,7 @@ public class Controller {
         } while (true);
     }
     
-    private void updateBudgetMenu(Project currentProject, User currentUser) {
+    private void updateBudgetMenu(Project currentProject, User currentUser) throws IOException {
         String[] options =
                 {
                         "Update Budget (SEK)",
@@ -363,7 +365,7 @@ public class Controller {
         } while (true);
     }
     
-    private void tasksMenu() {
+    private void tasksMenu() throws IOException {
         String[] options =
                 {
                         "Add Task",
@@ -397,8 +399,8 @@ public class Controller {
             }
         } while (true);
     }
-
-    private void teamMenu() {
+    
+    private void teamMenu() throws IOException {
         String menuName;
         if (currentProject.getTeam() == null)
         {
@@ -429,7 +431,7 @@ public class Controller {
                 case "2" -> addMemberMenu();
                 case "3" -> teamLibrary.removeTeamMember(currentProject.getTeam(), currentUser);
                 case "4" -> changeMemberRoleMenu();
-               // case "7" -> teamLibrary.removeTeam(currentProject, currentUser);
+                // case "7" -> teamLibrary.removeTeam(currentProject, currentUser);
                 case "5" -> currentProjectMenu();
                 case "6" -> projectMenu();
                 case "7" -> logout();
@@ -437,7 +439,7 @@ public class Controller {
             }
         } while (true);
     }
-    private void addMemberMenu() {
+    private void addMemberMenu() throws IOException {
         String[] options =
                 {
                         "Maintainer",
@@ -463,7 +465,7 @@ public class Controller {
         } while (true);
     }
     
-    private void currentTaskMenu(Project currentProject, Task currentTask, User currentUser) {
+    private void currentTaskMenu(Project currentProject, Task currentTask, User currentUser) throws IOException {
         String[] options =
                 {
                         "View Task Details",
@@ -500,8 +502,8 @@ public class Controller {
             }
         } while (true);
     }
-
-    private void messageMenu() {
+    
+    private void messageMenu() throws IOException {
         String[] options =
                 {
                         "Create Message",
@@ -526,8 +528,8 @@ public class Controller {
             }
         } while (true);
     }
-
-    private void profileMenu() {
+    
+    private void profileMenu() throws IOException {
         String[] options =
                 {
                         "View My Profile",
@@ -552,8 +554,8 @@ public class Controller {
             }
         } while (true);
     }
-
-    private void editProfileMenu() {
+    
+    private void editProfileMenu() throws IOException {
         String[] options =
                 {
                         "Change Username",
@@ -582,9 +584,9 @@ public class Controller {
             }
         } while (true);
     }
-
-
-    private void leaderboardMenu() {
+    
+    
+    private void leaderboardMenu() throws IOException {
         String[] options =
                 {
                         "View Leaderboard",
@@ -605,14 +607,14 @@ public class Controller {
             }
         } while (true);
     }
-    private void changeMemberRoleMenu() {
+    private void changeMemberRoleMenu() throws IOException {
         TeamMember userToChange = currentProject.getTeam().roleChange(currentUser);
         String[] options =
                 {
                         "Maintainer",
                         "Developer",
                         "Custom Role",
-                       currentProject.getName() + " Menu",
+                        currentProject.getName() + " Menu",
                         "Logout",
                         "Exit"
                 };
@@ -631,20 +633,20 @@ public class Controller {
             }
         } while (true);
     }
-
-    private void login() {
-       currentUser = (userLibrary.login());
-       if (currentUser !=null)
-       {
-           mainMenu();
-       }
+    
+    private void login() throws IOException {
+        currentUser = (userLibrary.login());
+        if (currentUser !=null)
+        {
+            mainMenu();
+        }
     }
-
-    public void logout(){
+    
+    public void logout() throws IOException {
         currentUser = null;
         loginMenu();
     }
-
+    
     public User userProfile(String name) {
         for (User user : userLibrary.getAllUsers()) {
             if (user.getUserName().equals(name)){
@@ -653,7 +655,7 @@ public class Controller {
         }
         return null;
     }
-
+    
     private boolean systemAdminLogin(){
         if (Login.getInstance().authorizeAdmin())
         {
@@ -664,7 +666,7 @@ public class Controller {
             return false;
         }
     }
-
+    
     private void viewAllProjects()
     {
         projectLibrary.printAllProjects();
@@ -673,15 +675,15 @@ public class Controller {
     {
         UserLibrary.getInstance().printAllUsers();
     }
-
+    
     private void createUser() {
         userLibrary.createUser();
     }
-
+    
     private void createProject() {
         projectLibrary.createProject(currentUser);
     }
-
+    
     
     private void createMessage() {
         userLibrary.createMessage(currentUser);
@@ -694,7 +696,7 @@ public class Controller {
     private void deleteMessage() {
         userLibrary.deleteMessage(currentUser);
     }
-
+    
     
 }
 
