@@ -108,14 +108,14 @@ public class ImportJson {
             if ("createdBy".equals(field)) {
                 task.setCreatedBy(parseUserJson(jsonParser));
             } else if("name".equals(field)) {
-                jsonParser.nextToken();
-                task.setName(field);
+                
+                task.setName(jsonParser.getText());
             } else if("description".equals(field)) {
                 jsonParser.nextToken();
-                task.setDescription(field);
+                task.setDescription(jsonParser.getText());
             } else if("status".equals(field)) {
                 jsonParser.nextToken();
-                task.setStatus(field);
+                task.setStatus(jsonParser.getText());
             } else if("startDate".equals(field)) {
                 jsonParser.nextToken();
                 task.setStartDate(LocalDate.parse(jsonParser.getText()));
@@ -126,8 +126,6 @@ public class ImportJson {
                 task.setAssignees(parseAssignees(jsonParser));
             } else if("workedHours".equals(field)) {
                 task.setWorkedHours(parseWorkedHours(jsonParser));
-                System.out.println(jsonParser.getCurrentName());
-                System.out.println(jsonParser.getText());
             }
         }
         return task;
@@ -140,7 +138,6 @@ public class ImportJson {
         
         //  "workedHours" : [ {
         
-        System.out.println("WorkedHours");
         if ("workedHours".equals(field)) {
             while (jsonParser.nextToken() != JsonToken.END_ARRAY) {
                 field = jsonParser.getCurrentName();
@@ -154,17 +151,13 @@ public class ImportJson {
                         tempWorkedHours.setWorkedHours(jsonParser.getValueAsDouble());
                     }
                     workedHoursLog.add(tempWorkedHours);
-                    System.out.println(workedHoursLog.size());
                 }
-                System.out.println("End of WorkedHourLogObjects");
             }
         }
-        System.out.println("End of loop");
         return workedHoursLog;
     }
     
     private ArrayList<User> parseAssignees(JsonParser jsonParser) throws IOException {
-        System.out.println("Assignees");
         ArrayList<User> assignees = new ArrayList<>();
         while(jsonParser.nextToken() != JsonToken.END_ARRAY) {
                 assignees.add(parseUserJson(jsonParser));

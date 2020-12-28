@@ -161,6 +161,8 @@ public class TaskLibrary extends DataLibrary {
             System.out.println("Status: " + currentTask.getStatus());
         }
         System.out.println("Description: " + currentTask.getDescription());
+        System.out.println("Start date: " + currentTask.getStartDate());
+        System.out.println("End date: " + currentTask.getDeadline());
         System.out.println("Assignees: " + currentTask.getAssignees().toString());
     }
 
