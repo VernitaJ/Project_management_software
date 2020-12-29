@@ -1,58 +1,42 @@
 package entities;
 
 import tools.Input;
-
 import java.time.LocalDate;
 
-public class Note
-{
-    private String username;
+public class Note extends Data {
+    private User createdBy;
     private String message;
     private LocalDate date;
     private boolean dateHasBeenModified = false;
+    private Input input = Input.getInstance();
 
-
-    public Note(User currentUser, String message)
-    {
-       this.username = currentUser.getUserName();
+    public Note(User currentUser, String message) {
+       this.createdBy = currentUser;
        this.message = message;
        this.date = LocalDate.now();
     }
 
-    public void editMessage(User currentUser, String newMessage)
-    {
-        if (currentUser.equals(username))
-        {
-            this.message = Input.getInstance().getStr(newMessage);
+    public void editMessage(User currentUser, String newMessage) {
+        if (currentUser.equals(createdBy)) {
+            this.message = newMessage;
             date = LocalDate.now();
             dateHasBeenModified = true;
-        }
-        else
-        {
-            System.out.println("This is not your note");
+        } else {
+            System.out.println("This is not your note, so you cannot edit it.");
         }
     }
 
-    public String getUsername()
-    {
-        return username;
-    }
+    public User getUser() { return createdBy; }
+
+    public String getUsername() { return createdBy.getUserName(); }
 
     public LocalDate getDate()
     {
         return date;
     }
 
-    public String toString()
-    {
-        String str;
-        if (dateHasBeenModified == false){
-            str = "Created " + date + "\n" + message;
-        }
-        else
-        {
-            str =  "Modified " + date + "\n" + message;
-        }
-        return str;
+    public String toString() {
+        String state = (dateHasBeenModified) ? "Modified " : "Created ";
+        return state + date + "\n" + message;
     }
 }

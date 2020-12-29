@@ -1,8 +1,11 @@
 package entities;
 
+import tools.Input;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
+
 
 public class Task extends Data{
     private User createdBy;
@@ -14,7 +17,8 @@ public class Task extends Data{
     private ArrayList<User> assignees;
     private ArrayList<WorkedHours> workedHours;
     private ArrayList<Note> notes;
-    
+    private Input input = Input.getInstance();
+
     public Task(User createdBy, String name, String description, LocalDate startDate, LocalDate deadline){
         this.createdBy = createdBy;
         this.name = name;
@@ -101,25 +105,80 @@ public class Task extends Data{
         this.workedHours.add(log);
     }
 
-    public void viewNotes(User currentUser)
-    {
-        int i = 1;
-        for (Note note : notes)
-        {
-            if (note.getUsername().equals(currentUser.getUserName())){
-                System.out.println(i + ")" + note.toString());
-                i++;
+    public void addNote(User currentUser) {
+        String message = input.getStr("Note: ");
+        Note note = new Note(currentUser, message);
+        this.notes.add(note);
+        System.out.println("Note successfully appended to this task!");
+    }
+
+    public void viewUserNotes(User currentUser) {
+        boolean found = false;
+        for (int i = 0; i < notes.size(); i++){
+            if (notes.get(i).getUser().equals(currentUser)){
+                System.out.println((i + 1) + ". " + notes.get(i).toString());
+                found = true;
             }
         }
+        if (!found) {
+            System.out.println("You do not have notes in the current task.");
+        }
     }
-    public void createNote()
-    {
 
-    }
-    public void deleteNote()
-    {
+   /*  Might be useful if we wanted non-personal notes? Not explicitly stated in the user story
 
+   public void viewAllNotes() {
+        for (int i = 0; i < notes.size(); i++){
+            System.out.println((i + 1) + ". " + notes.get(i).getUsername() + " | " + notes.get(i).toString());
+        }
     }
+    */
+
+    private int selectNote(User currentUser) {
+        ArrayList<Integer> userNotes = new ArrayList<>();
+        int counter = 1;
+        for (int i = 0; i < notes.size(); i++){
+            if (notes.get(i).getUser().equals(currentUser)){
+                System.out.println(counter + ". " + notes.get(i).toString());
+                userNotes.add(i);
+                counter++;
+            }
+        }
+        if (userNotes.size() > 0) {
+            boolean correct = false;
+            int option = -1;
+            do {
+                option = input.getInt("Select the note: ");
+                if (option > 0 && option <= userNotes.size()) {
+                    correct = true;
+                } else {
+                    System.out.println("Incorrect option selected. Please try again.");
+                }
+            } while (correct != true);
+            return userNotes.get(option - 1).intValue();
+        } else {
+            System.out.println("You do not have notes in the current task.");
+            return -1;
+        }
+    }
+
+    public void deleteNote(User currentUser) {
+        int option = selectNote(currentUser);
+        if (option != -1) {
+            notes.remove(option);
+            System.out.println("Note was deleted successfully.");
+        }
+    }
+
+    public void editNote(User currentUser) {
+        int option = selectNote(currentUser);
+        if (option != -1) {
+            String message = input.getStr("Enter new message: ");
+            notes.get(option).editMessage(currentUser, message);
+        }
+    }
+
+
 
 @Override
     public String printTaskInfo(Task task) {
