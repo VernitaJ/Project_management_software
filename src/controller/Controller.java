@@ -507,7 +507,7 @@ public class Controller {
         } while (true);
     }
 
-    private void currentTaskNoteMenu () {
+    private void currentTaskNoteMenu () throws IOException {
         String[] options =
                 {
                         "Add a Note",
@@ -566,7 +566,7 @@ public class Controller {
         } while (true);
     }
 
-    private void messageMenu() {
+    private void messageMenu() throws IOException {
         String[] options =
                 {
                         "Create Message",

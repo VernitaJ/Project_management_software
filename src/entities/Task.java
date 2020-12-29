@@ -1,5 +1,6 @@
 package entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import tools.Input;
@@ -20,6 +21,7 @@ public class Task extends Data {
     private LocalDate deadline;
     private ArrayList<User> assignees;
     private ArrayList<WorkedHours> workedHours;
+    @JsonIgnoreProperties
     private ArrayList<Note> notes;
     private Input input = Input.getInstance();
 
