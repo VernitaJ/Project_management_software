@@ -67,7 +67,7 @@ public class TaskLibrary extends DataLibrary {
                 return;
             }
             if(startDate.isBefore(projectStartDate)) {
-                System.out.println("Sorry, that date is before the Project start date, which is" + projectStartDate);
+                System.out.println("Sorry, that date is before the Project start date, which is " + projectStartDate);
             }
         } while (startDate.isBefore(projectStartDate));
 
@@ -80,14 +80,14 @@ public class TaskLibrary extends DataLibrary {
                 return;
             }
             if (deadline.isAfter(projectEndDate)){
-                System.out.println("Sorry, that date falls after the Project deadline, which is" + projectEndDate);
+                System.out.println("Sorry, that date falls after the Project deadline, which is " + projectEndDate);
             }
             if(deadline.isBefore(startDate)) {
                 System.out.println("Sorry, the task cannot end before it begins.");
             }
         } while (deadline.isAfter(projectEndDate) || deadline.isBefore(startDate));
         currentProject.taskList.addToList(new Task(currentUser, name, description, startDate, deadline));
-        System.out.println("Task created");
+        System.out.println("Task created!");
         //achievement tracking
         currentUser.achievementTracker.addPoints("createTask",1, currentUser);
     }
