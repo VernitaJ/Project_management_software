@@ -141,6 +141,8 @@ public class UserLibrary extends DataLibrary {
     }
 
 
+    /* Not explicitly stated in US; causes permissions issues
+
     public void changeUsername(User user) {
         System.out.println("Your current username is: " + user.getUserName());
         String option = input.getStr("Are you sure you want to change it?: Y/N ");
@@ -157,6 +159,7 @@ public class UserLibrary extends DataLibrary {
             System.out.println("Your username has not been changed.");
         }
     }
+    */
 
     public void changePassword(User user) {
         System.out.println("You are attempting to change your password.");
