@@ -9,6 +9,7 @@ import com.fasterxml.jackson.core.JsonToken;
 import entities.*;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -26,9 +27,14 @@ public class ImportJson {
     public void parseJson() throws IOException {
         Input input = Input.getInstance();
         String filePath = input.getStr("Write the file location \n");
-        JsonParser jsonParser = new JsonFactory().createParser(new File(filePath));
-        //   JsonParser jsonParser = new JsonFactory().createParser(new File(this.projectFileName));
-        parseProjectJson(jsonParser);
+        try{
+            JsonParser jsonParser = new JsonFactory().createParser(new File(filePath));
+            //   JsonParser jsonParser = new JsonFactory().createParser(new File(this.projectFileName));
+            parseProjectJson(jsonParser);
+        } catch (FileNotFoundException e){
+            System.out.println(filePath + " not found!");
+        }
+
     }
     
     private void parseProjectJson(JsonParser jsonParser) throws IOException {
