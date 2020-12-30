@@ -33,6 +33,7 @@ public class Controller {
     private File testFile = new File("src/temptestdata.txt");
     private ImportJson importJson = new ImportJson(projectLibrary, userLibrary);
     private ExportJson exportJson = new ExportJson(projectLibrary);
+
     
     private Controller() throws IOException {}
     
@@ -49,24 +50,23 @@ public class Controller {
     }
     
     public void run() throws IOException {
-        userLibrary.addUserToList(new User("boye", "1", "pog@pog.com", "Leet", "Ericsson", 400, 2));
-        User boye = (User) userLibrary.findUserInList("boye");
-        boye.achievementTracker.addPoints("createProject",5, boye);
-        boye.achievementTracker.addPoints("deleteProject", 3, boye);
-        ImportExcel lego = new ImportExcel(userLibrary, projectLibrary, boye);
+        userLibrary.addUserToList(new User("SBR", "1", "sbr@sbr.com", "Leet", "Ericsson", 400, 2));
+        User sbr = (User) userLibrary.findUserInList("SBR");
+        sbr.achievementTracker.addPoints("createProject",5, sbr);
+        sbr.achievementTracker.addPoints("deleteProject", 3, sbr);
+        ImportExcel lego = new ImportExcel(userLibrary, projectLibrary, sbr);
         // readFile();
-        //  testData();
+        // testData();
         
         loginMenu();
     }
     
     public void testData() {
-        User boye = (User) userLibrary.findUserInList("boye");
-        boye.achievementTracker.setExperience(15);
-        boye.getInbox().add(new Message("TestDataSender", "Boye", "Problem?"));
-        boye.getInbox().add(new Message("TestDataSender", "Boye", "Blä"));
-        boye.getInbox().add(new Message("TestDataSender", "Boye", "Kek"));
-        
+        User projectOwner = (User) userLibrary.findUserInList("SBR");
+        projectOwner.achievementTracker.setExperience(15);
+        projectOwner.getInbox().add(new Message("TestDataSender", "SBR", "Problem?"));
+        projectOwner.getInbox().add(new Message("TestDataSender", "SBR", "Blä"));
+        projectOwner.getInbox().add(new Message("TestDataSender", "SBR", "Kek"));
         try {
             ExportJson exportJSON = new ExportJson(projectLibrary);
         } catch (IOException e) {
@@ -195,8 +195,6 @@ public class Controller {
     private void sysAdminMenu() throws IOException {
         String[] options =
                 {
-                        "Import (test) Data",
-                        "Export (test) Data",
                         "View all Projects",
                         "View all Users",
                         "Logout",
@@ -208,12 +206,10 @@ public class Controller {
             String choice = menu.printMenu();
             switch (choice)
             {
-                case "1" -> notImplemented();
-                case "2" -> notImplemented();
-                case "3" -> viewAllProjects();
-                case "4" -> viewAllUsers();
-                case "5" -> loginMenu();
-                case "6" -> exit();
+                case "1" -> viewAllProjects();
+                case "2" -> viewAllUsers();
+                case "3" -> loginMenu();
+                case "4" -> exit();
             }
         } while (true);
     }

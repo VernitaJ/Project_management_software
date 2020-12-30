@@ -1,6 +1,7 @@
 package tools;
 
 
+import access_roles.CustomRoles;
 import access_roles.RoleFactory;
 import entities.*;
 import org.apache.poi.xssf.usermodel.XSSFCell;
@@ -145,14 +146,41 @@ public class ImportExcel {
     
     private void addUserToProjectTeam(Project currentProject, User user) {
         if (!currentProject.getTeam().isMember(user)) {
+            if(user.getUserName().equalsIgnoreCase("anna") || user.getUserName().equalsIgnoreCase("karl")) {
+                addCustomRoleToProjectTeam(currentProject, user);
+            } else {
+                currentProject.getTeam().getMemberList().put(
+                        user.getUserName(),
+                        new TeamMember(
+                                user,
+                                roleFactory.createMaintainer()));
+            }
+
+        }
+    }
+
+    private void addCustomRoleToProjectTeam(Project currentProject, User user){
+        if(user.getUserName().equalsIgnoreCase("anna")) {
             currentProject.getTeam().getMemberList().put(
                     user.getUserName(),
                     new TeamMember(
                             user,
-                            roleFactory.createMaintainer()));
+                            new CustomRoles("Scrum Master", true, true)));
+            return;
+        } else if(user.getUserName().equalsIgnoreCase("karl")) {
+            currentProject.getTeam().getMemberList().put(
+                    user.getUserName(),
+                    new TeamMember(
+                            user,
+                            new CustomRoles("Product Owner", true, true)));
+            return;
         }
     }
-    
+
+    private void addManagerToProjectTeam() {
+
+    }
+
     private void assignUserToTask(Task currentTask, User user) {
         if (!currentTask.getAssignees().toString().contains(user.getUserName())) {
             currentTask.getAssignees().add(user);

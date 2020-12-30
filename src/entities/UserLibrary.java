@@ -48,12 +48,10 @@ public class UserLibrary extends DataLibrary {
         System.out.println("Successfully created user.");
     }
 
-    public void addUserToList(User userToAdd)
-    {
+    public void addUserToList(User userToAdd) {
         if(findUserInList(userToAdd.getUserName())==null){
             list.add(userToAdd);
         }
-
     }
 
     public List<User> getAllUsers() {
