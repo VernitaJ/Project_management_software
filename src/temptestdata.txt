@@ -2,8 +2,9 @@ User,drake,drake,who has Emails,playing WOW for a Living, I dont have a job dude
 User,karl,karl,something@something.com,programmer,SEM,30.0f,8.0f
 User,vernita,vernita,something@something.com,programmer,SEM,40.0f,8.0f
 User,anna,pumpkinpie,something@something.com,programmer,SEM,50.0f,8.0f
-User,axel,axel,something@something.com,programmer,SEM,50.0f,8.0f
+User,axel,axel,something@something.com,seniorprogrammer,SEM,50.0f,8.0f
 User,numan,numan,something@something.com,programmer,SEM,10.0f,8.0f
+User,1,1,something@something.com,programmer,SEM,10.0f,8.0f
 User,jens,jens,something@something.com,programmer,SEM,100.0f,8.0f
 Project,Drakes Super Secret Project,drake,this is my project yo,2020,8,20,2020,12,20
 Project,project name,vernita,this is my project yo,2018,4,12,2019,12,20
@@ -24,3 +25,11 @@ Task,testproject,jens,Drivel,fix that,2020-11-20,2020-12-19
 Budget,jens,1000.0,48.0
 Workedhours,jens,12.0
 Workedhours,jens,4
+AchievementProgress,numan,sendMessage,25
+AchievementProgress,numan,createProject,25
+AchievementProgress,numan,deleteProject,25
+AchievementProgress,axel,sendMessage,25
+AchievementProgress,axel,createProject,25
+AchievementProgress,drake,sendMessage,25
+AchievementProgress,drake,createProject,25
+AchievementProgress,vernita,createProject,25

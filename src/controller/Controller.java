@@ -15,6 +15,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 import static java.lang.Double.parseDouble;
+import static java.lang.Integer.parseInt;
 
 public class Controller {
     private Input input = Input.getInstance();
@@ -69,7 +70,7 @@ public class Controller {
                     case "user" -> userLibrary.addUserToList(new User(token[1],token[2],token[3], token[4],token[5], Float.parseFloat(token[6]), Float.parseFloat(token[7])));
                     case "project" -> {
                         this.currentUser = (User) userLibrary.findUserInList(token[2]);
-                        projectLibrary.addProjectToList(new Project(token[1], currentUser, token[3], LocalDate.of(Integer.parseInt(token[4]), Integer.parseInt(token[5]), Integer.parseInt(token[6])), LocalDate.of(Integer.parseInt(token[7]), Integer.parseInt(token[8]), Integer.parseInt(token[9]))));
+                        projectLibrary.addProjectToList(new Project(token[1], currentUser, token[3], LocalDate.of(parseInt(token[4]), parseInt(token[5]), parseInt(token[6])), LocalDate.of(parseInt(token[7]), parseInt(token[8]), parseInt(token[9]))));
                         this.currentUser = null;
                     }
                     case "task" -> {
@@ -89,6 +90,11 @@ public class Controller {
                         currentUser = (User) userLibrary.findUserInList(token[1]);
                         currentProject = projectLibrary.listUsersProjects(currentUser, false).get(0);
                         projectLibrary.addBudgetToList(currentProject,parseDouble(token[2]),parseDouble(token[3]));
+                    }
+                    case "achievementprogress" -> {
+                        currentUser = (User) userLibrary.findUserInList(token[1]);
+                        //idk what happens when achievement doesnt exist in the library??
+                        currentUser.achievementTracker.addPoints(token[2],parseInt(token[3]));
                     }
                 }
             }
@@ -140,6 +146,7 @@ public class Controller {
                         "Leaderboard",
                         "Projects",
                         "Profiles",
+                        "Search",
                         "Messaging",
                         "Logout",
                         "Exit"
@@ -154,9 +161,10 @@ public class Controller {
                 case "1" -> leaderboardMenu();
                 case "2" -> projectMenu();
                 case "3" -> profileMenu();
-                case "4" -> messageMenu();
-                case "5" -> logout();
-                case "6" -> exit();
+                case "4" -> searchMenu();
+                case "5" -> messageMenu();
+                case "6" -> logout();
+                case "7" -> exit();
             }
         } while (true);
     }
@@ -387,8 +395,8 @@ public class Controller {
                         "Add Team Member",
                         "Remove Team Member",
                         "Change Team Member Role",
-                        "Remove Team",
                         currentProject.getName() + " Menu",
+                        "Project Menu",
                         "Logout",
                         "Exit"
                 };
@@ -402,7 +410,6 @@ public class Controller {
                 case "2" -> addMemberMenu();
                 case "3" -> teamLibrary.removeTeamMember(currentProject.getTeam(), currentUser);
                 case "4" -> changeMemberRoleMenu();
-               // case "7" -> teamLibrary.removeTeam(currentProject, currentUser);
                 case "5" -> currentProjectMenu();
                 case "6" -> projectMenu();
                 case "7" -> logout();
@@ -410,6 +417,7 @@ public class Controller {
             }
         } while (true);
     }
+
     private void addMemberMenu() {
         String[] options =
                 {
@@ -447,6 +455,7 @@ public class Controller {
                         "Update Status",
                         "Add Worked Hours",
                         "Total Worked Hours",
+                        "Notes for " + currentTask.getName(),
                         "Project Menu",
                         "Main Menu",
                         "Logout",
@@ -466,10 +475,70 @@ public class Controller {
                 case "6" -> taskLibrary.updateStatus(currentProject, currentTask, currentUser);
                 case "7" -> taskLibrary.addWorkedHours(currentProject, currentTask, currentUser);
                 case "8" -> taskLibrary.printAllWorkedHours(currentTask);
-                case "9" -> currentProjectMenu();
-                case "10" -> mainMenu();
-                case "11" -> logout();
-                case "12" -> exit();
+                case "9" -> currentTaskNoteMenu();
+                case "10" -> currentProjectMenu();
+                case "11" -> mainMenu();
+                case "12" -> logout();
+                case "13" -> exit();
+            }
+        } while (true);
+    }
+
+    private void currentTaskNoteMenu () {
+        String[] options =
+                {
+                        "Add a Note",
+                        "View Your Note(s)",
+                        "Edit a Note",
+                        "Remove a Note",
+                        "Task " + currentTask.getName() + "'s Menu",
+                        "Project Menu",
+                        "Main Menu",
+                        "Logout",
+                        "Exit",
+
+                };
+        menu = new Menu("Task " + currentTask.getName() + "'s Note Menu", options);
+        do
+        {
+            String choice = menu.printMenu();
+            switch (choice)
+            {
+                case "1" -> currentTask.addNote(currentUser);
+                case "2" -> currentTask.viewUserNotes(currentUser);
+                case "3" -> currentTask.editNote(currentUser);
+                case "4" -> currentTask.deleteNote(currentUser);
+                case "5" -> currentTaskMenu(currentProject, currentTask, currentUser);
+                case "6" -> currentProjectMenu();
+                case "7" -> mainMenu();
+                case "8" -> logout();
+                case "9" -> exit();
+            }
+        } while (true);
+    }
+
+    private void searchMenu() {
+        String[] options =
+                {
+                        "Search by Username",
+                        "Search by Company",
+                        "Search by Occupation",
+                        "Main Menu",
+                        "Logout",
+                        "Exit"
+                };
+        menu = new Menu("Project Menu", options);
+        do
+        {
+            String choice = menu.printMenu();
+            switch (choice)
+            {
+                case "1" -> userLibrary.printSearchResults(userLibrary::searchByUsername);
+                case "2" -> userLibrary.printSearchResults(userLibrary::searchByCompany);
+                case "3" -> userLibrary.printSearchResults(userLibrary::searchByOccupation);
+                case "4" -> mainMenu();
+                case "5" -> logout();
+                case "6" -> exit();
             }
         } while (true);
     }
@@ -529,7 +598,6 @@ public class Controller {
     private void editProfileMenu() {
         String[] options =
                 {
-                        "Change Username",
                         "Change Password",
                         "Update Email",
                         "Update Company",
@@ -544,14 +612,13 @@ public class Controller {
             String choice = menu.printMenu();
             switch (choice)
             {
-                case "1" -> userLibrary.changeUsername(currentUser);
-                case "2" -> userLibrary.changePassword(currentUser);
-                case "3" -> userLibrary.updateEmail(currentUser);
-                case "4" -> userLibrary.updateCompany(currentUser);
-                case "5" -> userLibrary.updateOccupation(currentUser);
-                case "6" -> mainMenu();
-                case "7" -> logout();
-                case "8" -> exit();
+                case "1" -> userLibrary.changePassword(currentUser);
+                case "2" -> userLibrary.updateEmail(currentUser);
+                case "3" -> userLibrary.updateCompany(currentUser);
+                case "4" -> userLibrary.updateOccupation(currentUser);
+                case "5" -> mainMenu();
+                case "6" -> logout();
+                case "7" -> exit();
             }
         } while (true);
     }
@@ -571,7 +638,7 @@ public class Controller {
             String choice = menu.printMenu();
             switch (choice)
             {
-                case "1" -> notImplemented();
+                case "1" -> userLibrary.leaderboard();
                 case "2" -> mainMenu();
                 case "3" -> logout();
                 case "4" -> exit();
