@@ -19,7 +19,7 @@ public class ImportJson {
     private final UserLibrary userLibrary;
     private String projectFileName;
     
-    public ImportJson(ProjectLibrary projectLibrary, UserLibrary userLibrary) throws IOException {
+    public ImportJson(ProjectLibrary projectLibrary, UserLibrary userLibrary) {
         this.projectLibrary = projectLibrary;
         this.userLibrary = userLibrary;
     }

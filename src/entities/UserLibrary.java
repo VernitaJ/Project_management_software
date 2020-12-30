@@ -50,7 +50,10 @@ public class UserLibrary extends DataLibrary {
 
     public void addUserToList(User userToAdd)
     {
-        list.add(userToAdd);
+        if(findUserInList(userToAdd.getUserName())==null){
+            list.add(userToAdd);
+        }
+
     }
 
     public List<User> getAllUsers() {
