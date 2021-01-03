@@ -21,6 +21,10 @@ public class WorkedHours {
         return workedHours;
     }
 
+    public String getHours() {
+        return Double.toString(workedHours);
+    }
+
     public LocalDate getLogTime() {
         return logTime;
     }

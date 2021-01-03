@@ -273,7 +273,8 @@ public class Controller {
                         "Change Budget",
                         "View Cost",
                         "View total hours by task",
-                        "Hours to invoice",
+                        "Hours to be Invoiced",
+                        "Export Hours to be Invoiced",
                         "Expenses Forecast",
                         currentProject.getName() + " Menu",
                         "Logout",
@@ -289,11 +290,12 @@ public class Controller {
                 case "3" -> updateBudgetMenu(currentProject, currentUser);
                 case "4" -> projectLibrary.viewCost(currentProject);
                 case "5" -> taskLibrary.printDetailedWorkedHours(currentProject);
-                case "6" -> taskLibrary.billableTask(currentProject);
-                case "7" -> projectLibrary.getExpenseForecast(currentProject, currentUser);
-                case "8" -> currentProjectMenu();
-                case "9" -> logout();
-                case "10" -> exit();
+                case "6" -> taskLibrary.billableTask(currentProject, false);
+                case "7" -> taskLibrary.billableTask(currentProject, true);
+                case "8" -> projectLibrary.getExpenseForecast(currentProject, currentUser);
+                case "9" -> currentProjectMenu();
+                case "10" -> logout();
+                case "11" -> exit();
             }
         } while (true);
     }

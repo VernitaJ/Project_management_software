@@ -2,7 +2,8 @@ package entities;
 
 import tools.Input;
 
-import java.lang.reflect.Array;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -353,26 +354,55 @@ public class TaskLibrary extends DataLibrary {
         }
     }
 
-    public void billableTask(Project currentProject){
+    public void billableTask(Project currentProject, boolean print){
         ArrayList<Data> tasks = currentProject.taskList.list;
-        double totalToInvoice = 0;
-        if(tasks.size() == 0){
-            System.out.println("There are no billable hours for this project.");
-            return;
+        if (print) {
+            try {
+                exportInvoiceHours(tasks);
+            }
+            catch (IOException e) {
+                System.out.println("error occurred");
+            }
         } else {
-            for (Data task : tasks) {
-               Task currentTask = (Task) task;
-               ArrayList<WorkedHours> workedHours = currentTask.getWorkedHours();
-               if (workedHours.size() > 0) {
-                   System.out.println(currentTask.getName() + "\n");
-                       for (WorkedHours worked : workedHours){
-                           double payment = worked.getUser().getSalary()*worked.getWorkedHours();
-                           System.out.println("Contributor: " + worked.getUser().getUserName() + "\nHours logged: " + worked.getWorkedHours() + "\nWage: " + worked.getUser().getSalary() + " SEK\nInvoice: " + payment + " SEK\n");
-                           totalToInvoice += payment;
-                       }
-                   }
-               }
-            } System.out.println("\nTotal amount to invoice: " + totalToInvoice + " SEK\n");
+            double totalToInvoice = 0;
+            if (tasks.size() == 0) {
+                System.out.println("There are no billable hours for this project.");
+                return;
+            } else {
+                for (Data task : tasks) {
+                    Task currentTask = (Task) task;
+                    ArrayList<WorkedHours> workedHours = currentTask.getWorkedHours();
+                    if (workedHours.size() > 0) {
+                        System.out.println(currentTask.getName() + "\n");
+                        for (WorkedHours worked : workedHours) {
+                            double payment = worked.getUser().getSalary() * worked.getWorkedHours();
+                            System.out.println("Contributor: " + worked.getUser().getUserName() + "\nHours logged: " + worked.getWorkedHours() + "\nWage: " + worked.getUser().getSalary() + " SEK\nInvoice: " + payment + " SEK\n");
+                            totalToInvoice += payment;
+                        }
+                    }
+                }
+            }
+            System.out.println("\nTotal amount to invoice: " + totalToInvoice + " SEK\n");
+        }
+    }
+
+    public void exportInvoiceHours(ArrayList<Data> tasks) throws IOException {
+        FileWriter csvWriter = new FileWriter("new.csv");
+        for (Data rowData : tasks) {
+            Task task = (Task) rowData;
+            csvWriter.append(task.getName());
+            csvWriter.append(",");
+            if (task.getWorkedHours().size() > 0) {
+                for (WorkedHours hours : task.getWorkedHours()) {
+                    csvWriter.append(hours.getHours());
+                    csvWriter.append(",");
+                }
+            } else csvWriter.append("0");
+            csvWriter.append("\n");
+        }
+
+        csvWriter.flush();
+        csvWriter.close();
     }
 }
 
