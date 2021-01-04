@@ -354,13 +354,12 @@ public class TaskLibrary extends DataLibrary {
         }
     }
 
-    public void billableTask(Project currentProject, boolean print){
+    public void billableTask(Project currentProject, boolean print) {
         ArrayList<Data> tasks = currentProject.taskList.list;
         if (print) {
             try {
                 exportInvoiceHours(tasks);
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
                 System.out.println("error occurred");
             }
         } else {
@@ -372,7 +371,7 @@ public class TaskLibrary extends DataLibrary {
                 for (Data task : tasks) {
                     Task currentTask = (Task) task;
                     ArrayList<WorkedHours> workedHours = currentTask.getWorkedHours();
-                    if (workedHours.size() > 0) {
+                    if (workedHours.size() > 0 && !print) {
                         System.out.println(currentTask.getName() + "\n");
                         for (WorkedHours worked : workedHours) {
                             double payment = worked.getUser().getSalary() * worked.getWorkedHours();
@@ -380,14 +379,14 @@ public class TaskLibrary extends DataLibrary {
                             totalToInvoice += payment;
                         }
                     }
+                    System.out.println("\nTotal amount to invoice: " + totalToInvoice + " SEK\n");
                 }
             }
-            System.out.println("\nTotal amount to invoice: " + totalToInvoice + " SEK\n");
         }
     }
 
     public void exportInvoiceHours(ArrayList<Data> tasks) throws IOException {
-        FileWriter csvWriter = new FileWriter("new.csv");
+        FileWriter csvWriter = new FileWriter("invoice_hours.csv");
         for (Data rowData : tasks) {
             Task task = (Task) rowData;
             csvWriter.append(task.getName());
