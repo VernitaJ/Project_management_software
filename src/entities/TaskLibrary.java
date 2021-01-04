@@ -394,8 +394,6 @@ public class TaskLibrary extends DataLibrary {
             if (task.getWorkedHours().size() > 0) {
                 double totalHours = 0;
                 for (WorkedHours hours : task.getWorkedHours()) {
-                    csvWriter.append(hours.getHours());
-                    csvWriter.append(",");
                     totalHours += hours.getWorkedHours();
                 }
                 String total = Double.toString(totalHours);
