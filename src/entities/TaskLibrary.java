@@ -358,7 +358,7 @@ public class TaskLibrary extends DataLibrary {
         ArrayList<Data> tasks = currentProject.taskList.list;
         if (print) {
             try {
-                exportInvoiceHours(tasks);
+                exportInvoiceHours(tasks, currentProject.getName());
             } catch (IOException e) {
                 System.out.println("error occurred");
             }
@@ -385,8 +385,8 @@ public class TaskLibrary extends DataLibrary {
         }
     }
 
-    public void exportInvoiceHours(ArrayList<Data> tasks) throws IOException {
-        FileWriter csvWriter = new FileWriter("invoice_hours.csv");
+    public void exportInvoiceHours(ArrayList<Data> tasks, String name) throws IOException {
+        FileWriter csvWriter = new FileWriter( name + "_InvoiceHours.csv");
         for (Data rowData : tasks) {
             Task task = (Task) rowData;
             csvWriter.append(task.getName());
