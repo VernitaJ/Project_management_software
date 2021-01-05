@@ -2,7 +2,7 @@ package access_roles;
 
 public interface Roles
 {
-    String roleType();
+    String getType();
     boolean canCreateTask();
     boolean adminAccess();
 }

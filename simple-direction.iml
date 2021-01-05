@@ -7,10 +7,39 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="java" level="project" />
+    <orderEntry type="library" name="poi-4.1" level="project" />
+    <orderEntry type="library" name="commons-math3-3.6" level="project" />
+    <orderEntry type="library" name="commons-collections4-4" level="project" />
+    <orderEntry type="library" name="commons-compress-1" level="project" />
+    <orderEntry type="library" name="ooxml-lib" level="project" />
+    <orderEntry type="library" name="jackson" level="project" />
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$USER_HOME$/Desktop/New folder (2)/json-simple-1.1.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/jackson/jackson-datatype-jsr310-2.12.0.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="file://$MODULE_DIR$/json-simple" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="file://$MODULE_DIR$/json-simple" />
+        </SOURCES>
+        <jarDirectory url="file://$MODULE_DIR$/json-simple" recursive="false" />
+        <jarDirectory url="file://$MODULE_DIR$/json-simple" recursive="false" type="SOURCES" />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/json-simple/json-simple-3.1.1.jar!/com/github/cliftonlabs/json_simple" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

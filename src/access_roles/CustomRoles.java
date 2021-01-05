@@ -1,33 +1,16 @@
 package access_roles;
 
-import entities.User;
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 
-//WIP
-public class CustomRoles implements Roles{
+public class CustomRoles extends Role {
 
-    private String roleType;
-    private boolean canCreateTask;
-    private boolean adminAccess;
 
     public CustomRoles(String roleType, boolean canCreateTask, boolean adminAccess){
-        this.roleType = roleType;
-        this.canCreateTask = canCreateTask;
-        this.adminAccess = adminAccess;
-    }
-    public String roleType()
-    {
-        return this.roleType;
+        super(roleType, canCreateTask, adminAccess);
     }
 
-    public boolean canCreateTask()
-    {
-        return this.canCreateTask;
+    public CustomRoles(String roleType){
+        super(roleType);
     }
-
-    public boolean adminAccess()
-    {
-        return this.adminAccess;
-    }
-
-    //TODO
+    
 }

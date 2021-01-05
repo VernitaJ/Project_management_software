@@ -1,5 +1,8 @@
 package entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 import tools.Input;
 
 import java.time.LocalDate;
@@ -7,7 +10,9 @@ import java.util.ArrayList;
 import java.util.Comparator;
 
 
-public class Task extends Data{
+@JsonDeserialize(as = Task.class)
+
+public class Task extends Data {
     private User createdBy;
     private String name;
     private String description;
@@ -16,6 +21,7 @@ public class Task extends Data{
     private LocalDate deadline;
     private ArrayList<User> assignees;
     private ArrayList<WorkedHours> workedHours;
+    @JsonIgnoreProperties
     private ArrayList<Note> notes;
     private Input input = Input.getInstance();
 
@@ -26,9 +32,33 @@ public class Task extends Data{
         this.status = "Default";
         this.startDate = startDate;
         this.deadline = deadline;
+        this.assignees = new ArrayList<>();
+        this.workedHours = new ArrayList<>();
+    }
+    
+    public Task(User createdBy, String name, String description) {
+        this.createdBy = createdBy;
+        this.name = name;
+        this.description = description;
+        this.status = "Default";
         this.assignees = new ArrayList<User>();
         this.workedHours = new ArrayList<>();
         this.notes = new ArrayList<>();
+    }
+    
+    public Task() {
+    }
+    
+    public void setAssignees(ArrayList<User> assignees) {
+        this.assignees = assignees;
+    }
+    
+    public void setWorkedHours(ArrayList<WorkedHours> workedHours) {
+        this.workedHours = workedHours;
+    }
+    
+    public void setCreatedBy(User createdBy){
+        this.createdBy=createdBy;
     }
     
     public String getName() {

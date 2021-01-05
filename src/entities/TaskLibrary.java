@@ -89,7 +89,7 @@ public class TaskLibrary extends DataLibrary {
         currentProject.taskList.addToList(new Task(currentUser, name, description, startDate, deadline));
         System.out.println("Task created!");
         //achievement tracking
-        currentUser.achievementTracker.addPoints("createTask",1);
+        currentUser.achievementTracker.addPoints("createTask",1, currentUser);
     }
 
     public void deleteTask(Project currentProject, User currentUser) {
@@ -126,7 +126,7 @@ public class TaskLibrary extends DataLibrary {
             Task currentTask = ((Task) task);
             tempList.add(currentTask);
         }
-        if (print){
+        if (print) {
             if (tempList.size() == 0) {
                 System.out.println("This task does not exist!");
             } else {
@@ -161,6 +161,8 @@ public class TaskLibrary extends DataLibrary {
             System.out.println("Status: " + currentTask.getStatus());
         }
         System.out.println("Description: " + currentTask.getDescription());
+        System.out.println("Start date: " + currentTask.getStartDate());
+        System.out.println("End date: " + currentTask.getDeadline());
         System.out.println("Assignees: " + currentTask.getAssignees().toString());
     }
 
@@ -203,7 +205,7 @@ public class TaskLibrary extends DataLibrary {
         if (!confirmAccess(projectTeam, currentUser)) {
             return;
         }
-        List<User> tempList = projectTeam.getAllTeamUsers();
+        List<User> tempList = projectTeam.listAllTeamUsers();
         for (int i = 0; i < tempList.size(); i++) {
             if(!taskTeam.contains(tempList.get(i))) {
                 System.out.println(i+1 + ". " + tempList.get(i).getUserName());
@@ -269,7 +271,7 @@ public class TaskLibrary extends DataLibrary {
                         "Description: " + projectTask.getDescription() + "" + "\n" + "Team:");
                 for (User teamMember : assignees){
                     TeamMember member = currentProject.getTeam().findTeamMember(teamMember);
-                    System.out.println(teamMember.getUserName() + " - " + member.getRole().roleType() + "\n");
+                    System.out.println(teamMember.getUserName() + " - " + member.getRole().getType() + "\n");
                 }
                 input.spacer();
             }
@@ -287,7 +289,7 @@ public class TaskLibrary extends DataLibrary {
                         "Description" + projectTask.getDescription() + "" + "\n" + "Team Members:");
                 for (User teamMember : assignees){
                     TeamMember member = currentProject.getTeam().findTeamMember(teamMember);
-                    System.out.println(teamMember.getUserName() + " - " + member.getRole().roleType() + "\n");
+                    System.out.println(teamMember.getUserName() + " - " + member.getRole().getType() + "\n");
                 }
                 input.spacer();
             }
@@ -316,7 +318,7 @@ public class TaskLibrary extends DataLibrary {
             WorkedHours newLog = new WorkedHours(currentUser,workedHours);
             currentTask.addWorkedHours(newLog);
             int xp = (int)workedHours;
-            currentUser.addExp(xp);
+            currentUser.achievementTracker.addExp(xp);
             System.out.println(getAllWorkedHours(currentTask) + " hours spent on this task.");
         }else {
             System.out.println("You are not authorized to perform this action!");
@@ -350,6 +352,16 @@ public class TaskLibrary extends DataLibrary {
             }
             System.out.println("Total time worked on project tasks: " + allTasksHours + ".");
         }
+    }
+    
+    public Task taskNameExists(TaskLibrary taskLibrary, String stringToCheck) {
+        for(Data task : taskLibrary.list){
+            Task currentTask = ((Task) task);
+            if(currentTask.getName().equalsIgnoreCase(stringToCheck)) {
+                return currentTask;
+            }
+        }
+        return null;
     }
 }
 

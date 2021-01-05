@@ -1,6 +1,7 @@
 package entities;
 
 import tools.Input;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
@@ -12,7 +13,7 @@ import static entities.Task.sortByStartDate;
 import static java.time.temporal.ChronoUnit.DAYS;
 
 public class ProjectLibrary extends DataLibrary{
-    private static final ProjectLibrary instance = null;
+    private static ProjectLibrary instance = null;
     Input input = Input.getInstance();
     
     public static ProjectLibrary getInstance() {
@@ -49,7 +50,7 @@ public class ProjectLibrary extends DataLibrary{
         if(confirmAction("Are you sure you want to create this project?")) {
             addToList(new Project(name, currentUser, description, startDate, endDate));
             //achievement tracking
-            currentUser.achievementTracker.addPoints("createProject",1);
+            currentUser.achievementTracker.addPoints("createProject",1, currentUser);
         }
     }
     
@@ -165,7 +166,7 @@ public class ProjectLibrary extends DataLibrary{
                     System.out.println("Project successfully deleted!");
                     System.out.println("Returning to main menu...");
                     //achievement tracking
-                    currentUser.achievementTracker.addPoints("deleteProject",1);
+                    currentUser.achievementTracker.addPoints("deleteProject",1, currentUser);
                     return true;
                 } else {
                     System.out.println("Something went wrong");
@@ -450,7 +451,7 @@ public class ProjectLibrary extends DataLibrary{
         System.out.println();
         return daysBetweenDisplayDates;
     }
-    
+
     public void printTasks(Project currentProject, ArrayList<Data> taskList, long daysBetween){
         for (Data task : taskList){
             Task currentTask = (Task) task;
@@ -491,5 +492,15 @@ public class ProjectLibrary extends DataLibrary{
               System.out.println(project.toString());
           }
         }
+    }
+    
+    public Project projectNameExists(String stringToCheck) {
+        for(Data project : list){
+            Project currentProject = ((Project) project);
+            if(currentProject.getName().equalsIgnoreCase(stringToCheck)) {
+                return currentProject;
+            }
+        }
+        return null;
     }
 }

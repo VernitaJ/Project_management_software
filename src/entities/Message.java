@@ -1,23 +1,29 @@
 package entities;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import tools.UniqueID;
 
 import java.time.LocalDate;
 import java.util.Comparator;
 
+@JsonDeserialize(as = Message.class)
 public class Message extends Data {
     private String sender;
     private String receiver;
     private String content;
     private LocalDate dateSent;
-    private boolean status;
+    private boolean read;
 
     public Message(String sender, String receiver, String content) {
         this.sender = sender;
         this.receiver = receiver;
         this.content = content;
         this.dateSent = LocalDate.now();
-        this.status = false;
+        this.read = false;
+    }
+
+    public Message() {
+
     }
 
     public String getSender() {
@@ -52,14 +58,18 @@ public class Message extends Data {
         this.dateSent = dateSent;
     }
 
-    public String getStatus() {
-        if (status) {
+    public boolean getRead(){
+        return(this.read);
+    }
+
+    public String prettyRead() {
+        if (read) {
             return "\033[32mRead\033[0m";
         } else return "\033[34mUnread\033[0m";
     }
 
-    public void setStatus(boolean status) {
-        this.status = status;
+    public void setRead(boolean read) {
+        this.read = read;
     }
 
     public static Comparator<Message> sortByName = new Comparator<Message>() {
@@ -71,6 +81,6 @@ public class Message extends Data {
     };
 
     public String toString() {
-        return getStatus() + "\n" + getID() + "\n" + "From: " + getSender() + "\n" + "Sent: " + getDateSent() + "\n" + getContent();
+        return prettyRead() + "\n" + getID() + "\n" + "From: " + getSender() + "\n" + "Sent: " + getDateSent() + "\n" + getContent();
     }
 }

@@ -1,7 +1,13 @@
 package entities;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import tools.DataDeserializer;
 import tools.UniqueID;
 
-abstract class Data {
+@JsonDeserialize(using = DataDeserializer.class)
+public abstract class Data {
+    
+    @JsonIgnoreProperties
     private String ID;
 
     Data(){
@@ -12,6 +18,10 @@ abstract class Data {
         return ID;
     }
 
+    protected void setID(String ID) {
+        this.ID = ID;
+    }
+    
     Boolean checkID(String ID){
         if(this.ID.equals(ID)){
             return true;
@@ -29,3 +39,5 @@ abstract class Data {
         return(null);
     }
 }
+
+

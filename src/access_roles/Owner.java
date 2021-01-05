@@ -1,34 +1,9 @@
 package access_roles;
 
-public class Owner implements Roles
-{
+public class Owner extends Role {
 
-    public boolean canRemoveMember(){
+public Owner() {
+    super("Owner", true, true);
+}
 
-        return true;
-    }
-
-    public boolean canChangeProjectStatus(){
-        return true;
-    }
-
-    public boolean assignRole(){
-        return true;
-    }
-
-    public String roleType() {
-        return "Owner";
-    }
-
-    public boolean canCreateTask() {
-        return true;
-    }
-
-    public boolean canDelete(){
-        return true;
-    }
-
-    public boolean adminAccess() {
-        return true;
-    }
 }
