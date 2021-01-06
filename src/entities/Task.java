@@ -22,7 +22,7 @@ public class Task extends Data {
     private ArrayList<User> assignees;
     private ArrayList<WorkedHours> workedHours;
     @JsonIgnoreProperties
-    private ArrayList<Note> notes;
+    private ArrayList<Note> notes = new ArrayList<>();
     private Input input = Input.getInstance();
 
     public Task(User createdBy, String name, String description, LocalDate startDate, LocalDate deadline){
@@ -43,7 +43,6 @@ public class Task extends Data {
         this.status = "Default";
         this.assignees = new ArrayList<User>();
         this.workedHours = new ArrayList<>();
-        this.notes = new ArrayList<>();
     }
     
     public Task() {
