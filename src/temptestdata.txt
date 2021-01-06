@@ -1,4 +1,4 @@
-User,drake,drake,who has Emails,who Working for a Living, I dont have a job dude...,20.0f,0.0f
+User,drake,drake,who has Emails,playing WOW for a Living, I dont have a job dude...,20.0f,0.0f
 User,karl,karl,something@something.com,programmer,SEM,30.0f,8.0f
 User,vernita,vernita,something@something.com,programmer,SEM,40.0f,8.0f
 User,anna,pumpkinpie,something@something.com,programmer,SEM,50.0f,8.0f
