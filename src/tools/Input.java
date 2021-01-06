@@ -76,33 +76,26 @@ public class Input
     public float getFloat(String str)
     {
         float userInput = 0;
-        boolean complianceCheck = false;
-        while (!complianceCheck) {
-            try {
-                System.out.print(str);
-                userInput = scanner.nextFloat();
-                scanner.nextLine();
-                complianceCheck = true;
-            } catch (InputMismatchException e){
-                e.printStackTrace();
-            }
+        try {
+            System.out.print(str);
+            userInput = scanner.nextFloat();
+        } catch (InputMismatchException e){
+            scanner.nextLine();
+            return getFloat("Wrong format, please try again: ");
         }
+
         return userInput;
     }
 
     public double getDouble(String str)
     {
         double userInput = 0.0;
-        boolean complianceCheck = false;
-        while (!complianceCheck) {
-            try {
-                System.out.print(str);
-                userInput = scanner.nextDouble();
-                scanner.nextLine();
-                complianceCheck = true;
-            } catch (InputMismatchException e) {
-                e.printStackTrace();
-            }
+        try {
+            System.out.print(str);
+            userInput = scanner.nextDouble();
+        } catch (InputMismatchException e) {
+            scanner.nextLine();
+            return getFloat("Wrong format, please try again: ");
         }
         return userInput;
     }
