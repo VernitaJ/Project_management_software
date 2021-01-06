@@ -36,6 +36,14 @@ public class Role implements Roles {
         return this.canCreateTask;
     }
 
+    public boolean getCanCreateTask() {
+        return canCreateTask;
+    }
+
+    public boolean getAdminAccess() {
+        return adminAccess;
+    }
+
     public void setCanCreateTask(boolean canCreateTask) {
         this.canCreateTask = canCreateTask;
     }
