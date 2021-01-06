@@ -1,13 +1,12 @@
 package achievements;
 
-import tools.Input;
-
 import java.util.HashMap;
+
 
 public class AchievementLibrary {
 
     private static AchievementLibrary instance = null;
-    protected  HashMap<String, Achievement> achievements = new HashMap<>();
+    protected HashMap<String, Achievement> achievements = new HashMap<>();
 
     public AchievementLibrary(){
         initAchievements();
@@ -27,7 +26,7 @@ public class AchievementLibrary {
 
 
 
-    public Achievement getAchievement(String achievementName){
+    public Achievement getAchievement(String achievementName) {
         return achievements.get(achievementName);
     }
 

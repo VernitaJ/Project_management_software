@@ -48,9 +48,10 @@ public class UserLibrary extends DataLibrary {
         System.out.println("Successfully created user.");
     }
 
-    public void addUserToList(User userToAdd)
-    {
-        list.add(userToAdd);
+    public void addUserToList(User userToAdd) {
+        if(findUserInList(userToAdd.getUserName())==null){
+            list.add(userToAdd);
+        }
     }
 
     public List<User> getAllUsers() {
@@ -90,6 +91,7 @@ public class UserLibrary extends DataLibrary {
     }
 
     public Data findUserInList(String userName) {
+
         for (Data user : this.list) {
                 if (((User) user).getUserName().equals(userName)){
                     return user;
@@ -110,7 +112,7 @@ public class UserLibrary extends DataLibrary {
                 userToSendTo.getInbox().add(new Message(senderUserName,receiver,content));
                 System.out.println("Message sent.");
                 //achievement tracking
-                sender.achievementTracker.addPoints("sendMessage",1);
+                sender.achievementTracker.addPoints("sendMessage",1, sender);
             }
         } else System.out.println("That user doesn't exist.");
     }
@@ -122,7 +124,7 @@ public class UserLibrary extends DataLibrary {
         if (inbox.size()>0){
             for (Message message: inbox){
                 System.out.println(message.toString() + "\n");
-                message.setStatus(true);
+                message.setRead(true);
             }
         } else System.out.println("Inbox is Empty");
     }
@@ -132,8 +134,8 @@ public class UserLibrary extends DataLibrary {
         System.out.println("Email: " + user.getEmail());
         System.out.println("Occupation: " + user.getOccupation());
         System.out.println("Company Name: " + user.getCompanyName());
-        user.getXpBar();
-        if(user.achievementTracker.getUserAchievements().size() > 0){
+        user.achievementTracker.printXpBar();
+        if(user.achievementTracker.listUserAchievements().size() > 0){
             System.out.println("Achievements:" );
             user.achievementTracker.printUserAchievementsWithDetails();
         }
@@ -274,9 +276,9 @@ public class UserLibrary extends DataLibrary {
 
     //if user1 is greater than user 2 -> return true;
     public boolean compareTwoUserAchievements(User user1, User user2){
-        if(user1.getNumOfAchievements() > user2.getNumOfAchievements()){
+        if(user1.achievementTracker.printNumOfUserAchievements() > user2.achievementTracker.printNumOfUserAchievements()){
             return false;
-        } else if(user1.getNumOfAchievements() < user2.getNumOfAchievements()){
+        } else if(user1.achievementTracker.printNumOfUserAchievements() < user2.achievementTracker.printNumOfUserAchievements()){
             return true;
         } else {
             //check the tiers
@@ -318,8 +320,8 @@ public class UserLibrary extends DataLibrary {
         List<User> allUsers = sortUsersByAchievements();
         System.out.println("--------------------"+ Input.BLUE + "LEADERBOARD" + Input.RESET +"--------------------");
         for(User user : allUsers){
-            if(user.getNumOfAchievements() > 0 ){
-                System.out.println(user.getUserName() + " - Total Achievements: " + user.getNumOfAchievements());
+            if(user.achievementTracker.printNumOfUserAchievements() > 0 ){
+                System.out.println(user.getUserName() + " - Total Achievements: " + user.achievementTracker.printNumOfUserAchievements());
                 user.achievementTracker.printUserAchievements();
             }
         }

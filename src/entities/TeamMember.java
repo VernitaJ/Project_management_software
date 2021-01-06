@@ -1,31 +1,29 @@
 package entities;
 
-import access_roles.Roles;
+import access_roles.Role;
 
 public class TeamMember {
 
    private User user;
-   private Roles role;
+   private Role role;
 
-   public TeamMember(User teamMember, Roles role){
+   public TeamMember(User teamMember, Role role){
        this.user = teamMember;
        this.role = role;
    }
+   
+   public TeamMember() {}
 
     public User getUser() {
         return user;
     }
 
-    public Roles getRole() {
-        return role;
+    public Role getRole() {
+        return this.role;
     }
-
-    public String getRoleType(){
-       return role.roleType();
+    
+    public void setRole(Role newRole) {
+        this.role = newRole;
     }
-
-    public void setRole(Roles role)
-    {
-        this.role = role;
-    }
+    
 }

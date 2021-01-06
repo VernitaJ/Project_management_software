@@ -1,9 +1,12 @@
 package entities;
 import budget.Budget;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
+
+@JsonDeserialize(as = Project.class)
 public class Project extends Data {
     private String name;
     private String description;
@@ -12,10 +15,10 @@ public class Project extends Data {
     private LocalDate startDate;
     private LocalDate endDate;
     protected Budget budget;
-    protected TaskLibrary taskList;
     protected TeamLibrary teamLibrary = TeamLibrary.getInstance();
     private User projectManager;
     private Team team;
+    protected TaskLibrary taskList;
 
     public Project(String name, User projectManager, String description, LocalDate startDate, LocalDate endDate) {
         this.name = name;
@@ -28,6 +31,16 @@ public class Project extends Data {
         this.projectManager = projectManager;
         this.budget = new Budget();
         this.team = new Team(projectManager);
+    }
+
+    public Project() {
+        this.team = new Team();
+        this.taskList = new TaskLibrary();
+    }
+
+    public void setProjectManager(User projectManager) {
+        this.projectManager = projectManager;
+        team.setOwner(projectManager);
     }
 
     public void setStatus(String status) {
@@ -44,6 +57,18 @@ public class Project extends Data {
 
     public void setTeam(Team team) { this.team = team; }
 
+    public void setCreatedDate(LocalDate createdDate) {
+        this.createdDate = createdDate;
+    }
+    
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+    
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
+    }
+    
     public String getName() {
         return name;
     }
@@ -76,6 +101,10 @@ public class Project extends Data {
         return budget;
     }
     
+    public void setBudget(Budget budget) {
+        this.budget = budget;
+    }
+    
     public TaskLibrary getTaskList() {
         return taskList;
     }
@@ -99,7 +128,7 @@ public class Project extends Data {
                 "\n createdDate: " + createdDate +
                 "\n startDate: " + startDate +
                 "\n endDate: " + endDate +
-                "\n projectManager: " + projectManager;
+                "\n projectManager: " + projectManager.getUserName();
     }
 
     //not mentioned in the user stories soooo idk

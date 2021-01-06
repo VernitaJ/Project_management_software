@@ -1,9 +1,11 @@
 import controller.Controller;
-import entities.Project;
-import entities.ProjectLibrary;
+
+import java.io.IOException;
+
 
 public class Main {
-    public static void main(String[] args) {
+    
+    public static void main(String[] args) throws IOException {
         Controller start = Controller.getInstance();
         start.run();
     }

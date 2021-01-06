@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="commons-compress-1">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/commons-compress-1.20" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="file://$PROJECT_DIR$/commons-compress-1.20/apidocs" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/commons-compress-1.20" />
+    </SOURCES>
+    <jarDirectory url="file://$PROJECT_DIR$/commons-compress-1.20" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/commons-compress-1.20" recursive="false" type="SOURCES" />
+  </library>
+</component>
