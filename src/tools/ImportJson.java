@@ -44,10 +44,10 @@ public class ImportJson {
                 project.setName(jsonParser.getText());
             } else if("description".equals(field)) {
                 jsonParser.nextToken();
-                project.setDescription(field);
+                project.setDescription(jsonParser.getText());
             } else if("status".equals(field)) {
                 jsonParser.nextToken();
-                project.setStatus(field);
+                project.setStatus(jsonParser.getText());
             } else if("createdDate".equals(field)) {
                 jsonParser.nextToken();
                 project.setCreatedDate(LocalDate.parse(jsonParser.getText()));
@@ -241,7 +241,7 @@ public class ImportJson {
             }else if("password".equals(field)){
                 jsonParser.nextToken();
                 user.setPassword(jsonParser.getText());
-            }else if("eMail".equals(field)){
+            }else if("email".equals(field)){
                 jsonParser.nextToken();
                 user.setEmail(jsonParser.getText());
             }else if("occupation".equals(field)){
