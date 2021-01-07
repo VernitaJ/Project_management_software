@@ -18,28 +18,27 @@ public class ImportJson {
     private final ProjectLibrary projectLibrary;
     private final UserLibrary userLibrary;
     private String projectFileName;
-    
+
     public ImportJson(ProjectLibrary projectLibrary, UserLibrary userLibrary) {
         this.projectLibrary = projectLibrary;
         this.userLibrary = userLibrary;
     }
-    
+
     public void parseJson() throws IOException {
         Input input = Input.getInstance();
         String filePath = input.getStr("Write the file location \n");
         try{
             JsonParser jsonParser = new JsonFactory().createParser(new File(filePath));
-            //   JsonParser jsonParser = new JsonFactory().createParser(new File(this.projectFileName));
             parseProjectJson(jsonParser);
         } catch (FileNotFoundException e){
             System.out.println(filePath + " not found!");
         }
 
     }
-    
+
     private void parseProjectJson(JsonParser jsonParser) throws IOException {
         Project project = new Project();
-        
+
         while(jsonParser.nextToken() != JsonToken.END_OBJECT) {
             String field = jsonParser.getCurrentName();
             if ("name".equals(field)) {
@@ -72,12 +71,13 @@ public class ImportJson {
             }
         }
         this.projectLibrary.addProjectToList(project);
+        jsonParser.close();
         System.out.println("Successfully imported the project.");
     }
-    
+
     private void parseTaskListJson(JsonParser jsonParser, Project project) throws IOException {
         String field = jsonParser.getCurrentName();
-        
+
         while (jsonParser.nextToken() != JsonToken.END_OBJECT) {
             field = jsonParser.getCurrentName();
             if ("taskList".equals(field)) {
@@ -93,7 +93,7 @@ public class ImportJson {
             }
         }
     }
-    
+
     private Task parseTaskJson(JsonParser jsonParser, Project project) throws IOException {
         Task task = new Task();
         while(jsonParser.nextToken() != JsonToken.END_OBJECT) {
@@ -122,12 +122,12 @@ public class ImportJson {
         }
         return task;
     }
-    
+
     private ArrayList<WorkedHours> parseWorkedHours(JsonParser jsonParser) throws IOException {
         ArrayList<WorkedHours> workedHoursLog = new ArrayList<>();
         WorkedHours tempWorkedHours = new WorkedHours();
         String field = jsonParser.getCurrentName();
-        
+
         if ("workedHours".equals(field)) {
             while (jsonParser.nextToken() != JsonToken.END_ARRAY) {
                 field = jsonParser.getCurrentName();
@@ -146,7 +146,7 @@ public class ImportJson {
         }
         return workedHoursLog;
     }
-    
+
     private ArrayList<User> parseAssignees(JsonParser jsonParser) throws IOException {
         ArrayList<User> assignees = new ArrayList<>();
         while(jsonParser.nextToken() != JsonToken.END_ARRAY) {
@@ -154,11 +154,11 @@ public class ImportJson {
         }
         return assignees;
     }
-    
+
     private Project parseBudgetJson(JsonParser jsonParser, Project project) throws IOException {
         Budget budget = new Budget();
         String field = jsonParser.getCurrentName();
-        
+
         while(jsonParser.nextToken() != JsonToken.END_OBJECT) {
             if ("money".equals(field)) {
                 jsonParser.nextToken();
@@ -171,7 +171,7 @@ public class ImportJson {
         project.setBudget(budget);
         return project;
     }
-    
+
     private void parseTeamJson(JsonParser jsonParser, Project project) throws IOException {
         TeamMember tempMember = null;
         while(jsonParser.nextToken() != JsonToken.END_OBJECT) {
@@ -186,10 +186,10 @@ public class ImportJson {
             }
         }
     }
-    
+
     private TeamMember parseTeamMember(JsonParser jsonParser) throws JsonParseException, IOException {
         TeamMember member = null;
-        
+
         while(jsonParser.nextToken() != JsonToken.END_OBJECT) {
             String field = jsonParser.getCurrentName();
             if("user".equals(field)) {
@@ -200,7 +200,7 @@ public class ImportJson {
         }
         return member;
     }
-    
+
     private Role parseRoleJson(JsonParser jsonParser) throws IOException {
         Role tempRole = null;
         while (jsonParser.nextToken() != JsonToken.END_OBJECT) {
@@ -224,7 +224,7 @@ public class ImportJson {
         }
         return (tempRole);
     }
-    
+
     private User parseUserJson(JsonParser jsonParser) throws JsonParseException, IOException {
         User user = new User();
         while(jsonParser.nextToken() != JsonToken.END_OBJECT){
@@ -272,7 +272,7 @@ public class ImportJson {
         }
         return user;
     }
-    
+
     private Message parseMessage(JsonParser jsonParser) throws IOException {
         Message tempMessage = new Message();
         while (jsonParser.nextToken() != JsonToken.END_OBJECT) {
@@ -296,7 +296,7 @@ public class ImportJson {
         }
         return(tempMessage);
     }
-    
+
     private void parseAchievements(JsonParser jsonParser, User user) throws IOException {
         String field = jsonParser.getCurrentName();
         if ("tracker".equals(field)) {
