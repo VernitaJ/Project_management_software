@@ -383,7 +383,7 @@ public class ProjectLibrary extends DataLibrary{
         do {
             value = input.getDouble("What is the total budget in hours? ");
         } while (value < 0);
-        currentProject.getBudget().setMoney(value);
+        currentProject.getBudget().setHours(value);
         System.out.println("Budget in hours has been added");
     }
 
