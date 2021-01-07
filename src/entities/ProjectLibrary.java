@@ -243,12 +243,7 @@ public class ProjectLibrary extends DataLibrary{
         }
         String currency = currentProject.budget.CURRENCY;
         double costPerDay = getTotalCostProject(currentProject.taskList, false) / currentProject.duration();
-        Period actualDaysRemainingPeriod = currentProject.getStartDate().
-                until(currentProject.getEndDate());
-        long actualDaysRemainingA = DAYS.between(LocalDate.now(),currentProject.getEndDate());
-        //.
-        //                        plusDays(currentProject.duration())
-        int actualDaysRemaining = actualDaysRemainingPeriod.getDays();
+        long actualDaysRemaining = DAYS.between(LocalDate.now(),currentProject.getEndDate());
         double iteratedCostRemainingDays = (getBudgetHoursRemaining(currentProject) / 24) * costPerDay;
         double iteratedRemainingMoney =
                 currentProject.getBudget().getMoney() -
@@ -262,18 +257,20 @@ public class ProjectLibrary extends DataLibrary{
         iteratedMoneyToUsePerHour = new BigDecimal(iteratedMoneyToUsePerHour).
                 setScale(2, RoundingMode.HALF_UP).
                 doubleValue();
-        String message;
+        StringBuilder builder = new StringBuilder();
         if (iteratedRemainingMoney > 0) {
-            message = "Your project is cheaper than planned. " +
-                    "\nThere are " + actualDaysRemainingA + " days remaining until the current finish date." +
-                    "\nIf your project keeps the same linear pace, you will have " + iteratedRemainingMoney + currency + " extra when the project is completed." +
-                    "\nThis opens up for hiring additional resources with a combined rate of " + iteratedMoneyToUsePerHour + currency + "/hour";
-        } else {
-            message = "Your project will break the budget. " +
+            builder.append("Your project is cheaper than planned. " +
                     "\nThere are " + actualDaysRemaining + " days remaining until the current finish date." +
-                    "\nIf your project keeps the same linear pace you will have a deficit of " + input.RED + iteratedRemainingMoney + currency + input.RESET + " when the project is completed";
+                    "\nIf your project keeps the same linear pace, you will have " + iteratedRemainingMoney + currency + " extra when the project is completed.");
+            if(iteratedMoneyToUsePerHour > 0) {
+                builder.append("\nThis opens up for hiring additional resources with a combined rate of " + iteratedMoneyToUsePerHour + currency + "/hour");
+            }
+        } else {
+            builder.append("Your project will break the budget. " +
+                    "\nThere are " + actualDaysRemaining + " days remaining until the current finish date." +
+                    "\nIf your project keeps the same linear pace you will have a deficit of " + input.RED + iteratedRemainingMoney + currency + input.RESET + " when the project is completed");
         }
-        System.out.println(message);
+        System.out.println(builder.toString());
     }
 
     public void viewBudget(Project currentProject, User currentUser) {
