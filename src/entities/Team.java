@@ -1,9 +1,7 @@
 package entities;
 
 
-import access_roles.CustomRoles;
-import access_roles.Owner;
-import access_roles.RoleFactory;
+import access_roles.*;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import tools.Input;
@@ -190,9 +188,9 @@ public class Team extends Data {
     public List<TeamMember> listCustomMembers() {
         List<TeamMember> users = new ArrayList<>();
         for (TeamMember member: memberList.values()) {
-            if (!member.getRole().getType().equals("Owner") &&
-                    !member.getRole().getType().equals("Developer") &&
-                    !member.getRole().getType().equals("Maintainer"))
+            if (!(member.getRole() instanceof  Owner) &&
+                    !(member.getRole() instanceof Maintainer) &&
+                    !(member.getRole() instanceof Developer))
                 users.add(member);
         }
         return users;
