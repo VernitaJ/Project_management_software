@@ -246,17 +246,12 @@ public class ProjectLibrary extends DataLibrary{
         long actualDaysRemaining = DAYS.between(LocalDate.now(),currentProject.getEndDate());
         double iteratedCostRemainingDays = (getBudgetHoursRemaining(currentProject) / 24) * costPerDay;
         double iteratedRemainingMoney =
-                currentProject.getBudget().getMoney() -
+                input.round(currentProject.getBudget().getMoney() -
                         getTotalCostProject(currentProject.taskList, false) -
-                        iteratedCostRemainingDays;
-        double iteratedMoneyToUsePerHour = (iteratedRemainingMoney /
-                getBudgetHoursRemaining(currentProject));
-        iteratedRemainingMoney = new BigDecimal(iteratedRemainingMoney).
-                setScale(2, RoundingMode.HALF_UP).
-                doubleValue();
-        iteratedMoneyToUsePerHour = new BigDecimal(iteratedMoneyToUsePerHour).
-                setScale(2, RoundingMode.HALF_UP).
-                doubleValue();
+                        iteratedCostRemainingDays,2);
+        double iteratedMoneyToUsePerHour = input.round(iteratedRemainingMoney /
+                getBudgetHoursRemaining(currentProject),2);
+
         StringBuilder builder = new StringBuilder();
         if (iteratedRemainingMoney > 0) {
             builder.append("Your project is cheaper than planned. " +
@@ -481,7 +476,7 @@ public class ProjectLibrary extends DataLibrary{
             }
         }
     }
-    
+
     public Project projectNameExists(String stringToCheck) {
         for(Data project : list){
             Project currentProject = ((Project) project);
