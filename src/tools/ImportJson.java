@@ -130,8 +130,8 @@ public class ImportJson {
 
         if ("workedHours".equals(field)) {
             while (jsonParser.nextToken() != JsonToken.END_ARRAY) {
+                field = jsonParser.getCurrentName();
                 if(jsonParser.currentToken() == JsonToken.START_OBJECT) {
-                    field = jsonParser.getCurrentName();
                     while (jsonParser.nextToken() != JsonToken.END_OBJECT) {
                         field = jsonParser.getCurrentName();
                         if ("user".equals(field)) {
@@ -140,8 +140,9 @@ public class ImportJson {
                         } else if ("workedHours".equals(field)) {
                             jsonParser.nextToken();
                             tempWorkedHours.setWorkedHours(jsonParser.getValueAsDouble());
+                            workedHoursLog.add(tempWorkedHours);
                         }
-                        workedHoursLog.add(tempWorkedHours);
+
                     }
                 }
             }
