@@ -244,8 +244,10 @@ public class ProjectLibrary extends DataLibrary{
         String currency = currentProject.budget.CURRENCY;
         double costPerDay = getTotalCostProject(currentProject.taskList, false) / currentProject.duration();
         Period actualDaysRemainingPeriod = currentProject.getStartDate().
-                until(currentProject.getStartDate().
-                        plusDays(currentProject.duration()));
+                until(currentProject.getEndDate());
+        long actualDaysRemainingA = DAYS.between(LocalDate.now(),currentProject.getEndDate());
+        //.
+        //                        plusDays(currentProject.duration())
         int actualDaysRemaining = actualDaysRemainingPeriod.getDays();
         double iteratedCostRemainingDays = (getBudgetHoursRemaining(currentProject) / 24) * costPerDay;
         double iteratedRemainingMoney =
@@ -263,7 +265,7 @@ public class ProjectLibrary extends DataLibrary{
         String message;
         if (iteratedRemainingMoney > 0) {
             message = "Your project is cheaper than planned. " +
-                    "\nThere are " + actualDaysRemaining + " days remaining until the current finish date." +
+                    "\nThere are " + actualDaysRemainingA + " days remaining until the current finish date." +
                     "\nIf your project keeps the same linear pace, you will have " + iteratedRemainingMoney + currency + " extra when the project is completed." +
                     "\nThis opens up for hiring additional resources with a combined rate of " + iteratedMoneyToUsePerHour + currency + "/hour";
         } else {
@@ -284,9 +286,6 @@ public class ProjectLibrary extends DataLibrary{
         double budgetMoney = currentProject.getBudget().getMoney();
         double budgetHours = currentProject.getBudget().getHours();
         double hoursRemaining = getBudgetHoursRemaining(currentProject);
-        double daysRemaining = new BigDecimal(hoursRemaining / 24).
-                setScale(2, RoundingMode.HALF_UP).
-                doubleValue();
         double remainingMoney = getBudgetMoneyRemaining(currentProject);
         String informBudgetReachedSEK = "";
         String informBudgetReachedHours = "";
@@ -299,7 +298,6 @@ public class ProjectLibrary extends DataLibrary{
         System.out.println("Budget Statistics: " +
                 "\nTotal SEK: " + budgetMoney +
                 "\nTotal Hours: " + budgetHours +
-                "\nDays remaining on budget: " + daysRemaining +
                 "\nHours remaining on budget: " + hoursRemaining +
                 informBudgetReachedHours +
                 "\nSEK remaining on budget: " + remainingMoney +
@@ -413,7 +411,7 @@ public class ProjectLibrary extends DataLibrary{
         do {
             value = input.getDouble("What is the total budget in hours?");
         } while (value < 0);
-        currentProject.getBudget().setMoney(value);
+        currentProject.getBudget().setHours(value);
         System.out.println("Budget in hours has been updated");
     }
 
