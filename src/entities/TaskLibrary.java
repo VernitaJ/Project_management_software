@@ -62,6 +62,8 @@ public class TaskLibrary extends DataLibrary {
     
         LocalDate startDate;
         LocalDate projectStartDate = currentProject.getStartDate();
+        LocalDate deadline;
+        LocalDate projectEndDate = currentProject.getEndDate();
         do {
             startDate = input.getDate("Task Start Date (YYYY-MM-DD): ");
             if (input.abort(description)) {
@@ -71,10 +73,11 @@ public class TaskLibrary extends DataLibrary {
             if(startDate.isBefore(projectStartDate)) {
                 System.out.println("Sorry, that date is before the Project start date, which is " + projectStartDate);
             }
-        } while (startDate.isBefore(projectStartDate));
+            if(startDate.isAfter(projectEndDate)) {
+                System.out.println("Sorry, that date falls after the Project deadline, which is " + projectEndDate);
+            }
+        } while (startDate.isBefore(projectStartDate) || startDate.isAfter(projectEndDate));
 
-        LocalDate deadline;
-        LocalDate projectEndDate = currentProject.getEndDate();
         do {
             deadline = input.getDate("Task Deadline (YYYY-MM-DD): ");
             if (input.abort(description)) {
