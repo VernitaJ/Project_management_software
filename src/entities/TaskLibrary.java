@@ -62,6 +62,8 @@ public class TaskLibrary extends DataLibrary {
     
         LocalDate startDate;
         LocalDate projectStartDate = currentProject.getStartDate();
+        LocalDate deadline;
+        LocalDate projectEndDate = currentProject.getEndDate();
         do {
             startDate = input.getDate("Task Start Date (YYYY-MM-DD): ");
             if (input.abort(description)) {
@@ -71,10 +73,11 @@ public class TaskLibrary extends DataLibrary {
             if(startDate.isBefore(projectStartDate)) {
                 System.out.println("Sorry, that date is before the Project start date, which is " + projectStartDate);
             }
-        } while (startDate.isBefore(projectStartDate));
+            if(startDate.isAfter(projectEndDate)) {
+                System.out.println("Sorry, that date falls after the Project deadline, which is " + projectEndDate);
+            }
+        } while (startDate.isBefore(projectStartDate) || startDate.isAfter(projectEndDate));
 
-        LocalDate deadline;
-        LocalDate projectEndDate = currentProject.getEndDate();
         do {
             deadline = input.getDate("Task Deadline (YYYY-MM-DD): ");
             if (input.abort(description)) {
@@ -207,12 +210,15 @@ public class TaskLibrary extends DataLibrary {
         if (!confirmAccess(projectTeam, currentUser)) {
             return;
         }
-        List<User> tempList = projectTeam.listAllTeamUsers();
-        for (int i = 0; i < tempList.size(); i++) {
-            if(!taskTeam.contains(tempList.get(i))) {
-                System.out.println(i+1 + ". " + tempList.get(i).getUserName());
+
+        ArrayList<User> tempList = new ArrayList<>();
+        for(User user : projectTeam.listAllTeamUsers()){
+            if(!taskTeam.contains(user)){
+                tempList.add(user);
+                System.out.println(tempList.size() + ". " + user.getUserName());
             }
         }
+
         int choice;
         do{
             choice = input.getInt("Enter user number or 0 to return to the previous menu: ");
