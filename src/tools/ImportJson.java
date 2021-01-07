@@ -33,7 +33,6 @@ public class ImportJson {
         } catch (FileNotFoundException e){
             System.out.println(filePath + " not found!");
         }
-
     }
 
     private void parseProjectJson(JsonParser jsonParser) throws IOException {
