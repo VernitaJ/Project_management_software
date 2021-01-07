@@ -59,7 +59,7 @@ public class TaskLibrary extends DataLibrary {
             System.out.println("Returning to project menu...");
             return;
         }
-    
+
         LocalDate startDate;
         LocalDate projectStartDate = currentProject.getStartDate();
         LocalDate deadline;
@@ -187,7 +187,7 @@ public class TaskLibrary extends DataLibrary {
         }
         currentTask.setStatus(newStatus);
     }
-    
+
     public void updateName(Project currentProject, Task currentTask, User currentUser) {
         if(!confirmAccess(currentProject.getTeam(), currentUser)) {
             return;
@@ -195,7 +195,7 @@ public class TaskLibrary extends DataLibrary {
         String newName = input.getStr("Enter the name: ");
         currentTask.setName(newName);
     }
-    
+
     public void updateDescription(Project currentProject, Task currentTask, User currentUser) {
         if(!confirmAccess(currentProject.getTeam(), currentUser)) {
             return;
@@ -342,7 +342,7 @@ public class TaskLibrary extends DataLibrary {
     }
 
     public void printAllWorkedHours(Task currentTask) {
-        System.out.println(getAllWorkedHours(currentTask));
+        System.out.println(input.round(getAllWorkedHours(currentTask),2));
     }
 
     public void printDetailedWorkedHours(Project currentProject) {
@@ -413,7 +413,7 @@ public class TaskLibrary extends DataLibrary {
         csvWriter.flush();
         csvWriter.close();
     }
-    
+
     public Task taskNameExists(TaskLibrary taskLibrary, String stringToCheck) {
         for(Data task : taskLibrary.list){
             Task currentTask = ((Task) task);
