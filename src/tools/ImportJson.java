@@ -6,6 +6,7 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
+import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import entities.*;
 
 import java.io.File;
@@ -28,10 +29,14 @@ public class ImportJson {
         Input input = Input.getInstance();
         String filePath = input.getStr("Write the file location \n");
         try{
-            JsonParser jsonParser = new JsonFactory().createParser(new File(filePath));
-            parseProjectJson(jsonParser);
+            if(filePath.endsWith(".json")){
+                JsonParser jsonParser = new JsonFactory().createParser(new File(filePath));
+                parseProjectJson(jsonParser);
+            } else {
+                throw new FileNotFoundException("Invalid file path.");
+            }
         } catch (FileNotFoundException e){
-            System.out.println(filePath + " not found!");
+            System.out.println(e.getMessage());
         }
     }
 
