@@ -235,13 +235,18 @@ public class ProjectLibrary extends DataLibrary{
     }
 
     public void getExpenseForecast(Project currentProject, User currentUser) {
+        String currency = currentProject.budget.CURRENCY;
         if (noTeam(currentProject)) {
             return;
         }
         if (!confirmAccess(currentProject.getTeam(), currentUser)) {
             return;
         }
-        String currency = currentProject.budget.CURRENCY;
+        if(!currentProject.getBudget().budgetExistMoney() || !currentProject.getBudget().budgetExistHours()) {
+            System.out.println("You must add a budget in " + currency + " and hours to run the forecast.");
+            return;
+        }
+
         double costPerDay = getTotalCostProject(currentProject.taskList, false) / currentProject.duration();
         long actualDaysRemaining = DAYS.between(LocalDate.now(),currentProject.getEndDate());
         double iteratedCostRemainingDays = (getBudgetHoursRemaining(currentProject) / 24) * costPerDay;
