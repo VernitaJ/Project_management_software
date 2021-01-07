@@ -210,12 +210,15 @@ public class TaskLibrary extends DataLibrary {
         if (!confirmAccess(projectTeam, currentUser)) {
             return;
         }
-        List<User> tempList = projectTeam.listAllTeamUsers();
-        for (int i = 0; i < tempList.size(); i++) {
-            if(!taskTeam.contains(tempList.get(i))) {
-                System.out.println(i+1 + ". " + tempList.get(i).getUserName());
+
+        ArrayList<User> tempList = new ArrayList<>();
+        for(User user : projectTeam.listAllTeamUsers()){
+            if(!taskTeam.contains(user)){
+                tempList.add(user);
+                System.out.println(tempList.size() + ". " + user.getUserName());
             }
         }
+
         int choice;
         do{
             choice = input.getInt("Enter user number or 0 to return to the previous menu: ");
