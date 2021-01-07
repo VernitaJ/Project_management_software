@@ -10,7 +10,7 @@ import java.util.Scanner;
 
 public class Input
 {
-    private static final Scanner scanner = new Scanner(System.in);
+    private static Scanner scanner = new Scanner(System.in);
     private static Input instance = null;
 
     // Change the color of terminal stuff
@@ -84,6 +84,8 @@ public class Input
         } catch (InputMismatchException e){
             scanner.nextLine();
             return getFloat("Wrong format, please try again: ");
+        } finally {
+            scanner = new Scanner(System.in);
         }
 
         return userInput;
@@ -98,6 +100,8 @@ public class Input
         } catch (InputMismatchException e) {
             scanner.nextLine();
             return getDouble("Wrong format, please try again: ");
+        } finally {
+            scanner = new Scanner(System.in);
         }
         return userInput;
     }
