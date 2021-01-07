@@ -206,7 +206,7 @@ public class Team extends Data {
         return false;
     }
     
-    public TeamMember roleChange(User currentUser) {
+    public TeamMember roleChange(User currentUser, Project currentProject) {
         TeamMember currentMember = findTeamMember(currentUser);
         if (currentMember != null && currentMember.getRole().adminAccess()) {
             for (String member : memberList.keySet()) {
@@ -217,14 +217,37 @@ public class Team extends Data {
                 if (memberList.containsKey(memberToChange) &&
                         !(memberList.get(memberToChange).getRole() instanceof Owner)
                 ) {
-                    return memberList.get(memberToChange);
+                    String[] options =
+                            {
+                                    "1) Maintainer",
+                                    "2) Developer",
+                                    "3) Custom Role",
+                            };
+                    for(String option : options){
+                        System.out.println(option);
+                    }
+                    int choice;
+                    do {
+                        choice = input.getInt("\nEnter project number or 0 to return to previous menu: ");
+                    } while (choice < 0 || choice > options.length);
+
+                    switch (choice)
+                    {
+                        case 1 -> memberList.get(memberToChange).setRole(new Maintainer());
+                        case 2 -> memberList.get(memberToChange).setRole(new Developer());
+                        case 3 -> memberList.get(memberToChange).setRole(currentProject.getTeam().addMemberWithCustomRole(currentUser));
+                    }
+
                 } else {
                     System.out.println("User selected has an access level that denies modification.");
                 }
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
+        } else {
+            System.out.println("You are not authorized to perform this action!");
         }
+
         return null;
     }
     
