@@ -95,7 +95,7 @@ public class Input
             userInput = scanner.nextDouble();
         } catch (InputMismatchException e) {
             scanner.nextLine();
-            return getFloat("Wrong format, please try again: ");
+            return getDouble("Wrong format, please try again: ");
         }
         return userInput;
     }
