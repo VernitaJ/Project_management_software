@@ -140,6 +140,7 @@ public class ImportJson {
                         } else if ("workedHours".equals(field)) {
                             jsonParser.nextToken();
                             tempWorkedHours.setWorkedHours(jsonParser.getValueAsDouble());
+                            //maybe next line should be at the outside of the loop
                             workedHoursLog.add(tempWorkedHours);
                         }
 
