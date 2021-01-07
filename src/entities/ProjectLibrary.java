@@ -235,43 +235,42 @@ public class ProjectLibrary extends DataLibrary{
     }
 
     public void getExpenseForecast(Project currentProject, User currentUser) {
+        String currency = currentProject.budget.CURRENCY;
         if (noTeam(currentProject)) {
             return;
         }
         if (!confirmAccess(currentProject.getTeam(), currentUser)) {
             return;
         }
-        String currency = currentProject.budget.CURRENCY;
+        if(!currentProject.getBudget().budgetExistMoney() || !currentProject.getBudget().budgetExistHours()) {
+            System.out.println("You must add a budget in " + currency + " and hours to run the forecast.");
+            return;
+        }
+
         double costPerDay = getTotalCostProject(currentProject.taskList, false) / currentProject.duration();
-        Period actualDaysRemainingPeriod = currentProject.getStartDate().
-                until(currentProject.getStartDate().
-                        plusDays(currentProject.duration()));
-        int actualDaysRemaining = actualDaysRemainingPeriod.getDays();
+        long actualDaysRemaining = DAYS.between(LocalDate.now(),currentProject.getEndDate());
         double iteratedCostRemainingDays = (getBudgetHoursRemaining(currentProject) / 24) * costPerDay;
         double iteratedRemainingMoney =
-                currentProject.getBudget().getMoney() -
+                input.round(currentProject.getBudget().getMoney() -
                         getTotalCostProject(currentProject.taskList, false) -
-                        iteratedCostRemainingDays;
-        double iteratedMoneyToUsePerHour = (iteratedRemainingMoney /
-                getBudgetHoursRemaining(currentProject));
-        iteratedRemainingMoney = new BigDecimal(iteratedRemainingMoney).
-                setScale(2, RoundingMode.HALF_UP).
-                doubleValue();
-        iteratedMoneyToUsePerHour = new BigDecimal(iteratedMoneyToUsePerHour).
-                setScale(2, RoundingMode.HALF_UP).
-                doubleValue();
-        String message;
+                        iteratedCostRemainingDays,2);
+        double iteratedMoneyToUsePerHour = input.round(iteratedRemainingMoney /
+                getBudgetHoursRemaining(currentProject),2);
+
+        StringBuilder builder = new StringBuilder();
         if (iteratedRemainingMoney > 0) {
-            message = "Your project is cheaper than planned. " +
+            builder.append("Your project is cheaper than planned. " +
                     "\nThere are " + actualDaysRemaining + " days remaining until the current finish date." +
-                    "\nIf your project keeps the same linear pace, you will have " + iteratedRemainingMoney + currency + " extra when the project is completed." +
-                    "\nThis opens up for hiring additional resources with a combined rate of " + iteratedMoneyToUsePerHour + currency + "/hour";
+                    "\nIf your project keeps the same linear pace, you will have " + iteratedRemainingMoney + currency + " extra when the project is completed.");
+            if(iteratedMoneyToUsePerHour > 0) {
+                builder.append("\nThis opens up for hiring additional resources with a combined rate of " + iteratedMoneyToUsePerHour + currency + "/hour");
+            }
         } else {
-            message = "Your project will break the budget. " +
+            builder.append("Your project will break the budget. " +
                     "\nThere are " + actualDaysRemaining + " days remaining until the current finish date." +
-                    "\nIf your project keeps the same linear pace you will have a deficit of " + input.RED + iteratedRemainingMoney + currency + input.RESET + " when the project is completed";
+                    "\nIf your project keeps the same linear pace you will have a deficit of " + input.RED + iteratedRemainingMoney + currency + input.RESET + " when the project is completed");
         }
-        System.out.println(message);
+        System.out.println(builder.toString());
     }
 
     public void viewBudget(Project currentProject, User currentUser) {
@@ -284,9 +283,6 @@ public class ProjectLibrary extends DataLibrary{
         double budgetMoney = currentProject.getBudget().getMoney();
         double budgetHours = currentProject.getBudget().getHours();
         double hoursRemaining = getBudgetHoursRemaining(currentProject);
-        double daysRemaining = new BigDecimal(hoursRemaining / 24).
-                setScale(2, RoundingMode.HALF_UP).
-                doubleValue();
         double remainingMoney = getBudgetMoneyRemaining(currentProject);
         String informBudgetReachedSEK = "";
         String informBudgetReachedHours = "";
@@ -299,7 +295,6 @@ public class ProjectLibrary extends DataLibrary{
         System.out.println("Budget Statistics: " +
                 "\nTotal SEK: " + budgetMoney +
                 "\nTotal Hours: " + budgetHours +
-                "\nDays remaining on budget: " + daysRemaining +
                 "\nHours remaining on budget: " + hoursRemaining +
                 informBudgetReachedHours +
                 "\nSEK remaining on budget: " + remainingMoney +
@@ -383,7 +378,7 @@ public class ProjectLibrary extends DataLibrary{
         do {
             value = input.getDouble("What is the total budget in hours? ");
         } while (value < 0);
-        currentProject.getBudget().setMoney(value);
+        currentProject.getBudget().setHours(value);
         System.out.println("Budget in hours has been added");
     }
 
@@ -413,7 +408,7 @@ public class ProjectLibrary extends DataLibrary{
         do {
             value = input.getDouble("What is the total budget in hours?");
         } while (value < 0);
-        currentProject.getBudget().setMoney(value);
+        currentProject.getBudget().setHours(value);
         System.out.println("Budget in hours has been updated");
     }
 
@@ -486,7 +481,7 @@ public class ProjectLibrary extends DataLibrary{
             }
         }
     }
-    
+
     public Project projectNameExists(String stringToCheck) {
         for(Data project : list){
             Project currentProject = ((Project) project);

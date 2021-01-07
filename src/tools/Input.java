@@ -1,5 +1,7 @@
 package tools;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -8,7 +10,7 @@ import java.util.Scanner;
 
 public class Input
 {
-    private static final Scanner scanner = new Scanner(System.in);
+    private static Scanner scanner = new Scanner(System.in);
     private static Input instance = null;
 
     // Change the color of terminal stuff
@@ -76,33 +78,30 @@ public class Input
     public float getFloat(String str)
     {
         float userInput = 0;
-        boolean complianceCheck = false;
-        while (!complianceCheck) {
-            try {
-                System.out.print(str);
-                userInput = scanner.nextFloat();
-                scanner.nextLine();
-                complianceCheck = true;
-            } catch (InputMismatchException e){
-                e.printStackTrace();
-            }
+        try {
+            System.out.print(str);
+            userInput = scanner.nextFloat();
+        } catch (InputMismatchException e){
+            scanner.nextLine();
+            return getFloat("Wrong format, please try again: ");
+        } finally {
+            scanner = new Scanner(System.in);
         }
+
         return userInput;
     }
 
     public double getDouble(String str)
     {
         double userInput = 0.0;
-        boolean complianceCheck = false;
-        while (!complianceCheck) {
-            try {
-                System.out.print(str);
-                userInput = scanner.nextDouble();
-                scanner.nextLine();
-                complianceCheck = true;
-            } catch (InputMismatchException e) {
-                e.printStackTrace();
-            }
+        try {
+            System.out.print(str);
+            userInput = scanner.nextDouble();
+        } catch (InputMismatchException e) {
+            scanner.nextLine();
+            return getDouble("Wrong format, please try again: ");
+        } finally {
+            scanner = new Scanner(System.in);
         }
         return userInput;
     }
@@ -138,6 +137,13 @@ public class Input
         System.out.print(check);
         scanner.nextLine();
         scanner.reset();
+    }
+
+    public static double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+            BigDecimal bd = BigDecimal.valueOf(value);
+            bd = bd.setScale(places, RoundingMode.HALF_UP);
+            return bd.doubleValue();
     }
 
     public void spacer(){

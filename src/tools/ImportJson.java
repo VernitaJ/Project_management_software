@@ -19,12 +19,12 @@ public class ImportJson {
     private final ProjectLibrary projectLibrary;
     private final UserLibrary userLibrary;
     private String projectFileName;
-    
+
     public ImportJson(ProjectLibrary projectLibrary, UserLibrary userLibrary) {
         this.projectLibrary = projectLibrary;
         this.userLibrary = userLibrary;
     }
-    
+
     public void parseJson() throws IOException {
         Input input = Input.getInstance();
         String filePath = input.getStr("Write the file location \n");
@@ -38,12 +38,10 @@ public class ImportJson {
         } catch (FileNotFoundException e){
             System.out.println(e.getMessage());
         }
-
     }
-    
+
     private void parseProjectJson(JsonParser jsonParser) throws IOException {
         Project project = new Project();
-        
         while(jsonParser.nextToken() != JsonToken.END_OBJECT) {
             String field = jsonParser.getCurrentName();
             if ("name".equals(field)) {
@@ -51,10 +49,10 @@ public class ImportJson {
                 project.setName(jsonParser.getText());
             } else if("description".equals(field)) {
                 jsonParser.nextToken();
-                project.setDescription(field);
+                project.setDescription(jsonParser.getText());
             } else if("status".equals(field)) {
                 jsonParser.nextToken();
-                project.setStatus(field);
+                project.setStatus(jsonParser.getText());
             } else if("createdDate".equals(field)) {
                 jsonParser.nextToken();
                 project.setCreatedDate(LocalDate.parse(jsonParser.getText()));
@@ -76,12 +74,13 @@ public class ImportJson {
             }
         }
         this.projectLibrary.addProjectToList(project);
+        jsonParser.close();
         System.out.println("Successfully imported the project.");
     }
-    
+
     private void parseTaskListJson(JsonParser jsonParser, Project project) throws IOException {
         String field = jsonParser.getCurrentName();
-        
+
         while (jsonParser.nextToken() != JsonToken.END_OBJECT) {
             field = jsonParser.getCurrentName();
             if ("taskList".equals(field)) {
@@ -89,7 +88,9 @@ public class ImportJson {
                     field = jsonParser.getCurrentName();
                     if("dataList".equals(field)) {
                         while (jsonParser.nextToken() != JsonToken.END_ARRAY) {
-                            project.getTaskList().addToList(parseTaskJson(jsonParser, project));
+                            if(jsonParser.currentToken() == JsonToken.START_OBJECT) {
+                                project.getTaskList().addToList(parseTaskJson(jsonParser, project));
+                            }
                         }
                         return;
                     }
@@ -97,7 +98,7 @@ public class ImportJson {
             }
         }
     }
-    
+
     private Task parseTaskJson(JsonParser jsonParser, Project project) throws IOException {
         Task task = new Task();
         while(jsonParser.nextToken() != JsonToken.END_OBJECT) {
@@ -126,43 +127,49 @@ public class ImportJson {
         }
         return task;
     }
-    
+
     private ArrayList<WorkedHours> parseWorkedHours(JsonParser jsonParser) throws IOException {
         ArrayList<WorkedHours> workedHoursLog = new ArrayList<>();
         WorkedHours tempWorkedHours = new WorkedHours();
         String field = jsonParser.getCurrentName();
-        
+
         if ("workedHours".equals(field)) {
             while (jsonParser.nextToken() != JsonToken.END_ARRAY) {
                 field = jsonParser.getCurrentName();
-                while (jsonParser.nextToken() != JsonToken.END_OBJECT) {
-                    field = jsonParser.getCurrentName();
-                    if ("user".equals(field)) {
-                        jsonParser.nextToken();
-                        tempWorkedHours.setUser(parseUserJson(jsonParser));
-                    } else if ("workedHours".equals(field)) {
-                        jsonParser.nextToken();
-                        tempWorkedHours.setWorkedHours(jsonParser.getValueAsDouble());
+                if(jsonParser.currentToken() == JsonToken.START_OBJECT) {
+                    while (jsonParser.nextToken() != JsonToken.END_OBJECT) {
+                        field = jsonParser.getCurrentName();
+                        if ("user".equals(field)) {
+                            jsonParser.nextToken();
+                            tempWorkedHours.setUser(parseUserJson(jsonParser));
+                        } else if ("workedHours".equals(field)) {
+                            jsonParser.nextToken();
+                            tempWorkedHours.setWorkedHours(jsonParser.getValueAsDouble());
+                            //maybe next line should be at the outside of the loop
+                            workedHoursLog.add(tempWorkedHours);
+                        }
+
                     }
-                    workedHoursLog.add(tempWorkedHours);
                 }
             }
         }
         return workedHoursLog;
     }
-    
+
     private ArrayList<User> parseAssignees(JsonParser jsonParser) throws IOException {
         ArrayList<User> assignees = new ArrayList<>();
         while(jsonParser.nextToken() != JsonToken.END_ARRAY) {
-            assignees.add(parseUserJson(jsonParser));
+            if(jsonParser.currentToken() == JsonToken.START_OBJECT) {
+                assignees.add(parseUserJson(jsonParser));
+            }
         }
         return assignees;
     }
-    
+
     private Project parseBudgetJson(JsonParser jsonParser, Project project) throws IOException {
         Budget budget = new Budget();
         String field = jsonParser.getCurrentName();
-        
+
         while(jsonParser.nextToken() != JsonToken.END_OBJECT) {
             if ("money".equals(field)) {
                 jsonParser.nextToken();
@@ -175,7 +182,7 @@ public class ImportJson {
         project.setBudget(budget);
         return project;
     }
-    
+
     private void parseTeamJson(JsonParser jsonParser, Project project) throws IOException {
         TeamMember tempMember = null;
         while(jsonParser.nextToken() != JsonToken.END_OBJECT) {
@@ -190,10 +197,10 @@ public class ImportJson {
             }
         }
     }
-    
+
     private TeamMember parseTeamMember(JsonParser jsonParser) throws JsonParseException, IOException {
         TeamMember member = null;
-        
+
         while(jsonParser.nextToken() != JsonToken.END_OBJECT) {
             String field = jsonParser.getCurrentName();
             if("user".equals(field)) {
@@ -204,7 +211,7 @@ public class ImportJson {
         }
         return member;
     }
-    
+
     private Role parseRoleJson(JsonParser jsonParser) throws IOException {
         Role tempRole = null;
         while (jsonParser.nextToken() != JsonToken.END_OBJECT) {
@@ -228,7 +235,7 @@ public class ImportJson {
         }
         return (tempRole);
     }
-    
+
     private User parseUserJson(JsonParser jsonParser) throws JsonParseException, IOException {
         User user = new User();
         while(jsonParser.nextToken() != JsonToken.END_OBJECT){
@@ -239,7 +246,7 @@ public class ImportJson {
             }else if("password".equals(field)){
                 jsonParser.nextToken();
                 user.setPassword(jsonParser.getText());
-            }else if("eMail".equals(field)){
+            }else if("email".equals(field)){
                 jsonParser.nextToken();
                 user.setEmail(jsonParser.getText());
             }else if("occupation".equals(field)){
@@ -276,7 +283,7 @@ public class ImportJson {
         }
         return user;
     }
-    
+
     private Message parseMessage(JsonParser jsonParser) throws IOException {
         Message tempMessage = new Message();
         while (jsonParser.nextToken() != JsonToken.END_OBJECT) {
@@ -300,7 +307,7 @@ public class ImportJson {
         }
         return(tempMessage);
     }
-    
+
     private void parseAchievements(JsonParser jsonParser, User user) throws IOException {
         String field = jsonParser.getCurrentName();
         if ("tracker".equals(field)) {

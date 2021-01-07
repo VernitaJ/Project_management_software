@@ -22,27 +22,26 @@ public class ImportExcel {
     UserLibrary userLibrary;
     User currentUser;
     RoleFactory roleFactory = new RoleFactory();
-    
+
     public ImportExcel(UserLibrary userLibrary, ProjectLibrary projectLibrary, User currentUser) {
         this.projectLibrary = projectLibrary;
         this.userLibrary = userLibrary;
         this.currentUser = currentUser;
         loopExcel();
     }
-    
+
     private void loopExcel() {
         try {
-            //POIFSFileSystem fs = new POIFSFileSystem(new FileInputStream(System.getProperty("user.home") + "/ProjectData.xlsx"));
             XSSFWorkbook wb = new XSSFWorkbook("projectexcel.xlsx");
             XSSFSheet sheet = wb.getSheetAt(0);
             XSSFRow row;
             XSSFCell cell;
-            
+
             int rows;
             rows = sheet.getPhysicalNumberOfRows();
             int cols = 0;
             int tmp = 0;
-            
+
             for (int i = 0; i < 10 || i < rows; i++) {
                 row = sheet.getRow(i);
                 if (row != null) {
@@ -50,9 +49,9 @@ public class ImportExcel {
                     if (tmp > cols) cols = tmp;
                 }
             }
-            
+
             assignHeaders(sheet, cols);
-            
+
             for (int r = 0; r < rows; r++) {
                 row = sheet.getRow(r);
                 if (row != null) {
@@ -64,11 +63,12 @@ public class ImportExcel {
                     }
                 }
             }
+            wb.close();
         } catch (Exception ioe) {
             ioe.printStackTrace();
         }
     }
-    
+
     private void confirmObjectType(XSSFRow row, XSSFCell cell) {
         if (cell.toString().equalsIgnoreCase("Project")) {
             importProject(row);
@@ -80,7 +80,7 @@ public class ImportExcel {
             importWorkLog(row);
         }
     }
-    
+
     private void importProject(XSSFRow row) {
         this.projectLibrary.addProjectToList(
                 new Project(row.getCell(1).toString(),
@@ -89,7 +89,7 @@ public class ImportExcel {
                         LocalDate.parse(row.getCell(3).toString()),
                         LocalDate.parse(row.getCell(4).toString())));
     }
-    
+
     private void importUser(XSSFRow row) {
         if (row.getCell(30).toString().equalsIgnoreCase(this.currentUser.getUserName())) {
             return;
@@ -103,9 +103,9 @@ public class ImportExcel {
                         100.0f,
                         parseFloat(row.getCell(35).toString())));
     }
-    
+
     private void importTask(XSSFRow row) {
-        
+
         String projectName = row.getCell(1).toString();
         Project currentProject = this.projectLibrary.projectNameExists(projectName);
         if (currentProject == null) {
@@ -118,7 +118,7 @@ public class ImportExcel {
                 LocalDate.parse(row.getCell(3).toString()),
                 LocalDate.parse(row.getCell(4).toString()));
     }
-    
+
     private void importWorkLog(XSSFRow row) {
         String projectName = row.getCell(1).toString();
         Project currentProject = this.projectLibrary.projectNameExists(projectName);
@@ -139,11 +139,11 @@ public class ImportExcel {
                 new WorkedHours(
                         (User) userLibrary.findUserInList(row.getCell(18).toString().toLowerCase()),
                         parseDouble(row.getCell(13).toString())));
-        
+
         addUserToProjectTeam(currentProject, user);
         assignUserToTask(currentTask, user);
     }
-    
+
     private void addUserToProjectTeam(Project currentProject, User user) {
         if (!currentProject.getTeam().isMember(user)) {
             if(user.getUserName().equalsIgnoreCase("anna") || user.getUserName().equalsIgnoreCase("karl")) {
@@ -155,7 +155,6 @@ public class ImportExcel {
                                 user,
                                 roleFactory.createMaintainer()));
             }
-
         }
     }
 
@@ -177,17 +176,13 @@ public class ImportExcel {
         }
     }
 
-    private void addManagerToProjectTeam() {
-
-    }
-
     private void assignUserToTask(Task currentTask, User user) {
         if (!currentTask.getAssignees().toString().contains(user.getUserName())) {
             currentTask.getAssignees().add(user);
-            
+
         }
     }
-    
+
     private void assignHeaders(XSSFSheet sheet, int cols) {
         this.headerList = new ArrayList<>();
         XSSFRow row = sheet.getRow(0);

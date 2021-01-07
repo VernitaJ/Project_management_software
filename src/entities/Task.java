@@ -22,7 +22,7 @@ public class Task extends Data {
     private ArrayList<User> assignees;
     private ArrayList<WorkedHours> workedHours;
     @JsonIgnoreProperties
-    private ArrayList<Note> notes;
+    private ArrayList<Note> notes = new ArrayList<>();
     private Input input = Input.getInstance();
 
     public Task(User createdBy, String name, String description, LocalDate startDate, LocalDate deadline){
@@ -35,7 +35,7 @@ public class Task extends Data {
         this.assignees = new ArrayList<>();
         this.workedHours = new ArrayList<>();
     }
-    
+
     public Task(User createdBy, String name, String description) {
         this.createdBy = createdBy;
         this.name = name;
@@ -43,36 +43,35 @@ public class Task extends Data {
         this.status = "Default";
         this.assignees = new ArrayList<User>();
         this.workedHours = new ArrayList<>();
-        this.notes = new ArrayList<>();
     }
-    
+
     public Task() {
     }
-    
+
     public void setAssignees(ArrayList<User> assignees) {
         this.assignees = assignees;
     }
-    
+
     public void setWorkedHours(ArrayList<WorkedHours> workedHours) {
         this.workedHours = workedHours;
     }
-    
+
     public void setCreatedBy(User createdBy){
         this.createdBy=createdBy;
     }
-    
+
     public String getName() {
         return name;
     }
-    
+
     public String getDescription() {
         return description;
     }
-    
+
     public String getStatus() {
         return status;
     }
-    
+
     public ArrayList<User> getAssignees() {
         return assignees;
     }
@@ -84,15 +83,15 @@ public class Task extends Data {
     public User getCreatedBy() {
         return createdBy;
     }
-    
+
     public void setName(String name) {
         this.name = name;
     }
-    
+
     public void setDescription(String description) {
         this.description = description;
     }
-    
+
     public void setStatus(String status) {
         this.status = status;
     }
@@ -212,6 +211,6 @@ public class Task extends Data {
 
 @Override
     public String printTaskInfo(Task task) {
-        return "Task: " + task.getName() + "\n" + task.getDescription() + "" + "\n" + "Team Members: " + task.getAssignees().toString() + "\n";
+        return "Task: " + task.getName() + "\n" + "Description: " + task.getDescription() + "" + "\n" + "Team Members: " + task.getAssignees().toString() + "\n";
     }
 }

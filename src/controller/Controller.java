@@ -432,7 +432,7 @@ public class Controller {
                 case "1" -> teamLibrary.viewTeam(currentProject.getTeam());
                 case "2" -> addMemberMenu();
                 case "3" -> teamLibrary.removeTeamMember(currentProject.getTeam(), currentUser);
-                case "4" -> changeMemberRoleMenu();
+                case "4" -> currentProject.getTeam().roleChange(currentUser, currentProject);
                 case "5" -> currentProjectMenu();
                 case "6" -> projectMenu();
                 case "7" -> logout();
@@ -668,33 +668,7 @@ public class Controller {
             }
         } while (true);
     }
-    private void changeMemberRoleMenu() throws IOException {
-        TeamMember userToChange = currentProject.getTeam().roleChange(currentUser);
-        String[] options =
-                {
-                        "Maintainer",
-                        "Developer",
-                        "Custom Role",
-                        currentProject.getName() + " Menu",
-                        "Logout",
-                        "Exit"
-                };
-        menu = new Menu("Team Roles Menu", options);
-        do
-        {
-            String choice = menu.printMenu();
-            switch (choice)
-            {
-                case "1" -> userToChange.setRole(new Maintainer());
-                case "2" -> userToChange.setRole(new Developer());
-                case "3" -> userToChange.setRole(currentProject.getTeam().addMemberWithCustomRole(currentUser));
-                case "4" -> currentProjectMenu();
-                case "5" -> logout();
-                case "6" -> exit();
-            }
-        } while (true);
-    }
-    
+
     private void login() throws IOException {
         currentUser = (userLibrary.login());
         if (currentUser !=null)

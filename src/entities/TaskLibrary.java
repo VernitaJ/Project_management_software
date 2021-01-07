@@ -59,9 +59,11 @@ public class TaskLibrary extends DataLibrary {
             System.out.println("Returning to project menu...");
             return;
         }
-    
+
         LocalDate startDate;
         LocalDate projectStartDate = currentProject.getStartDate();
+        LocalDate deadline;
+        LocalDate projectEndDate = currentProject.getEndDate();
         do {
             startDate = input.getDate("Task Start Date (YYYY-MM-DD): ");
             if (input.abort(description)) {
@@ -71,10 +73,11 @@ public class TaskLibrary extends DataLibrary {
             if(startDate.isBefore(projectStartDate)) {
                 System.out.println("Sorry, that date is before the Project start date, which is " + projectStartDate);
             }
-        } while (startDate.isBefore(projectStartDate));
+            if(startDate.isAfter(projectEndDate)) {
+                System.out.println("Sorry, that date falls after the Project deadline, which is " + projectEndDate);
+            }
+        } while (startDate.isBefore(projectStartDate) || startDate.isAfter(projectEndDate));
 
-        LocalDate deadline;
-        LocalDate projectEndDate = currentProject.getEndDate();
         do {
             deadline = input.getDate("Task Deadline (YYYY-MM-DD): ");
             if (input.abort(description)) {
@@ -184,7 +187,7 @@ public class TaskLibrary extends DataLibrary {
         }
         currentTask.setStatus(newStatus);
     }
-    
+
     public void updateName(Project currentProject, Task currentTask, User currentUser) {
         if(!confirmAccess(currentProject.getTeam(), currentUser)) {
             return;
@@ -192,7 +195,7 @@ public class TaskLibrary extends DataLibrary {
         String newName = input.getStr("Enter the name: ");
         currentTask.setName(newName);
     }
-    
+
     public void updateDescription(Project currentProject, Task currentTask, User currentUser) {
         if(!confirmAccess(currentProject.getTeam(), currentUser)) {
             return;
@@ -207,12 +210,15 @@ public class TaskLibrary extends DataLibrary {
         if (!confirmAccess(projectTeam, currentUser)) {
             return;
         }
-        List<User> tempList = projectTeam.listAllTeamUsers();
-        for (int i = 0; i < tempList.size(); i++) {
-            if(!taskTeam.contains(tempList.get(i))) {
-                System.out.println(i+1 + ". " + tempList.get(i).getUserName());
+
+        ArrayList<User> tempList = new ArrayList<>();
+        for(User user : projectTeam.listAllTeamUsers()){
+            if(!taskTeam.contains(user)){
+                tempList.add(user);
+                System.out.println(tempList.size() + ". " + user.getUserName());
             }
         }
+
         int choice;
         do{
             choice = input.getInt("Enter user number or 0 to return to the previous menu: ");
@@ -336,7 +342,7 @@ public class TaskLibrary extends DataLibrary {
     }
 
     public void printAllWorkedHours(Task currentTask) {
-        System.out.println(getAllWorkedHours(currentTask));
+        System.out.println(input.round(getAllWorkedHours(currentTask),2));
     }
 
     public void printDetailedWorkedHours(Project currentProject) {
@@ -347,9 +353,10 @@ public class TaskLibrary extends DataLibrary {
             return;
         } else {
             for(Data task: tasks) {
-                System.out.println(task.printTaskInfo((Task) task));
-                System.out.println("Amount of hours spent on this task:");
+                System.out.print(task.printTaskInfo((Task) task));
+                System.out.print("Amount of hours spent on this task: ");
                 printAllWorkedHours((Task) task);
+                System.out.println();
                 allTasksHours += getAllWorkedHours((Task) task);
             }
             System.out.println("Total time worked on project tasks: " + allTasksHours + ".");
@@ -407,7 +414,7 @@ public class TaskLibrary extends DataLibrary {
         csvWriter.flush();
         csvWriter.close();
     }
-    
+
     public Task taskNameExists(TaskLibrary taskLibrary, String stringToCheck) {
         for(Data task : taskLibrary.list){
             Task currentTask = ((Task) task);
