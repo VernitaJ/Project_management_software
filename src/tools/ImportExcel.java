@@ -32,7 +32,6 @@ public class ImportExcel {
 
     private void loopExcel() {
         try {
-            //POIFSFileSystem fs = new POIFSFileSystem(new FileInputStream(System.getProperty("user.home") + "/ProjectData.xlsx"));
             XSSFWorkbook wb = new XSSFWorkbook("projectexcel.xlsx");
             XSSFSheet sheet = wb.getSheetAt(0);
             XSSFRow row;
@@ -156,7 +155,6 @@ public class ImportExcel {
                                 user,
                                 roleFactory.createMaintainer()));
             }
-
         }
     }
 
@@ -176,10 +174,6 @@ public class ImportExcel {
                             new CustomRoles("Product Owner", true, true)));
             return;
         }
-    }
-
-    private void addManagerToProjectTeam() {
-
     }
 
     private void assignUserToTask(Task currentTask, User user) {
