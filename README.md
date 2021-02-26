@@ -8,3 +8,5 @@
 
 * Excel: https://onedrive.live.com/view.aspx?resid=3FADCB5F772F640B!25673&ithint=file%2cxlsx&authkey=!AIgboHVifQq7xFE
 
+*For testing purposes : 
+Use credentials 'vernita' for login and password*
