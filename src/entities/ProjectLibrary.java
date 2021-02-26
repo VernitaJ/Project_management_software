@@ -14,6 +14,7 @@ import static java.time.temporal.ChronoUnit.DAYS;
 
 public class ProjectLibrary extends DataLibrary{
     private static ProjectLibrary instance = null;
+    int VISUALISATION_SPACING = 50;
     Input input = Input.getInstance();
 
 
@@ -413,30 +414,30 @@ public class ProjectLibrary extends DataLibrary{
     }
 
 
-    public void ganttChart(Project currentProject) {
+    public void ganttChart(Project currentProject){
         ArrayList<Data> taskList = currentProject.taskList.list;
         Collections.sort(taskList, sortByStartDate);
         String declare = " ";
-        System.out.print("\n" + declare.repeat(20) + input.PURPLE + "GANTT CHART" + input.RESET + declare.repeat(10) + "Project End Date: " + input.GREEN + currentProject.getEndDate() + input.RESET + "\n" + "\n" + declare.repeat(20));
+        System.out.print("\n" + declare.repeat(VISUALISATION_SPACING) + input.PURPLE + "GANTT CHART" + input.RESET + declare.repeat(10) + "Project End Date: " + input.GREEN + currentProject.getEndDate() + input.RESET + "\n" + "\n" + declare.repeat(VISUALISATION_SPACING));
         long daysBetweenDates = dateVisualisation(currentProject);
         printTasks(currentProject, taskList, daysBetweenDates);
     }
 
     public long dateVisualisation(Project currentProject) {
         LocalDate startDate = currentProject.getStartDate();
-        LocalDate endDate = currentProject.getEndDate();
+        LocalDate endDate = LocalDate.of(2021,01,8);
         long daysOfProject = DAYS.between(startDate, endDate);
-        long remainder = daysOfProject % 5;
-        long daysBetweenDisplayDates = Math.round(daysOfProject - remainder) / 10;
-        if (daysBetweenDisplayDates < 12) {
+        long remainder = daysOfProject%5;
+        long daysBetweenDisplayDates = Math.round(daysOfProject - remainder)/10;
+        if (daysBetweenDisplayDates < 12){
             daysBetweenDisplayDates = 12;
         }
-        long amountOfDates = (daysOfProject / daysBetweenDisplayDates) + 1;
+        long amountOfDates = (daysOfProject/daysBetweenDisplayDates) + 1;
         LocalDate printedDate = startDate;
-        for (int i = 0; i < amountOfDates; i++) {
+        for (int i = 0; i < amountOfDates; i++){
             System.out.print(printedDate);
             String declare = " ";
-            System.out.print(declare.repeat((int) (daysBetweenDisplayDates - 10)));
+            System.out.print(declare.repeat((int) (daysBetweenDisplayDates-10)));
             printedDate = printedDate.plusDays(daysBetweenDisplayDates);
         }
         System.out.println();
@@ -448,31 +449,31 @@ public class ProjectLibrary extends DataLibrary{
             Task currentTask = (Task) task;
             int characters = charactersInName(currentTask);
             System.out.print(currentTask.getName());
-            int taskNameCharacters = 20;
             String displayDateChar = (input.GREEN + "¤" + input.RESET);
-            for (int i = characters; i < taskNameCharacters; i++) System.out.print(" ");
+            for (int i = characters; i < VISUALISATION_SPACING; i++) System.out.print(" ");
             long daysFromStart = DAYS.between(currentProject.getStartDate(), currentTask.getStartDate());
-            long spaceFromStart = daysFromStart * (20 / daysBetween);
+            long spaceFromStart = daysFromStart*(20/daysBetween);
             String spacer = " ";
             for (int i = -5; i < spaceFromStart; i++) System.out.print(spacer);
             long durationOfTask = DAYS.between(currentTask.getStartDate(), currentTask.getDeadline());
-            for (int i = 0; i < durationOfTask + 1; i++) {
-                if ((spaceFromStart + i) % daysBetween == 0) {
+            for (int i = 0; i < durationOfTask + 1; i++){
+                if ((spaceFromStart+i)%daysBetween == 0){
                     System.out.print(displayDateChar);
                 } else System.out.print(input.BLUE + "¤" + input.RESET);
             }
-            for (User teamMember : currentTask.getAssignees()) {
-                System.out.print(" " + teamMember.getUserName() + " ");
+            for (User teamMember : currentTask.getAssignees()){
+                System.out.print(" " +teamMember.getUserName() + " ");
             }
             System.out.println("\n");
         }
     }
 
-    public int charactersInName(Task task) {
+    public int charactersInName(Task task){
         String name = task.getName();
         int count = name.length();
         return count;
     }
+
 
     public void printAllProjects() {
         for (Data project : list) {
