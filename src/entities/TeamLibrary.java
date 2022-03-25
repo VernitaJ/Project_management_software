@@ -42,29 +42,29 @@ public class TeamLibrary extends DataLibrary{
             input.spacer();
 
             System.out.println(input.BLUE + "Maintainers: " + input.RESET);
-            int count = 1;
+            int printIndex = 1;
             for (User maintainer: maintainers) {
-                System.out.print(count + ". " + maintainer.getUserName());
+                System.out.print(printIndex + ". " + maintainer.getUserName());
                 System.out.println(maintainer.achievementTracker.printTag());
-                count ++;
+                printIndex ++;
             }
             input.spacer();
 
-            count = 1;
+            printIndex = 1;
             System.out.println(input.BLUE + "Developers: " + input.RESET);
             for (User developer: developers) {
-                System.out.print(count + ". " + developer.getUserName());
+                System.out.print(printIndex + ". " + developer.getUserName());
                 System.out.println(developer.achievementTracker.printTag());
-                count ++;
+                printIndex ++;
             }
             input.spacer();
 
-            count = 1;
+            printIndex = 1;
             System.out.println(input.BLUE + "Custom Roles: " + input.RESET);
             for (TeamMember customMember: customMembers) {
-                System.out.print(count + ". "+ customMember.getRole().getType() +" - " + customMember.getUser().getUserName());
+                System.out.print(printIndex + ". "+ customMember.getRole().getType() +" - " + customMember.getUser().getUserName());
                 System.out.println(customMember.getUser().achievementTracker.printTag());
-                count ++;
+                printIndex ++;
             }
             input.spacer();
         }

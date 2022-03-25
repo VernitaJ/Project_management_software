@@ -1,5 +1,7 @@
 package tools;
 
+import controller.Controller;
+
 public class Menu
 {
     private String title;
@@ -10,6 +12,9 @@ public class Menu
     {
         this.title = title;
         this.options = options;
+    }
+
+    public Menu() {
     }
 
     private void printTitle()
@@ -34,4 +39,8 @@ public class Menu
         return input.getStr(Input.PURPLE + ">> Option: " + Input.RESET);
     }
 
+    public void teardown()
+    {
+        Controller.instance = null;
+    }
 }
