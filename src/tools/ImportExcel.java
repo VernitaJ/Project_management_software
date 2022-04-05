@@ -13,14 +13,13 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 import static java.lang.Double.parseDouble;
-import static java.lang.Float.parseFloat;
 
 
 public class ImportExcel {
     ArrayList<String> headerList;
     ProjectLibrary projectLibrary;
     UserLibrary userLibrary;
-    User currentUser;
+    public User currentUser;
     RoleFactory roleFactory = new RoleFactory();
 
     public ImportExcel(UserLibrary userLibrary, ProjectLibrary projectLibrary, User currentUser) {
@@ -73,7 +72,7 @@ public class ImportExcel {
         if (cell.toString().equalsIgnoreCase("Project")) {
             importProject(row);
         } else if (cell.toString().equalsIgnoreCase("User")) {
-            importUser(row);
+            userLibrary.importUser(row, this);
         } else if (cell.toString().equalsIgnoreCase("Task")) {
             importTask(row);
         } else if (cell.toString().equalsIgnoreCase("Worklog")) {
@@ -88,20 +87,6 @@ public class ImportExcel {
                         row.getCell(2).toString(),
                         LocalDate.parse(row.getCell(3).toString()),
                         LocalDate.parse(row.getCell(4).toString())));
-    }
-
-    private void importUser(XSSFRow row) {
-        if (row.getCell(30).toString().equalsIgnoreCase(this.currentUser.getUserName())) {
-            return;
-        }
-        this.userLibrary.addUserToList(
-                new User(row.getCell(30).toString(),
-                        row.getCell(31).toString(),
-                        row.getCell(32).toString(),
-                        row.getCell(33).toString(),
-                        row.getCell(34).toString(),
-                        100.0f,
-                        parseFloat(row.getCell(35).toString())));
     }
 
     private void importTask(XSSFRow row) {

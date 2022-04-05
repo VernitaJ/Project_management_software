@@ -17,16 +17,16 @@ import java.time.format.DateTimeFormatter;
 import static java.lang.Double.parseDouble;
 import static java.lang.Integer.parseInt;
 
-public class Controller {
-    private Input input = Input.getInstance();
-    private Menu menu;
+public class Controller extends Menu {
+    public Input input = Input.getInstance();
+    public Menu menu;
     private Login login = Login.getInstance();
     private UserLibrary userLibrary = UserLibrary.getInstance();
     private TeamLibrary teamLibrary = TeamLibrary.getInstance();
     private ProjectLibrary projectLibrary = ProjectLibrary.getInstance();
     private TaskLibrary taskLibrary = TaskLibrary.getInstance();
     private AchievementLibrary achievementLibrary = AchievementLibrary.getInstance();
-    private static Controller instance = null;
+    public static Controller instance = null;
     private User currentUser = null;
     private Project currentProject = null;
     private Task currentTask = null;
@@ -35,7 +35,9 @@ public class Controller {
     private ExportJson exportJson = new ExportJson(projectLibrary);
 
     
-    private Controller() throws IOException {}
+    private Controller() throws IOException {
+        super();
+    }
     
     public static Controller getInstance() throws IOException {
         if (instance == null) {
@@ -43,12 +45,7 @@ public class Controller {
         }
         return instance;
     }
-    
-    public void teardown()
-    {
-        instance = null;
-    }
-    
+
     public void run() throws IOException {
         userLibrary.addUserToList(new User("SBR", "1", "sbr@sbr.com", "Leet", "Ericsson", 400, 2));
         User sbr = (User) userLibrary.findUserInList("SBR");
@@ -74,7 +71,7 @@ public class Controller {
         }
     }
     
-    private void exit()
+    public void exit()
     {
         input.teardown();
         teardown();
@@ -88,36 +85,36 @@ public class Controller {
         try {
             br = new BufferedReader(new FileReader(testFile));
             while((line = br.readLine()) != null) {
-                String[] token = line.split(",");
-                switch (token[0].toLowerCase()) {
-                    case "user" -> userLibrary.addUserToList(new User(token[1],token[2],token[3], token[4],token[5], Float.parseFloat(token[6]), Float.parseFloat(token[7])));
+                String[] word = line.split(",");
+                switch (word[0].toLowerCase()) {
+                    case "user" -> userLibrary.addUserToList(new User(word[1],word[2],word[3], word[4],word[5], Float.parseFloat(word[6]), Float.parseFloat(word[7])));
                     case "project" -> {
-                        this.currentUser = (User) userLibrary.findUserInList(token[2]);
-                        projectLibrary.addProjectToList(new Project(token[1], currentUser, token[3], LocalDate.of(parseInt(token[4]), parseInt(token[5]), parseInt(token[6])), LocalDate.of(parseInt(token[7]), parseInt(token[8]), parseInt(token[9]))));
+                        this.currentUser = (User) userLibrary.findUserInList(word[2]);
+                        projectLibrary.addProjectToList(new Project(word[1], currentUser, word[3], LocalDate.of(parseInt(word[4]), parseInt(word[5]), parseInt(word[6])), LocalDate.of(parseInt(word[7]), parseInt(word[8]), parseInt(word[9]))));
                         this.currentUser = null;
                     }
                     case "task" -> {
-                        currentUser = (User) userLibrary.findUserInList(token[2]);
+                        currentUser = (User) userLibrary.findUserInList(word[2]);
                         currentProject = projectLibrary.listUsersProjects(currentUser, false).get(0);
                         TaskLibrary currentTaskLibrary = currentProject.getTaskList();
-                        currentTaskLibrary.addTaskToList(currentProject, currentUser, token[3], token[4], LocalDate.parse(token[5]), LocalDate.parse(token[6]));
+                        currentTaskLibrary.addTaskToList(currentProject, currentUser, word[3], word[4], LocalDate.parse(word[5]), LocalDate.parse(word[6]));
                     }
                     case "workedhours" -> {
-                        currentUser = (User) userLibrary.findUserInList(token[1]);
+                        currentUser = (User) userLibrary.findUserInList(word[1]);
                         currentProject = projectLibrary.listUsersProjects(currentUser, false).get(0);
                         TaskLibrary currentTaskLibrary = currentProject.getTaskList();
                         Task currentTask = currentTaskLibrary.listProjectsTasks(currentProject, false).get(0);
-                        currentTaskLibrary.addWorkedHoursToList(currentTask, currentUser, parseDouble(token[2]));
+                        currentTaskLibrary.addWorkedHoursToList(currentTask, currentUser, parseDouble(word[2]));
                     }
                     case "budget" -> {
-                        currentUser = (User) userLibrary.findUserInList(token[1]);
+                        currentUser = (User) userLibrary.findUserInList(word[1]);
                         currentProject = projectLibrary.listUsersProjects(currentUser, false).get(0);
-                        projectLibrary.addBudgetToList(currentProject,parseDouble(token[2]),parseDouble(token[3]));
+                        projectLibrary.addBudgetToList(currentProject,parseDouble(word[2]),parseDouble(word[3]));
                     }
                     case "achievementprogress" -> {
-                        currentUser = (User) userLibrary.findUserInList(token[1]);
+                        currentUser = (User) userLibrary.findUserInList(word[1]);
                         //idk what happens when achievement doesnt exist in the library??
-                        currentUser.achievementTracker.addPoints(token[2],parseInt(token[3]), currentUser);
+                        currentUser.achievementTracker.addPoints(word[2],parseInt(word[3]), currentUser);
                     }
                 }
             }
@@ -126,7 +123,7 @@ public class Controller {
             e.printStackTrace();
         }
     }
-    
+
     // method just to say that a menu item has not been implemented. (temporary)
     private void notImplemented() {
         System.out.println(Input.RED + "This Feature Has Not been Implemented" + Input.RESET);

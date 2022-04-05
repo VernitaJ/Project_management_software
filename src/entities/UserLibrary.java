@@ -1,5 +1,7 @@
 package entities;
 
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import tools.ImportExcel;
 import tools.Input;
 
 import java.util.ArrayList;
@@ -8,9 +10,10 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.function.Function;
 
-import static entities.Message.sortByName;
+import static java.lang.Float.parseFloat;
 
 public class UserLibrary extends DataLibrary {
+    private final entities.messageHandler messageHandler = new messageHandler(this);
     Input input = Input.getInstance();
 
     private static UserLibrary instance = null;
@@ -101,32 +104,11 @@ public class UserLibrary extends DataLibrary {
     }
 
     public void createMessage(User sender){
-        String senderUserName = sender.getUserName();
-        String receiver = input.getStr("To: ");
-        Data sendTo = findUserInList(receiver);
-        if (sendTo != null) {
-            User userToSendTo = (User) sendTo;
-            String content = input.getStr("Message: ");
-            String userConfirm = input.getStr("\n" + "Send: " + "\n " + content  + "\n" + " To " + receiver + "? Y/N: " );
-            if (userConfirm.equalsIgnoreCase("y")){
-                userToSendTo.getInbox().add(new Message(senderUserName,receiver,content));
-                System.out.println("Message sent.");
-                //achievement tracking
-                sender.achievementTracker.addPoints("sendMessage",1, sender);
-            }
-        } else System.out.println("That user doesn't exist.");
+        messageHandler.createMessage(sender);
     }
 
     public void readMessage(User user){
-        System.out.println("Inbox \n _______________");
-        ArrayList<Message> inbox = user.getInbox();
-        Collections.sort(inbox, sortByName);
-        if (inbox.size()>0){
-            for (Message message: inbox){
-                System.out.println(message.toString() + "\n");
-                message.setRead(true);
-            }
-        } else System.out.println("Inbox is Empty");
+        messageHandler.readMessage(user);
     }
 
     public void viewMyProfile(User user){
@@ -225,7 +207,7 @@ public class UserLibrary extends DataLibrary {
 
     public void deleteMessage(User user){
         ArrayList<Message> inbox = user.getInbox();
-        readMessage(user);
+        messageHandler.readMessage(user);
         String messageId = input.getStr("ID of message to delete: ");
         boolean itemExists = inbox.stream().map(Message::getID).anyMatch(messageId::equals);
         if (itemExists){
@@ -375,4 +357,21 @@ public class UserLibrary extends DataLibrary {
 
     }
 
+    public Input getInput() {
+        return input;
+    }
+
+    public void importUser(XSSFRow row, ImportExcel importExcel) {
+        if (row.getCell(30).toString().equalsIgnoreCase(importExcel.currentUser.getUserName())) {
+            return;
+        }
+        addUserToList(
+                new User(row.getCell(30).toString(),
+                        row.getCell(31).toString(),
+                        row.getCell(32).toString(),
+                        row.getCell(33).toString(),
+                        row.getCell(34).toString(),
+                        100.0f,
+                        parseFloat(row.getCell(35).toString())));
+    }
 }

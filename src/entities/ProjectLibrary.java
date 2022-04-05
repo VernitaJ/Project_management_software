@@ -285,6 +285,10 @@ public class ProjectLibrary extends DataLibrary{
         double budgetHours = currentProject.getBudget().getHours();
         double hoursRemaining = getBudgetHoursRemaining(currentProject);
         double remainingMoney = getBudgetMoneyRemaining(currentProject);
+        printBudget(currentProject, budgetMoney, budgetHours, hoursRemaining, remainingMoney);
+    }
+
+    private void printBudget(Project currentProject, double budgetMoney, double budgetHours, double hoursRemaining, double remainingMoney) {
         String informBudgetReachedSEK = "";
         String informBudgetReachedHours = "";
         if (!getOnBudgetMoney(currentProject)) {
